@@ -29,9 +29,9 @@ export default function VideoSection() {
   return (
     <section className="py-20">
       {/* Heading */}
-      <h2 className="text-center font-bold text-3xl md:text-4xl mb-14">
+      {/* <h2 className="text-center font-bold text-3xl md:text-4xl mb-14">
         Shop By Catalog
-      </h2>
+      </h2> */}
 
       {/* Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6">
@@ -65,7 +65,7 @@ export default function VideoSection() {
             </div>
 
             {/* Overlay */}
-            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition duration-300 flex items-end justify-center pb-8">
+            <div className="absolute inset-0 group-hover:bg-black/50 transition duration-300 flex items-end justify-center pb-8">
               <h3 className="text-white text-xl font-semibold tracking-wide">
                 {item.title}
               </h3>

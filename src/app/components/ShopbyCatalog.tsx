@@ -3,46 +3,43 @@ import Link from "next/link";
 
 export default function ShopByCatalog() {
   const catalogs = [
+     {
+      title: "New Arrivals",
+      image: "/images/new-arrivals.jpg",
+      link: "#",
+    },
     {
       title: "Necklaces",
-      image: "/images/jewellery-1.jpg",
+      image: "/images/necklace.jpg",
       link: "#",
     },
     {
       title: "Rings",
-      image: "/images/jewellery-1.jpg",
+      image: "/images/rings.jpg",
       link: "#",
     },
     {
       title: "Earrings",
-      image: "/images/jewellery-1.jpg",
+      image: "/images/earrings.jpg",
       link: "#",
     },
     {
       title: "Bracelets",
-      image: "/images/jewellery-1.jpg",
+      image: "/images/bracelet.jpg",
       link: "#",
     },
     {
-      title: "Bracelets",
-      image: "/images/jewellery-1.jpg",
+      title: "Pendants",
+      image: "/images/Pendant.jpg",
       link: "#",
     },
+   
     {
-      title: "Bracelets",
-      image: "/images/jewellery-1.jpg",
+      title: "Choker",
+      image: "/images/Choker.jpg",
       link: "#",
     },
-    {
-      title: "Bracelets",
-      image: "/images/jewellery-1.jpg",
-      link: "#",
-    },
-    {
-      title: "Bracelets",
-      image: "/images/jewellery-1.jpg",
-      link: "#",
-    },
+    
    
   ];
 
@@ -72,7 +69,7 @@ export default function ShopByCatalog() {
             </div>
 
             {/* Overlay */}
-            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition duration-300 flex items-end justify-center pb-6">
+            <div className="absolute inset-0  group-hover:bg-black/50 transition duration-300 flex items-end justify-center pb-6">
               <h3 className="text-white text-xl font-semibold tracking-wide">
                 {item.title}
               </h3>

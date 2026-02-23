@@ -5,6 +5,16 @@ import Image from "next/image";
 export default function CategoryCollage() {
   return (
     <section className="max-w-7xl mx-auto px-4 md:px-10 py-10 ">
+       <h2 className="text-center font-semibold text-3xl md:text-4xl mb-10 ">
+         Rani Designer
+
+      </h2>
+      <p className="text-center font-base text-3xl md:text-2xl mb-12 max-w-4xl mx-auto">
+
+ Discover timeless elegance with handcrafted jewellery designed
+  to celebrate tradition and modern luxury.
+      </p>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         {/* LEFT COLUMN */}
@@ -27,7 +37,7 @@ export default function CategoryCollage() {
           {/* Gold (Big Bottom) */}
           <div className="relative h-[350px] md:h-[450px] rounded-2xl overflow-hidden group cursor-pointer">
             <Image
-              src="/images/wedding-image.webp"
+              src="/images/gold.webp"
               alt="Gold Jewellery"
               fill
               className="object-cover group-hover:scale-105 transition duration-500"
@@ -46,7 +56,7 @@ export default function CategoryCollage() {
           {/* Diamond (Small Top) */}
           <div className="relative h-[200px] md:h-[350px] rounded-2xl overflow-hidden group cursor-pointer">
             <Image
-              src="/images/wedding-image.webp"
+              src="/images/diamond.webp"
               alt="Diamond Jewellery"
               fill
               className="object-cover group-hover:scale-105 transition duration-500"
@@ -60,7 +70,7 @@ export default function CategoryCollage() {
           {/* Dailywear (Big Bottom) */}
           <div className="relative h-[350px] md:h-[500px] rounded-2xl overflow-hidden group cursor-pointer">
             <Image
-              src="/images/wedding-image.webp"
+              src="/images/dailywear.webp"
               alt="Dailywear Jewellery"
               fill
               className="object-cover group-hover:scale-105 transition duration-500"

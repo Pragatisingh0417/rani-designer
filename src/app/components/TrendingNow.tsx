@@ -4,18 +4,18 @@ import Link from "next/link";
 export default function TrendingNow() {
   const catalogs = [
     {
-      title: "Necklaces",
-      image: "/images/jewellery-1.jpg",
+      title: "Chandbali Eacrings",
+      image: "/images/chaand-bali-1.jpg",
       link: "#",
     },
     {
-      title: "Rings",
-      image: "/images/jewellery-1.jpg",
+      title: "Chokers",
+      image: "/images/choker-1.jpg",
       link: "#",
     },
     {
-      title: "Earrings",
-      image: "/images/jewellery-1.jpg",
+      title: "Bangles",
+      image: "/images/bangles.jpg",
       link: "#",
     },
    
@@ -44,7 +44,7 @@ Trending Now
             className="group relative overflow-hidden shadow-md rounded-2xl"
           >
             {/* Image Container */}
-            <div className="relative h-[400px] w-full ">
+            <div className="relative h-[500px] w-full ">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -54,7 +54,7 @@ Trending Now
             </div>
 
             {/* Overlay */}
-            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition duration-300 flex items-end justify-center pb-6">
+            <div className="absolute inset-0 group-hover:bg-black/50 transition duration-300 flex items-end justify-center pb-6">
               <h3 className="text-white text-xl font-semibold tracking-wide">
                 {item.title}
               </h3>

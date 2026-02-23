@@ -1,6 +1,7 @@
 import CategoryCollage from "./components/CategoryCollage";
 import HeroGrid from "./components/HeroGrid";
 import ImageMarquee from "./components/ImageMarquee";
+import LuxuryProductCarousel from "./components/LuxuryProductCarousel";
 import NewsletterSection from "./components/NewsletterSection";
 import PerfectMatch from "./components/PerfectMatch";
 import ShopByCatalog from "./components/ShopbyCatalog";
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <>
         <HeroGrid />
+        <LuxuryProductCarousel />
 <ShopByCatalog />
 <VideoSection />
 <PerfectMatch />

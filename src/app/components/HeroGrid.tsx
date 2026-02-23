@@ -7,15 +7,15 @@ import Link from "next/link";
 const bottomCards = [
   {
     title: "Heritage Jewels",
-    image: "/images/jewellery-1.jpg",
+    image: "/images/polki-kundan.jpg",
   },
   {
     title: "Proudly Worn",
-    image: "/images/jewellery-1.jpg",
+    image: "/images/banner-3.jpg",
   },
   {
     title: "Rare Discoveries",
-    image: "/images/jewellery-1.jpg",
+    image: "/images/banner-4.jpg",
   },
 ];
 
@@ -27,16 +27,16 @@ export default function HeroGrid() {
       <div className="max-w-8xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
 
         {/* ================= LEFT LARGE ================= */}
-        <div className="relative group h-[300px] md:h-[300px] overflow-hidden rounded-2xl">
+        <div className="relative group h-[300px] md:h-[400px] overflow-hidden rounded-2xl">
 
           <Image
-            src="/images/banner-1.avif"   
+            src="/images/polki-kundan-1.jpg"   
             alt="Celebrate Collection"
             fill
             className="object-cover group-hover:scale-105 transition duration-700 rounded-2xl"
           />
 
-          <div className="absolute inset-0 bg-black/40"></div>
+          {/* <div className="absolute inset-0 bg-black/40"></div> */}
 
           {/* <div className="absolute left-8 bottom-10 text-white max-w-md">
             <h2 className="text-4xl md:text-5xl font-semibold text-[#B9AA52]">
@@ -56,16 +56,16 @@ export default function HeroGrid() {
         </div>
 
         {/* ================= RIGHT LARGE ================= */}
-        <div className="relative group h-[300px] md:h-[300px] overflow-hidden rounded-2xl">
+        <div className="relative group h-[300px] md:h-[400px] overflow-hidden rounded-2xl">
 
           <Image
-            src="/images/banner-1.avif"
+            src="/images/banner-image-2.jpg"
             alt="Polki Collection"
             fill
-            className="object-cover group-hover:scale-105 transition duration-700 rounded-2xl"
+            className="object-cover group object-contain-hover:scale-105 transition duration-700 rounded-2xl"
           />
 
-          <div className="absolute inset-0 bg-black/30"></div>
+          {/* <div className="absolute inset-0 bg-black/30"></div> */}
 
           {/* <div className="absolute right-8 bottom-10 text-white text-right">
             <h2 className="text-4xl md:text-5xl font-semibold text-[#B9AA52]">
@@ -90,7 +90,7 @@ export default function HeroGrid() {
   {bottomCards.map((item, index) => (
     <div
       key={index}
-      className="relative group h-[250px] overflow-hidden rounded-2xl"
+      className="relative group h-[400px] overflow-hidden rounded-2xl"
     >
       <Image
         src={item.image}
@@ -99,7 +99,7 @@ export default function HeroGrid() {
         className="object-cover group-hover:scale-105 transition duration-700 rounded-2xl"
       />
 
-      <div className="absolute inset-0 bg-black/40"></div>
+      {/* <div className="absolute inset-0 bg-black/40"></div> */}
 
       {/* <div className="absolute bottom-6 left-6 text-white">
         <h3 className="text-xl font-semibold text-[#B9AA52]">
