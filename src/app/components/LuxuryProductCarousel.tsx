@@ -1,108 +1,129 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { useRef } from "react";
-import { Star, ArrowLeft, ArrowRight } from "lucide-react";
+import { Star } from "lucide-react";
 
-const products = [
-  {
-    title: "Ruby Diamond Necklace set",
-    image: "/images/p1.jpg",
-    price: "12,850",
-    discount: "23% OFF",
-  },
-  {
-    title: "Ruby and Gold Plated Flower Earrings",
-    image: "/images/p2.jpg",
-    price: "4,350",
-    oldPrice: "5,650",
-    discount: "23% OFF",
-  },
-  {
-    title: "Premium Ruby Micron Gold Ring",
-    image: "/images/p3.jpg",
-    price: "4,550",
-    oldPrice: "7,000",
-    discount: "35% OFF",
-  },
-  {
-    title: "Gold Plated Ring with Rubies",
-    image: "/images/p4.jpg",
-    price: "3,650",
-    oldPrice: "5,700",
-    discount: "35% OFF",
-  },
-  {
-    title: "Vilandi Luxe Ruby Hoops",
-    image: "/images/p5.jpg",
-    price: "8,250",
-    oldPrice: "14,550",
-    discount: "43% OFF",
-  },
-  
-];
+const productData = {
+  "Ruby Radiance": [
+    {
+      title: "Ruby Diamond Necklace Set",
+      image: "/images/ruby-diamond.webp",
+      price: "12,850",
+      discount: "23% OFF",
+    },
+    {
+      title: "Ruby and Gold Plated Flower Earrings",
+      image: "/images/Ruby-Gold-Plated-Flower-Earrings.webp",
+      price: "4,350",
+      discount: "23% OFF",
+    },
+     {
+      title: "Premium Ruby Micron gold plated ring-Free Size",
+      image: "/images/Premium-Ruby.webp",
+      price: "12,850",
+      discount: "23% OFF",
+    },
+     {
+      title: "Vilandi Luxe Ruby Statement Hoops",
+      image: "/images/Vilandi-Luxe-Ruby-Statement-Hoops.jpg",
+      price: "12,850",
+      discount: "23% OFF",
+    },
+    
+  ],
+  "Emerald Envy": [
+    {
+      title: "Emerald Statement Ring",
+      image: "/images/p3.jpg",
+      price: "6,550",
+      discount: "30% OFF",
+    },
+    {
+      title: "Ruby and Gold Plated Flower Earrings",
+      image: "/images/Ruby-Gold-Plated-Flower-Earrings.webp",
+      price: "6,550",
+      discount: "30% OFF",
+    },
+    {
+      title: "Emerald Statement Ring",
+      image: "/images/p3.jpg",
+      price: "6,550",
+      discount: "30% OFF",
+    },
+    {
+      title: "Emerald Pendant Set",
+      image: "/images/p4.jpg",
+      price: "9,250",
+      discount: "40% OFF",
+    },
+  ],
+  "Multicolor Magic": [
+    {
+      title: "Multicolor Floral Earrings",
+      image: "/images/p5.jpg",
+      price: "5,450",
+      discount: "20% OFF",
+    },
+     {
+      title: "Multicolor Floral Earrings",
+      image: "/images/p5.jpg",
+      price: "5,450",
+      discount: "20% OFF",
+    },
+     {
+      title: "Multicolor Floral Earrings",
+      image: "/images/p5.jpg",
+      price: "5,450",
+      discount: "20% OFF",
+    },
+    {
+      title: "Multicolor Luxe Necklace",
+      image: "/images/p6.jpg",
+      price: "14,250",
+      discount: "35% OFF",
+    },
+  ],
+};
 
-export default function LuxuryProductCarousel() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return;
-    const scrollAmount = 400;
-    scrollRef.current.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
-      behavior: "smooth",
-    });
-  };
+export default function LuxuryProductSection() {
+  const [activeCategory, setActiveCategory] =
+    useState<keyof typeof productData>("Ruby Radiance");
 
   return (
-    <section className="bg-[#f4f1ea] py-14 relative">
+    <section className="bg-[#f4f1ea] py-10">
 
-      {/* CATEGORY PILLS */}
-      <div className="flex justify-center gap-4 mb-10">
-        {["Ruby Radiance", "Emerald Envy", "Multicolor Magic"].map(
-          (item) => (
-            <button
-              key={item}
-              className="px-6 py-2 border border-black rounded-full text-sm hover:bg-black hover:text-white transition"
-            >
-              {item}
-            </button>
-          )
-        )}
+      {/* CATEGORY BUTTONS */}
+      <div className="flex justify-center gap-6 mb-12">
+        {Object.keys(productData).map((category) => (
+          <button
+            key={category}
+            onClick={() =>
+              setActiveCategory(category as keyof typeof productData)
+            }
+            className={`px-6 py-2 rounded-full border transition text-sm ${
+              activeCategory === category
+                ? "bg-black text-white"
+                : "border-black hover:bg-black hover:text-white"
+            }`}
+          >
+            {category}
+          </button>
+        ))}
       </div>
 
-      {/* ARROWS */}
-      <button
-        onClick={() => scroll("left")}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white shadow p-3 rounded-full z-10"
-      >
-        <ArrowLeft size={20} />
-      </button>
-
-      <button
-        onClick={() => scroll("right")}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white shadow p-3 rounded-full z-10"
-      >
-        <ArrowRight size={20} />
-      </button>
-
-      {/* PRODUCT SCROLLER */}
-      <div
-        ref={scrollRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar px-14"
-      >
-        {products.map((product, index) => (
+      {/* PRODUCTS GRID (2 CARDS ONLY) */}
+      <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 px-6 ">
+        {productData[activeCategory].map((product, index) => (
           <div
             key={index}
-            className="min-w-[260px] bg-white rounded-xl shadow-sm p-4 relative"
+            className="bg-white rounded-xl shadow-sm p-6 relative"
           >
-            {/* SALE BADGE */}
-            <span className="absolute top-3 left-3 bg-[#D4AF37] text-white text-xs px-2 py-1 rounded">
+            <span className="absolute top-4 left-4 bg-[#D4AF37] text-white text-xs px-2 py-1 rounded z-11111">
               SALE
             </span>
 
-            {/* PRODUCT IMAGE */}
-            <div className="relative w-full h-[220px] mb-4">
+            <div className="relative w-full h-[200px] mb-4">
               <Image
                 src={product.image}
                 alt={product.title}
@@ -111,54 +132,42 @@ export default function LuxuryProductCarousel() {
               />
             </div>
 
-            {/* DISCOUNT BADGE */}
             <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded">
               {product.discount}
             </span>
 
-            {/* TITLE */}
-            <h3 className="mt-3 text-sm font-medium leading-snug">
+            <h3 className="mt-3 font-medium text-[16px]">
               {product.title}
             </h3>
 
-            {/* RATING */}
+            {/* Rating */}
             <div className="flex items-center gap-1 mt-2">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} size={14} className="fill-green-600 text-green-600" />
+                <Star
+                  key={i}
+                  size={14}
+                  className="fill-green-600 text-green-600"
+                />
               ))}
               <span className="text-xs text-gray-500 ml-2">
                 25 reviews
               </span>
             </div>
 
-            {/* PRICE */}
-            <div className="mt-2">
-              <span className="font-semibold text-lg">
-                Rs. {product.price}
-              </span>
-              {product.oldPrice && (
-                <span className="text-sm line-through text-gray-400 ml-2">
-                  Rs. {product.oldPrice}
-                </span>
-              )}
+            <div className="mt-3 text-lg font-semibold">
+              Rs. {product.price}
             </div>
 
-            {/* EMI */}
-            <div className="mt-2 flex items-center justify-between">
-              <span className="text-xs text-gray-600">
-                or ₹1088/Month
-              </span>
-              <button className="bg-[#690303] text-white text-xs px-3 py-1 rounded hover:opacity-90">
-                Buy on EMI
-              </button>
-            </div>
+            <button className="mt-4 bg-[#B9AA52] text-white px-4 py-2 rounded text-sm hover:opacity-90">
+              Buy on EMI
+            </button>
           </div>
         ))}
       </div>
 
       {/* VIEW ALL */}
-      <div className="flex justify-center mt-10">
-        <button className="bg-[#690303] text-white px-10 py-3 rounded hover:opacity-90 transition">
+      <div className="flex justify-center mt-12">
+        <button className="bg-[#B9AA52] text-white px-10 py-3 rounded hover:opacity-90 transition">
           VIEW ALL
         </button>
       </div>

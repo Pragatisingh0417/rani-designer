@@ -22,3 +22,15 @@ body {
   animation: marquee 30s linear infinite;
 }
 
+/* Hide scrollbar fully */
+.no-scrollbar::-webkit-scrollbar {
+  height: 0px;
+}
+
+.no-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+}
