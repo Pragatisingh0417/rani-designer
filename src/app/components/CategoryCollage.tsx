@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function CategoryCollage() {
   return (
     <section className="max-w-7xl mx-auto px-4 md:px-10 py-10 ">
-       <h2 className="text-center font-semibold text-3xl md:text-4xl mb-10 ">
+      <h2 className="text-3xl md:text-5xl leading-tight text-black mb-5 text-center">
          Rani Designer
 
       </h2>

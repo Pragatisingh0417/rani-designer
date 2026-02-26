@@ -29,9 +29,8 @@ title: "Jhumkas",
 ]
     return (
 <section className="py-16 ">
-     <h2 className="text-center font-semibold text-3xl md:text-4xl mb-12 ">
-       FIND YOUR PERFECT MATCH
-      </h2>
+      <h2 className="text-3xl md:text-5xl  leading-tight text-black mb-12 text-center">
+Find Your Perfect Match      </h2>
 <div className="max-w-7xl grid grid-cols-1 sm:grid-cols-2 md-grid-cols-2 mx-auto gap-4">
   {match.map((item, index) => (
           <Link

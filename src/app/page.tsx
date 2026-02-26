@@ -1,12 +1,13 @@
 import CategoryCollage from "./components/CategoryCollage";
+import DualJewelleryBanner from "./components/DualJewelleryBanner";
 import HeroGrid from "./components/HeroGrid";
-import ImageMarquee from "./components/ImageMarquee";
+import InstagramSection from "./components/InstagramSection";
 import LuxuryProductCarousel from "./components/LuxuryProductCarousel";
+import NecklaceShowcase from "./components/NecklaceShowcase";
 import NewsletterSection from "./components/NewsletterSection";
 import PerfectMatch from "./components/PerfectMatch";
 import ReligiousJewellery from "./components/ReligiousJewellery";
 import ShopByCatalog from "./components/ShopbyCatalog";
-import TestimonialMarquee from "./components/TestimonialMarquee";
 import TrendingNow from "./components/TrendingNow";
 import VideoSection from "./components/VideoFrame";
 
@@ -15,13 +16,15 @@ export default function Home() {
     <>
         <HeroGrid />
         <LuxuryProductCarousel />
-<ShopByCatalog />
+<ShopByCatalog limit={8} />
 <ReligiousJewellery />
 <VideoSection />
 <PerfectMatch />
 <TrendingNow />
+<DualJewelleryBanner />
 <CategoryCollage />
-<ImageMarquee />
+<NecklaceShowcase />
+<InstagramSection />
 <NewsletterSection />
     </>
   )

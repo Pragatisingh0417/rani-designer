@@ -10,20 +10,21 @@ export default function VideoSection() {
     },
     {
       title: "Rings",
-      video: "/videos/video-1.mp4",
+      video: "/videos/video-2.mp4",
       link: "#",
     },
     {
       title: "Earrings",
-      video: "/videos/video-1.mp4",
+      video: "/videos/video-3.mp4",
+      link: "#",
+    },
+    {
+      title: "Earrings",
+      video: "/videos/video-4.mp4",
       link: "#",
     },
  
-    {
-      title: "Bracelets",
-      image: "/images/jewellery-1.jpg",
-      link: "#",
-    },
+
   ];
 
   return (
@@ -34,7 +35,7 @@ export default function VideoSection() {
       </h2> */}
 
       {/* Grid */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6">
+      <div className="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6">
         {catalogs.map((item, index) => (
           <Link
             key={index}
@@ -45,7 +46,7 @@ export default function VideoSection() {
             <div className="relative h-[600px] w-full">
 
               {/* If Video Exists */}
-              {item.video ? (
+             
                 <video
                   src={item.video}
                   autoPlay
@@ -54,21 +55,14 @@ export default function VideoSection() {
                   playsInline
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl"
                 />
-              ) : (
-                <Image
-                  src={item.image!}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-              )}
+            
             </div>
 
             {/* Overlay */}
             <div className="absolute inset-0 group-hover:bg-black/50 transition duration-300 flex items-end justify-center pb-8">
-              <h3 className="text-white text-xl font-semibold tracking-wide">
+              {/* <h3 className="text-white text-xl font-semibold tracking-wide">
                 {item.title}
-              </h3>
+              </h3> */}
             </div>
           </Link>
         ))}

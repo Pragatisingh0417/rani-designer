@@ -34,15 +34,15 @@ export default function DesktopNav() {
           onMouseLeave={() => setActiveMenu(null)}
         >
           <button className="flex items-center gap-1">
-            About <ChevronDown size={16} />
+            About <ChevronDown size={16} /> 
           </button>
 
           {activeMenu === "about" && (
-            <div className="absolute top-full left-0 bg-white shadow-xl w-52 py-4 px-6">
-              <Link href="/about/know-us" className="block py-2 hover:text-[#8B0000]">
+            <div className="absolute top-full left-0 bg-white shadow-xl w-30 py-4 px-6">
+              <Link href="/about-us" className="block py-2 hover:text-[#8B0000]">
                 Know Us
               </Link>
-              <Link href="/contact" className="block py-2 hover:text-[#8B0000]">
+              <Link href="/contact-us" className="block py-2 hover:text-[#8B0000]">
                 Contact
               </Link>
               <Link href="/faq" className="block py-2 hover:text-[#8B0000]">
@@ -52,7 +52,7 @@ export default function DesktopNav() {
           )}
         </div>
 
-        <Link href="/">New Arrivals</Link>
+        <Link href="shop-by-catalogs">Shop By Category</Link>
 
         {/* NECKLACES MEGA MENU */}
         <div

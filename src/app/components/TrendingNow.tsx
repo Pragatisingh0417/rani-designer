@@ -26,7 +26,7 @@ export default function TrendingNow() {
   return (
     <section className="py-16">
       {/* Heading */}
-      <h2 className="text-center font-bold text-3xl md:text-4xl mb-5">
+      <h2 className="text-3xl md:text-5xl  leading-tight text-black mb-5 text-center">
 Trending Now
       </h2>
       <p className="text-center font-base text-3xl md:text-2xl mb-12">
