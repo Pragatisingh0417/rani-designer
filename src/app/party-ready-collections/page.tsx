@@ -1,0 +1,136 @@
+"use client";
+import Image from "next/image";
+
+export default function PartyReadyPage() {
+  return (
+    <section className=" text-white">
+
+      {/* ================= HERO SECTION ================= */}
+      <div className="relative py-40 border-b border-[#B9AA52]/30 overflow-hidden">
+
+  {/* Background Image */}
+  <div className="absolute inset-0">
+    <img
+      src="/images/jwellery image .webp" // replace with your image
+      alt="About Background"
+      className="w-full h-full object-cover"
+    />
+  </div>
+
+  {/* Dark Overlay */}
+  <div className="absolute inset-0 bg-black/70"></div>
+
+  {/* Content */}
+  <div className="relative max-w-7xl mx-auto px-6">
+    <div className="max-w-2xl text-left">
+
+      <h1 className="text-4xl md:text-6xl font-bold text-[#B9AA52] mb-6 tracking-wide">
+        Party Reday Collection 
+      </h1>
+
+      <p className="text-lg text-gray-300 leading-relaxed">
+        A legacy of purity, craftsmanship, and timeless elegance.
+        We create jewellery that reflects royalty, tradition,
+        and unforgettable celebrations.
+      </p>
+
+      {/* Optional Gold Accent Line */}
+      <div className="w-24 h-[2px] bg-[#B9AA52] mt-8"></div>
+
+    </div>
+  </div>
+</div>
+
+
+
+{/* ================= COLLECTION GRID ================= */}
+<div className="bg-black py-20">
+  <div className="max-w-7xl mx-auto px-6">
+
+    <div className="text-center mb-16">
+      <h2 className="text-3xl md:text-4xl font-serif text-[#B9AA52] mb-4">
+        Featured Party Pieces
+      </h2>
+      <p className="text-gray-400 max-w-2xl mx-auto">
+        Statement jewellery designed to make you shine at every celebration.
+      </p>
+    </div>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+      {[
+        {
+          title: "Royal Kundan Set",
+          image: "/images/banner-4.jpg",
+        },
+        {
+          title: "Emerald Party Necklace",
+          image: "/images/banner-4.jpg",
+        },
+        {
+          title: "Gold Temple Earrings",
+          image: "/images/banner-4.jpg",
+        },
+      ].map((item, index) => (
+        <div
+          key={index}
+          className="group relative overflow-hidden rounded-xl border border-[#B9AA52]/30"
+        >
+          <div className="relative h-[400px]">
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              className="object-cover group-hover:scale-110 transition duration-700"
+            />
+          </div>
+
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition duration-500"></div>
+
+          {/* Text */}
+          <div className="absolute bottom-6 left-6 z-10">
+            <h3 className="text-xl font-semibold text-white">
+              {item.title}
+            </h3>
+            <button className="mt-3 text-sm text-[#B9AA52] border-b border-[#B9AA52]">
+              View Details
+            </button>
+          </div>
+        </div>
+      ))}
+
+    </div>
+  </div>
+</div>
+     
+
+     {/* ================= LUXURY CTA ================= */}
+<section className="relative w-full bg-black min-h-[90vh]">
+
+  <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[90vh]">
+
+    <div className="relative min-h-[90vh]">
+      <Image
+        src="/images/groom.jpg"
+        alt="Groom"
+        fill
+        className="object-cover"
+      />
+    </div>
+
+    <div className="bg-black grid grid-cols-2 gap-4 p-6">
+      {/* collage images */}
+    </div>
+
+  </div>
+
+</section>
+
+     
+
+    
+
+    </section>
+  );
+}

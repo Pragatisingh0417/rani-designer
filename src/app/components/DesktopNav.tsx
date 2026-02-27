@@ -52,7 +52,7 @@ export default function DesktopNav() {
           )}
         </div>
 
-        <Link href="shop-by-catalogs">Shop By Category</Link>
+        <Link href="/shop-by-catalogs">Shop By Category</Link>
 
         {/* NECKLACES MEGA MENU */}
         <div
@@ -133,7 +133,7 @@ export default function DesktopNav() {
           )}
         </div>
 
-        <Link href="/">Party Ready Collection</Link>
+        <Link href="/party-ready-collections">Party Ready Collection</Link>
 
         {/* EARRINGS DROPDOWN */}
         <div

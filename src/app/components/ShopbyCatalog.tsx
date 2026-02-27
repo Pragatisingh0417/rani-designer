@@ -10,7 +10,7 @@ export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
     { title: "New Arrivals", image: "/images/new-arrivals.jpg", link: "#" },
     { title: "Best Seller", image: "/images/Choker.jpg", link: "#" },
 
-    { title: "Necklaces", image: "/images/necklace.jpg", link: "#" },
+    { title: "Necklaces", image: "/images/necklace.jpg", link: "necklace" },
     { title: "Rings", image: "/images/rings.jpg", link: "#" },
     { title: "Earrings", image: "/images/earrings.jpg", link: "#" },
     { title: "Bracelets", image: "/images/bracelet.jpg", link: "#" },
