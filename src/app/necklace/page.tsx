@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Star, SlidersHorizontal, Eye, X } from "lucide-react";
 import QuickViewDrawer from "../components/QuickViewDrawer";
-
+import { Heart, ShoppingBag } from "lucide-react";
 const products = [
     {
         id: 1,
@@ -33,7 +33,7 @@ const products = [
         name: "Gulabi Émeraude Jadau Choker Set",
         price: 9450,
         image: "/images/necklace-1.jpg",
-        hoverImage: "/images/necklace-2.jpg",
+        hoverImage: "/images/necklace.jpg",
 
         rating: 5,
         reviews: 6,
@@ -43,7 +43,7 @@ const products = [
         name: "Étoile Pearl Sparkle Necklace Set",
         price: 6950,
         image: "/images/necklace-1.jpg",
-        hoverImage: "/images/necklace-2.jpg",
+        hoverImage: "/images/necklace.jpg",
 
         rating: 5,
         reviews: 1,
@@ -63,6 +63,19 @@ const products = [
 export default function NecklacesPage() {
     const [priceRange, setPriceRange] = useState([0, 36500]);
     const [selectedProduct, setSelectedProduct] = useState<any>(null);
+    const [wishlist, setWishlist] = useState<number[]>([]);
+    const [cart, setCart] = useState<number[]>([]);
+
+    const toggleWishlist = (id: number) => {
+        setWishlist((prev) =>
+            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+        );
+    };
+
+    const addToCart = (product: any) => {
+        setCart((prev) => [...prev, product.id]);
+        alert("Product added to cart");
+    };
 
     return (
         <div className="max-w-8xl mx-auto px-6 lg:px-10">
@@ -132,60 +145,83 @@ export default function NecklacesPage() {
                 <div className="flex-1 max-w-8xl mx-auto">
 
                     {/* Grid */}
-                    <div className=" grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-6">
+                    <div className=" grid grid-cols-2 md:grid-cols-4 xl:grid-cols-4 gap-6">
                         {products.map((product) => (
                             <div key={product.id} className="group">
 
 
-<div className="relative overflow-hidden group">
+                                <div className="relative overflow-hidden group">
 
-  {product.discount && (
-    <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">
-      {product.discount}
-    </span>
-  )}
+                                    {product.discount && (
+                                        <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">
+                                            {product.discount}
+                                        </span>
+                                    )}
+                                    {/* Wishlist */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            toggleWishlist(product.id);
+                                        }}
+                                        className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition z-20"
+                                    >
+                                        <Heart
+                                            size={16}
+                                            className={wishlist.includes(product.id) ? "text-red-500 fill-red-500" : "text-gray-500"}
+                                        />
+                                    </button>
 
-  <Link href={`/necklaces/${product.id}`}>
+                                    <Link href={`/necklaces/${product.id}`}>
 
-    {/* Main Image */}
-    <Image
-      src={product.image}
-      alt={product.name}
-      width={300}
-      height={400}
-      className="w-full h-[300px] object-cover transition duration-500 group-hover:opacity-0"
-    />
+                                        {/* Main Image */}
+                                        <Image
+                                            src={product.image}
+                                            alt={product.name}
+                                            width={300}
+                                            height={400}
+                                            className="w-full h-[400px] object-cover transition duration-500 group-hover:opacity-0"
+                                        />
 
-    {/* Hover Image */}
-    {product.hoverImage && (
-      <Image
-        src={product.hoverImage}
-        alt={product.name}
-        width={300}
-        height={400}
-        className="absolute inset-0 w-full h-[300px] object-cover opacity-0 group-hover:opacity-100 transition duration-500"
-      />
-    )}
+                                        {/* Hover Image */}
+                                        {product.hoverImage && (
+                                            <Image
+                                                src={product.hoverImage}
+                                                alt={product.name}
+                                                width={300}
+                                                height={400}
+                                                className="absolute inset-0 w-full h-[400px] object-cover opacity-0 group-hover:opacity-100 transition duration-500"
+                                            />
+                                        )}
 
-  </Link>
+                                    </Link>
 
-  {/* Overlay */}
-  <div className="absolute inset-0  flex items-end justify-center pb-6
-  opacity-0 group-hover:opacity-100 transition duration-300">
+                                    {/* Overlay */}
+                                    <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 gap-3 opacity-0 group-hover:opacity-100 transition duration-300">
+                                        <div className="flex gap-3">
 
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        setSelectedProduct(product);
-      }}
-      className="bg-white text-black p-3 rounded-full shadow-lg hover:scale-110 transition duration-200"
-    >
-      <Eye size={18} />
-    </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setSelectedProduct(product);
+                                                }}
+                                                className="bg-white text-black p-3 rounded-full shadow-lg hover:scale-110 transition"
+                                            >
+                                                <Eye size={18} />
+                                            </button>
 
-  </div>
+                                            <button
+                                                onClick={() => addToCart(product)}
+                                                className="flex items-center gap-2 bg-black text-white px-4 py-2 text-sm rounded hover:bg-gray-800 transition"
+                                            >
+                                                <ShoppingBag size={16} />
+                                                Add to Cart
+                                            </button>
 
-</div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
                                 <div className="mt-4 space-y-1">
 
                                     <h3 className="text-sm font-medium">

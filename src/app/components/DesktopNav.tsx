@@ -71,11 +71,11 @@ export default function DesktopNav() {
       <div>
 
         <Link href="/images/bangles.jpg" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/bangles.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/clearance-jewellery.webp" alt="" width={40} height={40} className="rounded-md" />
 Clearance Jewellery        </Link>
 
         <Link href="/category/bridal-jewellery-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/bangles.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/american-diamond.avif" alt="" width={40} height={40} className="rounded-md" />
 American Diamond        </Link>
 
         <Link href="/category/designer-jewellery" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
@@ -83,7 +83,7 @@ American Diamond        </Link>
 Bnagles        </Link>
 
         <Link href="/category/exclusive-luxury-jewellery" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/bangles.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/banner-3.jpg" alt="" width={40} height={40} className="rounded-md" />
 Bridal Sets        </Link>
       </div>
 
@@ -95,15 +95,15 @@ Bridal Sets        </Link>
 Choker Sets        </Link>
 
         <Link href="/category/choker-necklace-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/necklace.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/earrings.jpg" alt="" width={40} height={40} className="rounded-md" />
 Earrings        </Link>
 
         <Link href="/category/ad-necklace-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/necklace.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/hand-pieces.avif" alt="" width={40} height={40} className="rounded-md" />
 Hand Pieces        </Link>
 
         <Link href="/category/artificial-jewellery-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/necklace.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/headbands.avif" alt="" width={40} height={40} className="rounded-md" />
 Headbands        </Link>
       </div>
 
@@ -111,19 +111,19 @@ Headbands        </Link>
       <div>
 
         <Link href="/category/chandbali-earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/jadau.avif" alt="" width={40} height={40} className="rounded-md" />
 Jadau        </Link>
 
         <Link href="/category/american-diamond-earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/jhumar-passa.avif" alt="" width={40} height={40} className="rounded-md" />
 Jhumar / Passa        </Link>
 
         <Link href="/category/emerald-ruby-earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/mother-of-pearl.avif" alt="" width={40} height={40} className="rounded-md" />
 Mother of Pearl Sets        </Link>
 
         <Link href="/category/earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/nath.avif" alt="" width={40} height={40} className="rounded-md" />
 Nath        </Link>
       </div>
 
@@ -131,12 +131,12 @@ Nath        </Link>
       <div>
 
         <Link href="/category/bangles" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/banner-3.jpg" alt="" width={40} height={40} className="rounded-md" />
           Party Wear
         </Link>
 
         <Link href="/category/bracelet" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+          <Image src="/images/rings.jpg" alt="" width={40} height={40} className="rounded-md" />
           Rings
         </Link>
 
