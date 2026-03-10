@@ -28,7 +28,7 @@ export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
   return (
     <section className="py-16 bg-[#f8f3eb]">
       <h2 className="text-3xl md:text-5xl leading-tight text-black mb-12 text-center">
-        Shop By Catalogs
+        Shop By Category
       </h2>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6">
@@ -60,10 +60,10 @@ export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
       {limit && catalogs.length > limit && (
         <div className="text-center mt-12">
           <Link
-            href="/shop-by-catalogs"
+            href="/shop-by-category"
             className="inline-block bg-[#B9AA52] text-white px-8 py-3 hover:bg-black hover:text-white transition duration-300"
           >
-            View All Catalogs
+            View All Category
           </Link>
         </div>
       )}

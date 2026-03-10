@@ -18,8 +18,9 @@ export default function Home() {
     <HomeBanner />
         {/* <HeroGrid /> */}
         {/* <LuxuryProductCarousel /> */}
+        <CategoryCollage />
+
 <ShopByCatalog limit={8} />
-<CategoryCollage />
 
 <ReligiousJewellery />
 <VideoSection />
