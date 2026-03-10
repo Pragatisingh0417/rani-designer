@@ -1,8 +1,9 @@
 "use client";
-
+import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { Star, SlidersHorizontal, Eye, X } from "lucide-react";
+import QuickViewDrawer from "../components/QuickViewDrawer";
 
 const products = [
     {
@@ -12,6 +13,8 @@ const products = [
         oldPrice: 26500,
         discount: "43% OFF",
         image: "/images/necklace-1.jpg",
+        hoverImage: "/images/necklace.jpg",
+
         rating: 5,
         reviews: 6,
     },
@@ -20,6 +23,8 @@ const products = [
         name: "Gulbahar Emerald Drop Pearl Choker Set",
         price: 7850,
         image: "/images/necklace-1.jpg",
+        hoverImage: "/images/necklace.jpg",
+
         rating: 4,
         reviews: 3,
     },
@@ -28,6 +33,8 @@ const products = [
         name: "Gulabi Émeraude Jadau Choker Set",
         price: 9450,
         image: "/images/necklace-1.jpg",
+        hoverImage: "/images/necklace-2.jpg",
+
         rating: 5,
         reviews: 6,
     },
@@ -36,6 +43,8 @@ const products = [
         name: "Étoile Pearl Sparkle Necklace Set",
         price: 6950,
         image: "/images/necklace-1.jpg",
+        hoverImage: "/images/necklace-2.jpg",
+
         rating: 5,
         reviews: 1,
     },
@@ -44,6 +53,8 @@ const products = [
         name: "Elara Carved Stone Pendant Set",
         price: 3950,
         image: "/images/necklace-1.jpg",
+        hoverImage: "/images/necklace-1.jpg",
+
         rating: 4,
         reviews: 2,
     },
@@ -106,14 +117,14 @@ export default function NecklacesPage() {
                         </div>
 
                         {/* Color (Placeholder) */}
-                        <div className="border-t pt-6 mt-6">
+                        {/* <div className="border-t pt-6 mt-6">
                             <h3 className="font-medium mb-3">Color</h3>
                             <div className="flex gap-3">
                                 <div className="w-5 h-5 bg-green-600 rounded-full cursor-pointer" />
                                 <div className="w-5 h-5 bg-red-500 rounded-full cursor-pointer" />
                                 <div className="w-5 h-5 bg-yellow-400 rounded-full cursor-pointer" />
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </aside>
 
@@ -125,43 +136,58 @@ export default function NecklacesPage() {
                         {products.map((product) => (
                             <div key={product.id} className="group">
 
-                                <div className="relative overflow-hidden group">
-                                    {product.discount && (
-                                        <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                                            {product.discount}
-                                        </span>
-                                    )}
 
-                                    <Image
-                                        src={product.image}
-                                        alt={product.name}
-                                        width={300}
-                                        height={400}
-                                        className="w-full h-[300px] object-cover transition duration-500 group-hover:scale-105"
-                                    />
+<div className="relative overflow-hidden group">
 
-                                    {/* Quick View Button */}
-                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center 
-opacity-0 group-hover:opacity-100 transition duration-300">
+  {product.discount && (
+    <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">
+      {product.discount}
+    </span>
+  )}
 
-                                        <button
-                                            onClick={() => setSelectedProduct(product)}
-                                            className="bg-white text-black p-3 rounded-full shadow-lg 
-    hover:scale-110 transition duration-200"
-                                        >
-                                            <Eye size={18} />
-                                        </button>
+  <Link href={`/necklaces/${product.id}`}>
 
-                                    </div>
-                                </div>
+    {/* Main Image */}
+    <Image
+      src={product.image}
+      alt={product.name}
+      width={300}
+      height={400}
+      className="w-full h-[300px] object-cover transition duration-500 group-hover:opacity-0"
+    />
 
+    {/* Hover Image */}
+    {product.hoverImage && (
+      <Image
+        src={product.hoverImage}
+        alt={product.name}
+        width={300}
+        height={400}
+        className="absolute inset-0 w-full h-[300px] object-cover opacity-0 group-hover:opacity-100 transition duration-500"
+      />
+    )}
+
+  </Link>
+
+  {/* Overlay */}
+  <div className="absolute inset-0  flex items-end justify-center pb-6
+  opacity-0 group-hover:opacity-100 transition duration-300">
+
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        setSelectedProduct(product);
+      }}
+      className="bg-white text-black p-3 rounded-full shadow-lg hover:scale-110 transition duration-200"
+    >
+      <Eye size={18} />
+    </button>
+
+  </div>
+
+</div>
                                 <div className="mt-4 space-y-1">
-                                    {/* <button
-                                        onClick={() => setSelectedProduct(product)}
-                                        className=" bottom-4 right-4 bg-red-700 p-20 rounded-full opacity-0 group-hover:opacity-100 transition shadow-md hover:scale-110"
-                                    >
-                                        <Eye size={18} />
-                                    </button> */}
+
                                     <h3 className="text-sm font-medium">
 
                                         {product.name}
@@ -198,78 +224,15 @@ opacity-0 group-hover:opacity-100 transition duration-300">
 
 
             {/* Quick View Drawer */}
-            {/* Quick View Drawer */}
             <>
-             
 
-                {/* Drawer */}
-                <div
-                    className={`
-      fixed top-0 right-0 h-full w-[400px] bg-white z-50 shadow-xl
-      transform transition-transform duration-500 ease-in-out
-      ${selectedProduct ? "translate-x-0" : "translate-x-full"}
-    `}
-                >
-                    {selectedProduct && (
-                        <div className="p-6 h-full overflow-y-auto relative">
 
-                            {/* Close Button */}
-                            <button
-                                onClick={() => setSelectedProduct(null)}
-                                className="absolute top-4 right-4 text-gray-500 hover:text-black"
-                            >
-                                ✕
-                            </button>
-
-                            {/* Product Image */}
-                            <div className="mb-6">
-                                <Image
-                                    src={selectedProduct.image}
-                                    alt={selectedProduct.name}
-                                    width={500}
-                                    height={600}
-                                    className="w-full h-[400px] object-cover rounded"
-                                />
-                            </div>
-
-                            {/* Product Details */}
-                            <h2 className="text-xl font-semibold mb-2">
-                                {selectedProduct.name}
-                            </h2>
-
-                            <div className="flex items-center gap-2 mb-4">
-                                <span className="text-lg font-bold">
-                                    ₹ {selectedProduct.price.toLocaleString()}
-                                </span>
-
-                                {selectedProduct.oldPrice && (
-                                    <span className="line-through text-gray-400">
-                                        ₹ {selectedProduct.oldPrice.toLocaleString()}
-                                    </span>
-                                )}
-                            </div>
-
-                            <p className="text-sm text-gray-600 mb-6">
-                                Crafted with premium stones and intricate detailing,
-                                this necklace is designed for elegance and timeless beauty.
-                            </p>
-
-                            <div className="space-y-3">
-                                <button className="w-full bg-black text-white py-3 rounded">
-                                    Add to Cart
-                                </button>
-
-                                <a
-                                    href={`/necklaces/${selectedProduct.id}`}
-                                    className="block text-center border py-3 rounded hover:bg-gray-100"
-                                >
-                                    View Full Details
-                                </a>
-                            </div>
-
-                        </div>
-                    )}
-                </div>
+                {selectedProduct && (
+                    <QuickViewDrawer
+                        product={selectedProduct}
+                        onClose={() => setSelectedProduct(null)}
+                    />
+                )}
             </>
         </div>
 

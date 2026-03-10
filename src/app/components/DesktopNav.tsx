@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
 
 export default function DesktopNav() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -20,7 +21,7 @@ export default function DesktopNav() {
   }, []);
 
   return (
-    <nav className="hidden md:block bg-[#B9AA52] py-4 relative z-40">
+    <nav className="hidden md:block bg-[#F5F5DC] py-4 relative z-40">
       <div
         className="max-w-7xl mx-auto flex justify-center gap-10 text-[15px] tracking-wide relative"
         ref={menuRef}
@@ -34,7 +35,7 @@ export default function DesktopNav() {
           onMouseLeave={() => setActiveMenu(null)}
         >
           <button className="flex items-center gap-1">
-            About <ChevronDown size={16} /> 
+            Get To Know Us <ChevronDown size={16} /> 
           </button>
 
           {activeMenu === "about" && (
@@ -52,118 +53,108 @@ export default function DesktopNav() {
           )}
         </div>
 
-        <Link href="/shop-by-catalogs">Shop By Category</Link>
 
-        {/* NECKLACES MEGA MENU */}
-        <div
-          className="relative"
-          onMouseEnter={() => setActiveMenu("necklaces")}
-          onMouseLeave={() => setActiveMenu(null)}
-        >
-          <button className="flex items-center gap-1">
-            Necklaces <ChevronDown size={16} />
-          </button>
+       {/* SHOP BY CATEGORY MEGA MENU */}
+<div
+  className="relative"
+  onMouseEnter={() => setActiveMenu("Shop By Category")}
+  onMouseLeave={() => setActiveMenu(null)}
+>
+  <button className="flex items-center gap-1">
+    Shop By Category <ChevronDown size={16} />
+  </button>
 
-          {activeMenu === "necklaces" && (
-            <div className="absolute left-1/2 -translate-x-1/2 top-full bg-white shadow-2xl w-[800px] p-8 grid grid-cols-3 gap-8">
-              <div>
-                <h4 className="font-semibold mb-3">Traditional</h4>
-                {[
-                  "Temple Jewellery",
-                  "Kundan Necklaces",
-                  "Vilandi Necklaces",
-                  "Antique Traditional Necklaces",
-                  "Meenakari",
-                ].map((item) => (
-                  <Link key={item} href="#" className="block py-1 hover:text-[#8B0000]">
-                    {item}
-                  </Link>
-                ))}
-              </div>
+  {activeMenu === "Shop By Category" && (
+    <div className="absolute left-1/2 -translate-x-1/2 top-full bg-amber-50 shadow-2xl w-[1100px] p-8 grid grid-cols-4 gap-8">
 
-              <div>
-                <h4 className="font-semibold mb-3">Modern</h4>
-                {[
-                  "Choker",
-                  "Hasli",
-                  "Long Necklaces",
-                  "Western Necklaces",
-                  "Pendant Sets",
-                ].map((item) => (
-                  <Link key={item} href="#" className="block py-1 hover:text-[#8B0000]">
-                    {item}
-                  </Link>
-                ))}
-              </div>
+      {/* Column 1 */}
+      <div>
 
-              <div>
-                <h4 className="font-semibold mb-3">Popular</h4>
-                {["All Necklaces", "Pearl Necklaces"].map((item) => (
-                  <Link key={item} href="#" className="block py-1 hover:text-[#8B0000]">
-                    {item}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        <Link href="/images/bangles.jpg" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/bangles.jpg" alt="" width={40} height={40} className="rounded-md" />
+Clearance Jewellery        </Link>
 
-        {/* BANGLES DROPDOWN */}
-        <div
-          className="relative"
-          onMouseEnter={() => setActiveMenu("bangles")}
-          onMouseLeave={() => setActiveMenu(null)}
-        >
-          <button className="flex items-center gap-1">
-            Bangles / Bracelet <ChevronDown size={16} />
-          </button>
+        <Link href="/category/bridal-jewellery-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/bangles.jpg" alt="" width={40} height={40} className="rounded-md" />
+American Diamond        </Link>
 
-          {activeMenu === "bangles" && (
-            <div className="absolute top-full left-0 bg-white shadow-xl w-52 py-4 px-6">
-              <Link href="#" className="block py-2 hover:text-[#8B0000]">
-                Kada
-              </Link>
-              <Link href="#" className="block py-2 hover:text-[#8B0000]">
-                Bracelet
-              </Link>
-              <Link href="#" className="block py-2 hover:text-[#8B0000]">
-                Bangles
-              </Link>
-            </div>
-          )}
-        </div>
+        <Link href="/category/designer-jewellery" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/bangles.jpg" alt="" width={40} height={40} className="rounded-md" />
+Bnagles        </Link>
+
+        <Link href="/category/exclusive-luxury-jewellery" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/bangles.jpg" alt="" width={40} height={40} className="rounded-md" />
+Bridal Sets        </Link>
+      </div>
+
+      {/* Column 2 */}
+      <div>
+
+        <Link href="/category/antique-necklace" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/necklace.jpg" alt="" width={40} height={40} className="rounded-md" />
+Choker Sets        </Link>
+
+        <Link href="/category/choker-necklace-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/necklace.jpg" alt="" width={40} height={40} className="rounded-md" />
+Earrings        </Link>
+
+        <Link href="/category/ad-necklace-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/necklace.jpg" alt="" width={40} height={40} className="rounded-md" />
+Hand Pieces        </Link>
+
+        <Link href="/category/artificial-jewellery-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/necklace.jpg" alt="" width={40} height={40} className="rounded-md" />
+Headbands        </Link>
+      </div>
+
+      {/* Column 3 */}
+      <div>
+
+        <Link href="/category/chandbali-earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+Jadau        </Link>
+
+        <Link href="/category/american-diamond-earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+Jhumar / Passa        </Link>
+
+        <Link href="/category/emerald-ruby-earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+Mother of Pearl Sets        </Link>
+
+        <Link href="/category/earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+Nath        </Link>
+      </div>
+
+      {/* Column 4 */}
+      <div>
+
+        <Link href="/category/bangles" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+          Party Wear
+        </Link>
+
+        <Link href="/category/bracelet" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
+          <Image src="/images/chaand-bali-1.jpg" alt="" width={40} height={40} className="rounded-md" />
+          Rings
+        </Link>
+
+       
+
+       
+      </div>
+
+    </div>
+  )}
+</div>
+
+       
 
         <Link href="/party-ready-collections">Party Ready Collection</Link>
 
-        {/* EARRINGS DROPDOWN */}
-        <div
-          className="relative"
-          onMouseEnter={() => setActiveMenu("earrings")}
-          onMouseLeave={() => setActiveMenu(null)}
-        >
-          <button className="flex items-center gap-1">
-            Earrings <ChevronDown size={16} />
-          </button>
+        
 
-          {activeMenu === "earrings" && (
-            <div className="absolute top-full left-0 bg-white shadow-xl w-52 py-4 px-6">
-              {[
-                "All Earrings",
-                "Studs",
-                "Long Earrings",
-                "Jhumki & Baali",
-                "EarCuffs",
-                "Ruby and Emerald Earrings",
-              ].map((item) => (
-                <Link key={item} href="#" className="block py-2 hover:text-[#8B0000]">
-                  {item}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <Link href="/">Rings</Link>
         <Link href="/">Return & Exchange</Link>
       </div>
     </nav>

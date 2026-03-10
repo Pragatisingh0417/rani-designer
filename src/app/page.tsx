@@ -1,6 +1,7 @@
 import CategoryCollage from "./components/CategoryCollage";
 import DualJewelleryBanner from "./components/DualJewelleryBanner";
 import HeroGrid from "./components/HeroGrid";
+import HomeBanner from "./components/HomeBanner";
 import InstagramSection from "./components/InstagramSection";
 import LuxuryProductCarousel from "./components/LuxuryProductCarousel";
 import NecklaceShowcase from "./components/NecklaceShowcase";
@@ -14,15 +15,17 @@ import VideoSection from "./components/VideoFrame";
 export default function Home() {
   return (
     <>
-        <HeroGrid />
-        <LuxuryProductCarousel />
+    <HomeBanner />
+        {/* <HeroGrid /> */}
+        {/* <LuxuryProductCarousel /> */}
 <ShopByCatalog limit={8} />
+<CategoryCollage />
+
 <ReligiousJewellery />
 <VideoSection />
 <PerfectMatch />
 <TrendingNow />
 <DualJewelleryBanner />
-<CategoryCollage />
 <NecklaceShowcase />
 <InstagramSection />
 <NewsletterSection />

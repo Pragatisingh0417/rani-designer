@@ -6,7 +6,7 @@ export default function CategoryCollage() {
   return (
     <section className="max-w-7xl mx-auto px-4 md:px-10 py-10 ">
       <h2 className="text-3xl md:text-5xl leading-tight text-black mb-5 text-center">
-         Rani Designer
+         Rani Designer's Special
 
       </h2>
       <p className="text-center font-base text-3xl md:text-2xl mb-12 max-w-4xl mx-auto">

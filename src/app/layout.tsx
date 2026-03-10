@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "./components/Header";
 import TopHeader from "./components/TopHeader";
 import Footer from "./components/Footer";
+import { AuthProvider } from "./context/AuthContext";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -25,10 +26,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={fraunces.className}>
       <body className="bg-[#f8f3eb]">
+        <AuthProvider>
+
         <TopHeader />
         <Header />
         {children}
         <Footer />
+                </AuthProvider>
+
       </body>
     </html>
   );

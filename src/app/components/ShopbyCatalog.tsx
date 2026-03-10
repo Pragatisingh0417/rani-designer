@@ -60,7 +60,7 @@ export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
       {limit && catalogs.length > limit && (
         <div className="text-center mt-12">
           <Link
-            href="/catalogs"
+            href="/shop-by-catalogs"
             className="inline-block bg-[#B9AA52] text-white px-8 py-3 hover:bg-black hover:text-white transition duration-300"
           >
             View All Catalogs

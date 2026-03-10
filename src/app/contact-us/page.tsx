@@ -87,7 +87,7 @@ export default function Contact() {
       </div>
 
       {/* ================= MAP SECTION ================= */}
-      <div className="bg-black py-16 text-center">
+      {/* <div className="bg-black py-16 text-center">
         <h2 className="text-3xl font-bold text-[#B9AA52] mb-6">
           Visit Our Showroom
         </h2>
@@ -97,7 +97,7 @@ export default function Contact() {
             Google Map Placeholder
           </div>
         </div>
-      </div>
+      </div> */}
 
     </section>
   );
