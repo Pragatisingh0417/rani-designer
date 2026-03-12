@@ -1,11 +1,17 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@300;400;500;600;700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 @import "tailwindcss";
 
 body {
-  font-family:  serif;
   background-color: #f8f3eb;
+  font-family: 'Poppins', sans-serif;
 }
+
+h1, h2, h3, p {
+  font-family: 'Playfair Display', serif;
+}
+
+/* marquee animation */
 @keyframes marquee {
   0% {
     transform: translateX(0);
@@ -21,7 +27,7 @@ body {
   animation: marquee 30s linear infinite;
 }
 
-/* Hide scrollbar fully */
+/* Hide scrollbar */
 .no-scrollbar::-webkit-scrollbar {
   height: 0px;
 }
@@ -33,13 +39,3 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
 }
-
-
-/* @keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-} */

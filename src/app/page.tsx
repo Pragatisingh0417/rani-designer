@@ -1,3 +1,4 @@
+import Banner from "./components/Banner";
 import CategoryCollage from "./components/CategoryCollage";
 import DualJewelleryBanner from "./components/DualJewelleryBanner";
 import HeroGrid from "./components/HeroGrid";
@@ -15,7 +16,8 @@ import VideoSection from "./components/VideoFrame";
 export default function Home() {
   return (
     <>
-    <HomeBanner />
+    <Banner />
+    {/* <HomeBanner /> */}
         {/* <HeroGrid /> */}
         {/* <LuxuryProductCarousel /> */}
         <CategoryCollage />

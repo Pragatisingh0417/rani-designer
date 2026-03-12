@@ -28,7 +28,7 @@ export default function QuickViewDrawer({ product, onClose }: any) {
 
       {/* Drawer */}
 <div
-  className={`fixed top-0 right-0 h-full w-[480px] bg-white z-50 shadow-2xl
+  className={`fixed top-0 right-0 h-full w-[480px] bg-white z-[1000] shadow-2xl
   transform transition-transform duration-500 ease-in-out
   ${product ? "translate-x-0" : "translate-x-full"}`
   }
