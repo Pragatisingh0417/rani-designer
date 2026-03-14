@@ -5,18 +5,12 @@ import { useState } from "react";
 import { X } from "lucide-react";
 
 export default function QuickViewDrawer({ product, onClose }: any) {
-  const [activeImage, setActiveImage] = useState(product.image);
-  const [selectedColor, setSelectedColor] = useState("green");
-  
 
-  const images = [
-    product.image,
-    "/images/necklace-1.jpg",
-    "/images/necklace-1.jpg",
-    "/images/necklace-1.jpg",
-  ];
+  const images = product?.images?.length
+    ? product.images
+    : ["/placeholder.png"];
 
-  const colors = ["green", "red", "gold"];
+  const [activeImage, setActiveImage] = useState(images[0]);
 
   return (
     <>
@@ -27,20 +21,18 @@ export default function QuickViewDrawer({ product, onClose }: any) {
       />
 
       {/* Drawer */}
-<div
-  className={`fixed top-0 right-0 h-full w-[480px] bg-white z-[1000] shadow-2xl
-  transform transition-transform duration-500 ease-in-out
-  ${product ? "translate-x-0" : "translate-x-full"}`
-  }
->
+      <div
+        className={`fixed top-0 right-0 h-full w-[480px] bg-white z-[1000] shadow-2xl
+        transform transition-transform duration-500 ease-in-out
+        ${product ? "translate-x-0" : "translate-x-full"}`}
+      >
 
-    
         <div className="p-6 h-full overflow-y-auto relative">
 
           {/* Close */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-600 hover:text-black z-1"
+            className="absolute top-4 right-4 text-gray-600 hover:text-black"
           >
             <X size={22} />
           </button>
@@ -50,7 +42,7 @@ export default function QuickViewDrawer({ product, onClose }: any) {
 
             {/* Thumbnails */}
             <div className="flex flex-col gap-3">
-              {images.map((img, i) => (
+              {images.map((img: string, i: number) => (
                 <button
                   key={i}
                   onClick={() => setActiveImage(img)}
@@ -68,13 +60,13 @@ export default function QuickViewDrawer({ product, onClose }: any) {
             </div>
 
             {/* Main Image */}
-            <div className="flex-1 relative group">
+            <div className="flex-1">
               <Image
                 src={activeImage}
                 alt={product.name}
                 width={400}
                 height={500}
-                className="w-full h-[420px] object-cover rounded transition-transform duration-500 "
+                className="w-full h-[420px] object-cover rounded"
               />
             </div>
 
@@ -89,35 +81,9 @@ export default function QuickViewDrawer({ product, onClose }: any) {
 
             <div className="flex items-center gap-3 mb-4">
               <span className="text-lg font-bold">
-                ₹ {product.price.toLocaleString()}
+                £{product.price}
               </span>
-
-              {product.oldPrice && (
-                <span className="line-through text-gray-400">
-                  ₹ {product.oldPrice.toLocaleString()}
-                </span>
-              )}
             </div>
-
-            {/* Color Selection */}
-            {/* <div className="mb-6">
-              <p className="text-sm font-medium mb-2">Color</p>
-
-              <div className="flex gap-3">
-                {colors.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`w-6 h-6 rounded-full border-2 ${
-                      selectedColor === color
-                        ? "border-black"
-                        : "border-gray-300"
-                    }`}
-                    style={{ background: color }}
-                  />
-                ))}
-              </div>
-            </div> */}
 
             {/* Buttons */}
             <div className="space-y-3">
@@ -127,7 +93,7 @@ export default function QuickViewDrawer({ product, onClose }: any) {
               </button>
 
               <a
-                href={`/necklaces/${product.id}`}
+                href={`/products/${product.category.slug}/${product.slug}`}
                 className="block text-center border py-3 rounded hover:bg-gray-100"
               >
                 View Full Details
@@ -138,6 +104,7 @@ export default function QuickViewDrawer({ product, onClose }: any) {
           </div>
 
         </div>
+
       </div>
     </>
   );

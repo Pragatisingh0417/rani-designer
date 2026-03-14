@@ -1,18 +1,29 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { FaInstagram, FaFacebookF, FaPinterestP } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#B9AA52] text-[#141414] pt-20 pb-10 px-6 md:px-16">
+    <footer className="bg-black text-white p-10  px-6 md:px-16">
       
       {/* TOP SECTION */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-[#7a1e1e] pb-14">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white pb-14">
 
         {/* Brand */}
         <div>
-          <h2 className="text-3xl mb-6">Rani Designer</h2>
+
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/rani-logo-removebg.png"
+              alt="Rani designer Logo"
+              width={140}
+              height={50}
+              className="object-contain h-[150px]"
+              priority
+            />
+          </Link>
           <p className="text-sm  leading-relaxed">
             Celebrating timeless elegance through exquisite craftsmanship.
             Designed for queens who embrace tradition with modern grace.
@@ -52,13 +63,13 @@ export default function Footer() {
 
           {/* Social Icons */}
           <div className="flex gap-4 mt-6">
-            <a href="#" className="w-9 h-9 flex items-center justify-center border border-[#b76e79] rounded-full hover:bg-[#b76e79] hover:text-white transition">
+            <a href="#" className="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-[#b76e79] hover:text-white transition">
               <FaInstagram size={14} />
             </a>
-            <a href="#" className="w-9 h-9 flex items-center justify-center border border-[#b76e79] rounded-full hover:bg-[#b76e79] hover:text-white transition">
+            <a href="#" className="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-[#b76e79] hover:text-white transition">
               <FaFacebookF size={14} />
             </a>
-            <a href="#" className="w-9 h-9 flex items-center justify-center border border-[#b76e79] rounded-full hover:bg-[#b76e79] hover:text-white transition">
+            <a href="#" className="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-[#b76e79] hover:text-white transition">
               <FaPinterestP size={14} />
             </a>
           </div>

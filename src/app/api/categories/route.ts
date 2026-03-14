@@ -2,25 +2,24 @@ import { NextResponse } from "next/server";
 import Category from "@/app/models/Category";
 import { connectDB } from "@/app/lib/mongodb";
 
-export async function POST(req: Request) {
+export async function GET(){
 
-  await connectDB();
+await connectDB()
 
-  const { name } = await req.json();
+const categories = await Category.find()
 
-  const category = await Category.create({
-    name,
-    slug: name.toLowerCase().replace(/\s+/g, "-"),
-  });
+return NextResponse.json(categories)
 
-  return NextResponse.json(category);
 }
 
-export async function GET() {
+export async function POST(req:Request){
 
-  await connectDB();
+await connectDB()
 
-  const categories = await Category.find();
+const data = await req.json()
 
-  return NextResponse.json(categories);
+const category = await Category.create(data)
+
+return NextResponse.json(category)
+
 }

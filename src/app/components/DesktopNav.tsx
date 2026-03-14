@@ -1,5 +1,5 @@
 "use client";
-
+import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, Search, User, ShoppingCart } from "lucide-react";
@@ -19,7 +19,9 @@ export default function DesktopNav() {
 
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+const [categories, setCategories] = useState<any[]>([]);
+const pathname = usePathname();
+const isHome = pathname === "/";
   /* AUTH CONTEXT */
   const { user, logout } = useAuth() as {
     user: UserType | null;
@@ -55,11 +57,27 @@ export default function DesktopNav() {
     };
   }, []);
 
-  return (
-    <nav className="hidden md:block py-1 absolute top-0 left-0 w-full z-50">
 
+
+  useEffect(() => {
+
+  const fetchCategories = async () => {
+    const res = await fetch("/api/categories");
+    const data = await res.json();
+    setCategories(data);
+  };
+
+  fetchCategories();
+
+}, []);
+
+
+  return (
+<nav className={`hidden md:block py-1 absolute top-0 left-0 w-full z-50 
+${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}
+`}>
       <div
-        className="w-full  mx-auto p-10 flex justify-center gap-10 text-[15px] tracking-wide relative text-white items-center "
+        className="w-full   mx-auto p-10 flex justify-center gap-10 text-[15px] tracking-wide relative  items-center "
         ref={menuRef}
       >
 
@@ -101,52 +119,31 @@ export default function DesktopNav() {
           </button>
 
           {activeMenu === "Shop By Category" && (
-            <div className="absolute left-1/2 -translate-x-1/2 top-full bg-amber-50 text-black shadow-2xl w-[1100px] p-8 grid grid-cols-4 gap-8 z-[1000]">
+           <div className="absolute left-1/2 -translate-x-1/2 top-full bg-amber-50 text-black shadow-2xl w-[900px] p-8 grid grid-cols-4 gap-6 z-[1000]">
 
-              {/* Column 1 */}
-              <div>
-                <Link href="/images/bangles.jpg" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/clearance-jewellery.webp" alt="" width={40} height={40} className="rounded-md" /> Clearance Jewellery </Link>
-                <Link href="/category/bridal-jewellery-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/american-diamond.avif" alt="" width={40} height={40} className="rounded-md" /> American Diamond </Link>
-                <Link href="/category/designer-jewellery" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/bangles.jpg" alt="" width={40} height={40} className="rounded-md" /> Bnagles </Link>
-                <Link href="/category/exclusive-luxury-jewellery" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/banner-3.jpg" alt="" width={40} height={40} className="rounded-md" /> Bridal Sets </Link>
-              </div>
-              {/* Column 2 */}
+{categories.map((cat:any)=>(
+  
+<Link
+key={cat._id}
+href={`/products/${cat.slug}`}
+className="flex items-center gap-3 hover:text-[#8B0000]"
+>
 
-              <div>
-                <Link href="/category/antique-necklace" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/necklace.jpg" alt="" width={40} height={40} className="rounded-md" /> Choker Sets </Link>
-                <Link href="/category/choker-necklace-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/earrings.jpg" alt="" width={40} height={40} className="rounded-md" /> Earrings </Link>
-                <Link href="/category/ad-necklace-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/hand-pieces.avif" alt="" width={40} height={40} className="rounded-md" /> Hand Pieces </Link>
-                <Link href="/category/artificial-jewellery-set" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/headbands.avif" alt="" width={40} height={40} className="rounded-md" /> Headbands </Link>
-              </div>
-              {/* Column 3 */}
-              <div>
-                <Link href="/category/chandbali-earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/jadau.avif" alt="" width={40} height={40} className="rounded-md" /> Jadau </Link>
-                <Link href="/category/american-diamond-earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/jhumar-passa.avif" alt="" width={40} height={40} className="rounded-md" /> Jhumar / Passa </Link>
-                <Link href="/category/emerald-ruby-earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/mother-of-pearl.avif" alt="" width={40} height={40} className="rounded-md" /> Mother of Pearl Sets </Link>
-                <Link href="/category/earrings" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/nath.avif" alt="" width={40} height={40} className="rounded-md" /> Nath </Link> </div>
+{/* <Image
+src="/images/necklace.jpg"
+alt={cat.name}
+width={40}
+height={40}
+className="rounded-md"
+/> */}
 
+{cat.name}
 
-              {/* Column 4 */}
-              <div> <Link href="/category/bangles" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                <Image src="/images/banner-3.jpg" alt="" width={40} height={40} className="rounded-md" /> Party Wear </Link>
-                <Link href="/category/bracelet" className="flex items-center gap-3 mb-3 hover:text-[#8B0000]">
-                  <Image src="/images/rings.jpg" alt="" width={40} height={40} className="rounded-md" /> Rings </Link> </div>
+</Link>
 
+))}
 
-
-            </div>
+</div>
           )}
         </div>
 
