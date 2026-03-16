@@ -6,14 +6,13 @@ export default function CategoryCollage() {
   return (
     <section className="max-w-7xl mx-auto px-4 md:px-10 py-10 ">
       <h2 className="text-3xl md:text-5xl leading-tight text-black mb-5 text-center">
-         Rani Designer's Special
+Rani’s Designer Choice
 
       </h2>
       <p className="text-center font-base text-3xl md:text-2xl mb-12 max-w-4xl mx-auto">
 
- Discover timeless elegance with handcrafted jewellery designed
-  to celebrate tradition and modern luxury.
-      </p>
+Our jewellery is inspired by the beauty of Indian traditions, with a touch of modern
+elegance and uncompromising quality.      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 

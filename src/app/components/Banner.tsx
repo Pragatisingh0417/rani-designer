@@ -9,14 +9,14 @@ export default function Banner() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
-            src="/images/image gwellery wsw.webp"
+            src="/images/jwellery image 6 copy.webp"
             alt="Rani Designer Hut Jewellery"
             className="w-full h-full object-cover"
           />
         </div>
 
         {/* Dark Right Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-l from-black via-black/90 to-transparent"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-l from-black via-black/90 to-transparent"></div> */}
 
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-6 flex justify-end items-center min-h-[700px]">
@@ -36,9 +36,8 @@ export default function Banner() {
 
             {/* Description */}
             <p className="text-gray-200 text-lg  ml-auto tracking-widest ">
-              Before you took look to our wider collection, why not shop by the
-              sellers choice
-            </p>
+ Before you take a look at our wider collection <br /> why not
+shop by the sellers choice            </p>
 
           </div>
 

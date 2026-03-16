@@ -38,7 +38,7 @@ export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
             href={item.link}
             className="group relative overflow-hidden shadow-md rounded-2xl"
           >
-            <div className="relative h-[400px] w-full">
+            <div className="relative h-[300px] w-full">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -63,7 +63,7 @@ export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
             href="/shop-by-category"
             className="inline-block bg-[#B9AA52] text-white px-8 py-3 hover:bg-black hover:text-white transition duration-300"
           >
-            View All Category
+            View All Categories
           </Link>
         </div>
       )}

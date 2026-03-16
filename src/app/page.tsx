@@ -7,7 +7,9 @@ import InstagramSection from "./components/InstagramSection";
 import LuxuryProductCarousel from "./components/LuxuryProductCarousel";
 import NecklaceShowcase from "./components/NecklaceShowcase";
 import NewsletterSection from "./components/NewsletterSection";
+import OnSale from "./components/OnSale";
 import PerfectMatch from "./components/PerfectMatch";
+import RaniDesignerChoice from "./components/RaniDesignerChoice";
 import ReligiousJewellery from "./components/ReligiousJewellery";
 import ShopByCatalog from "./components/ShopbyCatalog";
 import TrendingNow from "./components/TrendingNow";
@@ -17,19 +19,21 @@ export default function Home() {
   return (
     <>
     <Banner />
+    <RaniDesignerChoice />
     {/* <HomeBanner /> */}
         {/* <HeroGrid /> */}
         {/* <LuxuryProductCarousel /> */}
-        <CategoryCollage />
+        {/* <CategoryCollage /> */}
 
 <ShopByCatalog limit={8} />
 
-<ReligiousJewellery />
-<VideoSection />
+{/* <ReligiousJewellery /> */}
+{/* <VideoSection /> */}
 <PerfectMatch />
-<TrendingNow />
-<DualJewelleryBanner />
-<NecklaceShowcase />
+{/* <TrendingNow /> */}
+<OnSale />
+{/* <DualJewelleryBanner />
+<NecklaceShowcase /> */}
 <InstagramSection />
 <NewsletterSection />
     </>
