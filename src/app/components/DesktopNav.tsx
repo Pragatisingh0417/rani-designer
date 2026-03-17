@@ -77,7 +77,7 @@ const isHome = pathname === "/";
 ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}
 `}>
       <div
-        className="w-full   mx-auto p-10 flex justify-center gap-10 text-[15px] tracking-wide relative  items-center "
+        className="w-full   mx-auto p-10 flex justify-center gap-10 text-[17.5px] tracking-wide relative  items-center "
         ref={menuRef}
       >
 

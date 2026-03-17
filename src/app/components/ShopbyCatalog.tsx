@@ -7,12 +7,14 @@ interface ShopByCatalogProps {
 
 export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
   const catalogs = [
-    { title: "New Arrivals", image: "/images/new-arrivals.jpg", link: "#" },
-    { title: "Best Seller", image: "/images/Choker.jpg", link: "#" },
-
+    { title: "Daily Wear", image: "/images/new-arrivals.jpg", link: "#" },
     { title: "Necklaces", image: "/images/necklace.jpg", link: "necklace" },
-    { title: "Rings", image: "/images/rings.jpg", link: "#" },
+        { title: "Long Haar", image: "/images/necklace.jpg", link: "necklace" },
+    { title: "Hasli", image: "/images/necklace.jpg", link: "necklace" },
+    { title: "Pendant Sets", image: "/images/necklace.jpg", link: "necklace" },
     { title: "Earrings", image: "/images/earrings.jpg", link: "#" },
+        { title: "Jhumkas", image: "/images/necklace.jpg", link: "necklace" },
+
     { title: "Bracelets", image: "/images/bracelet.jpg", link: "#" },
     { title: "Pendants", image: "/images/Pendant.jpg", link: "#" },
     { title: "Choker", image: "/images/Choker.jpg", link: "#" },
