@@ -53,9 +53,9 @@ className="w-full h-full object-cover object-left md:object-right"
 
               <a
                 href="/products"
-                className="bg-[#B9AA52] text-black px-6 py-3 font-medium hover:bg-[#a29345] transition"
+                className="bg-[#B9AA52] text-white px-6 py-3 font-medium hover:bg-[#a29345] transition"
               >
-                Shop Collection
+                Shop Now
               </a>
 
              

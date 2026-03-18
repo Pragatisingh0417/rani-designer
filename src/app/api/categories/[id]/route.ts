@@ -2,32 +2,73 @@ import { NextResponse } from "next/server";
 import Category from "@/app/models/Category";
 import { connectDB } from "@/app/lib/mongodb";
 
-export async function PUT(req:Request,{params}:any){
+export async function PUT(req: Request, { params }: any) {
+  try {
+    await connectDB();
 
-await connectDB()
+    const { id } = await params;
+    const body = await req.json();
 
-const { id } = await params
+    const existingCategory = await Category.findById(id);
 
-const body = await req.json()
+    if (!existingCategory) {
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 }
+      );
+    }
 
-const category = await Category.findByIdAndUpdate(
-id,
-body,
-{new:true}
-)
+    // 👉 OPTIONAL (if using Cloudinary)
+    // If image is changing → delete old image
+    // if (body.image && existingCategory.imagePublicId) {
+    //   await cloudinary.uploader.destroy(existingCategory.imagePublicId);
+    // }
 
-return NextResponse.json(category)
+    const updatedCategory = await Category.findByIdAndUpdate(
+      id,
+      body,
+      { new: true }
+    );
 
+    return NextResponse.json(updatedCategory);
+
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
+  }
 }
 
-export async function DELETE(req:Request,{params}:any){
 
-await connectDB()
+export async function DELETE(req: Request, { params }: any) {
+  try {
+    await connectDB();
 
-const { id } = await params
+    const { id } = await params;
 
-await Category.findByIdAndDelete(id)
+    const category = await Category.findById(id);
 
-return NextResponse.json({message:"Deleted"})
+    if (!category) {
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 }
+      );
+    }
 
+    // 👉 OPTIONAL (Cloudinary cleanup)
+    // if (category.imagePublicId) {
+    //   await cloudinary.uploader.destroy(category.imagePublicId);
+    // }
+
+    await Category.findByIdAndDelete(id);
+
+    return NextResponse.json({ message: "Deleted successfully" });
+
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
+  }
 }

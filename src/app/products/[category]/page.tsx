@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { SlidersHorizontal, Eye } from "lucide-react";
+import { Heart } from "lucide-react";
+
 import QuickViewDrawer from "@/app/components/QuickViewDrawer";
 
 export default function CategoryPage() {
@@ -13,9 +15,16 @@ export default function CategoryPage() {
 
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const [cart, setCart] = useState<any[]>([]);
+  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [cart, setCart] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState([0, 36500]);
-
+  const toggleWishlist = (id: string) => {
+    setWishlist((prev) =>
+      prev.includes(id)
+        ? prev.filter((item) => item !== id)
+        : [...prev, id]
+    );
+  };
   useEffect(() => {
 
     const fetchProducts = async () => {
@@ -24,7 +33,7 @@ export default function CategoryPage() {
       const data = await res.json();
 
       const filtered = data.filter(
-        (p:any) => p.category.slug === category
+        (p: any) => p.category.slug === category
       );
 
       setProducts(filtered);
@@ -35,8 +44,8 @@ export default function CategoryPage() {
 
   }, [category]);
 
-  const addToCart = (product:any) => {
-    setCart((prev)=>[...prev, product._id]);
+  const addToCart = (product: any) => {
+    setCart((prev) => [...prev, product._id]);
     alert("Product added to cart");
   };
 
@@ -52,49 +61,49 @@ export default function CategoryPage() {
 
         {/* Sidebar */}
 
-       <aside className="max-w-8xl mx-auto hidden lg:block">
-                          <div className="mb-8">
-                              <div className="flex items-center gap-2 font-medium mb-4">
-                                  <SlidersHorizontal size={18} />
-                                  Filter
-                              </div>
-      
-                              {/* Availability */}
-                              <div className="border-t pt-6">
-                                  <h3 className="font-medium mb-3">Availability</h3>
-                                  <div className="space-y-2 text-sm">
-                                      <label className="flex items-center gap-2">
-                                          <input type="checkbox" />
-                                          In Stock (291)
-                                      </label>
-                                      <label className="flex items-center gap-2">
-                                          <input type="checkbox" />
-                                          Out Of Stock (16)
-                                      </label>
-                                  </div>
-                              </div>
-      
-                              {/* Price */}
-                              <div className="border-t pt-6 mt-6">
-                                  <h3 className="font-medium mb-3">Price</h3>
-                                  <input
-                                      type="range"
-                                      min={0}
-                                      max={36500}
-                                      value={priceRange[1]}
-                                      onChange={(e) =>
-                                          setPriceRange([0, parseInt(e.target.value)])
-                                      }
-                                      className="w-full"
-                                  />
-                                  <div className="flex justify-between mt-3 text-sm">
-                                      <span>₹ 0</span>
-                                      <span>₹ {priceRange[1]}</span>
-                                  </div>
-                              </div>
-      
-                              {/* Color (Placeholder) */}
-                              {/* <div className="border-t pt-6 mt-6">
+        <aside className="max-w-8xl mx-auto hidden lg:block">
+          <div className="mb-8">
+            <div className="flex items-center gap-2 font-medium mb-4">
+              <SlidersHorizontal size={18} />
+              Filter
+            </div>
+
+            {/* Availability */}
+            <div className="border-t pt-6">
+              <h3 className="font-medium mb-3">Availability</h3>
+              <div className="space-y-2 text-sm">
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  In Stock (291)
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  Out Of Stock (16)
+                </label>
+              </div>
+            </div>
+
+            {/* Price */}
+            <div className="border-t pt-6 mt-6">
+              <h3 className="font-medium mb-3">Price</h3>
+              <input
+                type="range"
+                min={0}
+                max={36500}
+                value={priceRange[1]}
+                onChange={(e) =>
+                  setPriceRange([0, parseInt(e.target.value)])
+                }
+                className="w-full"
+              />
+              <div className="flex justify-between mt-3 text-sm">
+                <span>₹ 0</span>
+                <span>₹ {priceRange[1]}</span>
+              </div>
+            </div>
+
+            {/* Color (Placeholder) */}
+            {/* <div className="border-t pt-6 mt-6">
                                   <h3 className="font-medium mb-3">Color</h3>
                                   <div className="flex gap-3">
                                       <div className="w-5 h-5 bg-green-600 rounded-full cursor-pointer" />
@@ -102,61 +111,79 @@ export default function CategoryPage() {
                                       <div className="w-5 h-5 bg-yellow-400 rounded-full cursor-pointer" />
                                   </div>
                               </div> */}
-                          </div>
-                      </aside>
+          </div>
+        </aside>
 
         {/* Products */}
 
-                <div className="flex-1 max-w-8xl mx-auto">
+        <div className="flex-1 max-w-8xl mx-auto">
 
-                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 
-            {products.map((product:any)=>(
+            {products.map((product: any) => (
 
               <div key={product._id} className="group">
 
                 <div className="relative overflow-hidden">
 
-                  <Link href={`/products/${product.category.slug}/${product.slug}`}>
-
+                  <Link
+                    href={`/products/${product.category.slug}/${product.slug}`}
+                    className="block"
+                  >
                     <img
                       src={product.images?.[0] || "/placeholder.png"}
                       className="w-full h-[380px] object-cover transition duration-500 group-hover:scale-105"
+                      alt={product.name}
                     />
-
                   </Link>
+                  {/* Overlay Buttons */}
+                   {/* Overlay Buttons */}
+                                        <div className="absolute inset-0 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition pointer-events-none">
 
-                  {/* Hover Buttons */}
+                                            <div className="flex gap-3 pointer-events-auto">
 
-                  <div className="absolute inset-0 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition">
+                                                {/* Quick View */}
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedProduct(product);
+                                                    }}
+                                                    className="bg-white p-3 rounded-full shadow hover:scale-110 transition"
+                                                >
+                                                    <Eye size={18} />
+                                                </button>
 
-                    <div className="flex gap-3">
-
-                      <button
-                        onClick={()=>setSelectedProduct(product)}
-                        className="bg-white p-3 rounded-full shadow hover:scale-110 transition"
-                      >
-                        <Eye size={18}/>
-                      </button>
-
-                      <button
-                        onClick={()=>addToCart(product)}
-                        className="bg-black text-white px-4 py-2 text-sm rounded"
-                      >
-                        Add to Cart
-                      </button>
-
-                    </div>
-
-                  </div>
+                                            </div>
+                                        </div>
 
                 </div>
 
                 {/* Product Info */}
 
-                <div className="mt-3">
+                <div className="mt-3 mb-5">
+                  <div className="gap-20 flex">
+                    <button
+                      onClick={() => addToCart(product)}
+                      className="bg-black text-white px-4 py-2 text-sm rounded"
+                    >
+                      Add to Cart
+                    </button>
+                    <button
+                      onClick={() => toggleWishlist(product._id)}
+                      className="p-3 rounded-full shadow transition hover:scale-110"
+                    >
+                      <Heart
+                        size={18}
+                        className={
+                          wishlist.includes(product._id)
+                            ? "fill-red-500 text-red-500"
+                            : "text-black"
+                        }
+                      />
+                    </button>
+                  </div>
 
-                  <h3 className="text-sm font-medium">
+                  <h3 className="text-sm font-medium mt-3">
                     {product.name}
                   </h3>
 
@@ -181,7 +208,7 @@ export default function CategoryPage() {
       {selectedProduct && (
         <QuickViewDrawer
           product={selectedProduct}
-          onClose={()=>setSelectedProduct(null)}
+          onClose={() => setSelectedProduct(null)}
         />
       )}
 

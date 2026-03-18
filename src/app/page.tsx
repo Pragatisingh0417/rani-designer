@@ -1,4 +1,5 @@
 import Banner from "./components/Banner";
+import { BridalSection } from "./components/BridalSets";
 import CategoryCollage from "./components/CategoryCollage";
 import DualJewelleryBanner from "./components/DualJewelleryBanner";
 import HeroGrid from "./components/HeroGrid";
@@ -29,8 +30,8 @@ export default function Home() {
 
 {/* <ReligiousJewellery /> */}
 {/* <VideoSection /> */}
-<PerfectMatch />
 {/* <TrendingNow /> */}
+<BridalSection />
 <OnSale />
 {/* <DualJewelleryBanner />
 <NecklaceShowcase /> */}

@@ -29,15 +29,15 @@ export default function ProductsPage() {
 
     const [priceRange, setPriceRange] = useState([0, 36500]);
     const [selectedProduct, setSelectedProduct] = useState<any>(null);
-    const [wishlist, setWishlist] = useState<number[]>([]);
-    const [cart, setCart] = useState<number[]>([]);
-
-    const toggleWishlist = (id: number) => {
+    const [wishlist, setWishlist] = useState<string[]>([]);
+    const [cart, setCart] = useState<string[]>([]);
+    const toggleWishlist = (id: string) => {
         setWishlist((prev) =>
-            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+            prev.includes(id)
+                ? prev.filter((item) => item !== id)
+                : [...prev, id]
         );
     };
-
     const addToCart = (product: any) => {
         setCart((prev) => [...prev, product._id]);
         alert("Product added to cart");
@@ -123,46 +123,61 @@ export default function ProductsPage() {
                                     <div className="relative overflow-hidden">
 
                                         {/* Product Image */}
-                                        <Link href={`/products/${product.category.slug}/${product.slug}`}
-                                         className="block"
-                                         >
-
+                                        <Link
+                                            href={`/products/${product.category.slug}/${product.slug}`}
+                                            className="block"
+                                        >
                                             <img
                                                 src={product.images?.[0] || "/placeholder.png"}
                                                 className="w-full h-[380px] object-cover transition duration-500 group-hover:scale-105"
                                                 alt={product.name}
                                             />
-
                                         </Link>
-
                                         {/* Overlay Buttons */}
-                                        <div className="absolute inset-0 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition">
+                                        <div className="absolute inset-0 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition pointer-events-none">
 
-                                            <div className="flex gap-3">
+                                            <div className="flex gap-3 pointer-events-auto">
 
+                                                {/* Quick View */}
                                                 <button
-                                                    onClick={() => setSelectedProduct(product)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedProduct(product);
+                                                    }}
                                                     className="bg-white p-3 rounded-full shadow hover:scale-110 transition"
                                                 >
                                                     <Eye size={18} />
                                                 </button>
 
-                                                <button
-                                                    onClick={() => addToCart(product)}
-                                                    className="bg-black text-white px-4 py-2 text-sm rounded"
-                                                >
-                                                    Add to Cart
-                                                </button>
-
                                             </div>
-
                                         </div>
 
                                     </div>
 
                                     {/* Product Info */}
 
-                                    <div className="mt-3">
+                                    <div className="mt-3 mb-5">
+                                        <div className="gap-10 flex">
+                                            <button
+                                                onClick={() => addToCart(product)}
+                                                className="bg-black text-white px-4 py-2 text-sm rounded"
+                                            >
+                                                Add to Cart
+                                            </button>
+                                            <button
+                                                onClick={() => toggleWishlist(product._id)}
+                                                className="p-3 rounded-full shadow transition hover:scale-110"
+                                            >
+                                                <Heart
+                                                    size={18}
+                                                    className={
+                                                        wishlist.includes(product._id)
+                                                            ? "fill-red-500 text-red-500"
+                                                            : "text-black"
+                                                    }
+                                                />
+                                            </button>
+                                        </div>
 
                                         <h3 className="text-sm font-medium">
                                             {product.name}

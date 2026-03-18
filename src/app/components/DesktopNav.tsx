@@ -19,9 +19,9 @@ export default function DesktopNav() {
 
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-const [categories, setCategories] = useState<any[]>([]);
-const pathname = usePathname();
-const isHome = pathname === "/";
+  const [categories, setCategories] = useState<any[]>([]);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   /* AUTH CONTEXT */
   const { user, logout } = useAuth() as {
     user: UserType | null;
@@ -61,19 +61,19 @@ const isHome = pathname === "/";
 
   useEffect(() => {
 
-  const fetchCategories = async () => {
-    const res = await fetch("/api/categories");
-    const data = await res.json();
-    setCategories(data);
-  };
+    const fetchCategories = async () => {
+      const res = await fetch("/api/categories");
+      const data = await res.json();
+      setCategories(data);
+    };
 
-  fetchCategories();
+    fetchCategories();
 
-}, []);
+  }, []);
 
 
   return (
-<nav className={`hidden md:block py-1 absolute top-0 left-0 w-full z-50 
+    <nav className={`hidden md:block py-1 absolute top-0 left-0 w-full z-50 
 ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}
 `}>
       <div
@@ -119,36 +119,36 @@ ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}
           </button>
 
           {activeMenu === "Shop By Category" && (
-           <div className="absolute left-1/2 -translate-x-1/2 top-full bg-amber-50 text-black shadow-2xl w-[900px] p-8 grid grid-cols-4 gap-6 z-[1000]">
+            <div className="absolute left-1/2 -translate-x-1/2 top-full bg-amber-50 text-black shadow-2xl w-[900px] p-8 grid grid-cols-4 gap-6 z-[1000]">
 
-{categories.map((cat:any)=>(
-  
-<Link
-key={cat._id}
-href={`/products/${cat.slug}`}
-className="flex items-center gap-3 hover:text-[#8B0000]"
->
+              {categories.map((cat: any) => (
 
-{/* <Image
-src="/images/necklace.jpg"
-alt={cat.name}
-width={40}
-height={40}
-className="rounded-md"
-/> */}
+                <Link
+                  key={cat._id}
+                  href={`/products/${cat.slug}`}
+                  className="flex items-center gap-3 hover:text-[#8B0000]"
+                >
 
-{cat.name}
+                  <Image
+                    src={cat.image || "/placeholder.png"}
+                    alt={cat.name}
+                    width={40}
+                    height={40}
+                    className="rounded-md"
+                  />
 
-</Link>
+                  {cat.name}
 
-))}
+                </Link>
 
-</div>
+              ))}
+
+            </div>
           )}
         </div>
 
         <Link href="/party-ready-collections">The Complete Set</Link>
-                <Link href="/party-ready-collections">Review</Link>
+        <Link href="/party-ready-collections">Review</Link>
 
 
         {/* RIGHT SECTION */}
