@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   await writeFile(uploadPath, buffer);
 
   return NextResponse.json({
-    // url: `/uploads/${fileName}`,
-    url: `https://rani-backend.onrender.com/uploads/${fileName}` // ✅ CORRECT
+    url: `/uploads/${fileName}`,
+    // url: `https://rani-backend.onrender.com/uploads/${fileName}` // ✅ CORRECT
   });
 }

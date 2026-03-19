@@ -1,51 +1,75 @@
 export function BridalSection() {
-return (
+  return (
     <section>
-         {/* ================= HERO SECTION ================= */}
-      <div className="relative py-40 border-b border-[#B9AA52]/30 overflow-hidden">
+      {/* ================= HERO SECTION ================= */}
+      <div className="relative py-20 sm:py-28 md:py-40 border-b border-[#B9AA52]/30 overflow-hidden">
 
-  {/* Background Image */}
-  <div className="absolute inset-0">
-    <img
-      src="/images/bridal.webp" 
-      alt="About Background"
-      className="w-full h-full object-cover"
-    />
-  </div>
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="/images/bridal.webp"
+            alt="Bridal Jewellery"
+            className="w-full h-full  md:object-[center_top]"
+          />
+        </div>
 
-  {/* Dark Overlay */}
-  <div className="absolute inset-0 bg-black/40"></div>
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/50 md:bg-black/40"></div>
 
-  {/* Content */}
-  <div className="relative max-w-7xl mx-auto px-6">
-    <div className="max-w-2xl text-left">
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="max-w-xl sm:max-w-2xl">
 
-      <h1 className="text-4xl md:text-7xl font-bold text-[#B9AA52] mb-6 tracking-wide">
-         Rani Desinger Bridal Sets
-      </h1>
+            {/* HEADING */}
+            <h1 className="
+              text-2xl 
+              sm:text-4xl 
+              md:text-6xl 
+              lg:text-7xl 
+              font-bold 
+              text-[#B9AA52] 
+              mb-4 sm:mb-6 
+              leading-tight
+            ">
+              Rani Designer Bridal Sets
+            </h1>
 
-      <p className="text-lg text-gray-300 leading-relaxed">
-        A legacy of purity, craftsmanship, and timeless elegance.
-        We create jewellery that reflects royalty, tradition,
-        and unforgettable celebrations.
-      </p>
+            {/* TEXT */}
+            <p className="
+              text-sm 
+              sm:text-base 
+              md:text-lg 
+              text-gray-200 
+              leading-relaxed
+            ">
+              A legacy of purity, craftsmanship, and timeless elegance.
+              We create jewellery that reflects royalty, tradition,
+              and unforgettable celebrations.
+            </p>
 
-      {/* Optional Gold Accent Line */}
-  <div className="  mt-10 gap-4">
-
+            {/* BUTTON */}
+            <div className="mt-6 sm:mt-8">
               <a
                 href="/products"
-                className="bg-[#B9AA52] text-white px-6 py-3 font-medium hover:bg-[#a29345] transition"
+                className="
+                  inline-block 
+                  bg-[#B9AA52] 
+                  text-white 
+                  px-5 py-2.5 
+                  sm:px-6 sm:py-3 
+                  text-sm sm:text-base 
+                  font-medium 
+                  hover:bg-[#a29345] 
+                  transition
+                "
               >
                 Shop Now
               </a>
-
-             
-
             </div>
-    </div>
-  </div>
-</div>
+
+          </div>
+        </div>
+      </div>
     </section>
-)
+  );
 }

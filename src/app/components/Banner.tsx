@@ -16,7 +16,7 @@ className="w-full h-full object-cover object-left md:object-right"
         </div>
 
         {/* Optional Overlay (better readability) */}
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/50"></div>
 
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-center md:justify-end h-full">

@@ -4,19 +4,67 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X, Search, User, ShoppingCart } from "lucide-react";
+import { useAuth } from "@/app/context/AuthContext";
+
+type UserType = {
+  name: string;
+  email?: string;
+};
 
 export default function MobileNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSub, setMobileSub] = useState<string | null>(null);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [userOpen, setUserOpen] = useState(false);
+
+  const { user, logout } = useAuth() as {
+    user: UserType | null;
+    logout: () => void;
+  };
+
+
+  const [scrolled, setScrolled] = useState(false);
+
+useEffect(() => {
+  const handleScroll = () => {
+    setScrolled(window.scrollY > 50);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
 
   // Body scroll lock
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "auto";
   }, [mobileOpen]);
 
+  // FETCH CATEGORIES (same as desktop)
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await fetch("/api/categories");
+      const data = await res.json();
+      setCategories(data);
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setUserOpen(false);
+    setMobileOpen(false);
+  };
+
   return (
-    <nav className="md:hidden fixed w-full z-50 bg-black text-white">
-      {/* TOP BAR */}
+<nav
+  className={`md:hidden fixed w-full z-50 transition-all duration-300  shadow
+  ${
+    scrolled
+      ? "bg-black text-white shadow-md"
+      : "bg-transparent text-white"
+  }`}
+>      {/* TOP BAR */}
       <div className="flex items-center justify-between px-4 py-4">
         <button onClick={() => setMobileOpen(true)}>
           <Menu size={26} />
@@ -25,14 +73,53 @@ export default function MobileNav() {
         <Image
           src="/images/rani-logo-removebg.png"
           alt="Logo"
-          width={100}
+          width={80}
           height={20}
         />
 
-        <div className="flex items-center gap-4">
-          <Search size={20} className="cursor-pointer hover:text-[#D4AF37] transition" />
-          <User size={20} className="cursor-pointer hover:text-[#D4AF37] transition" />
-          <ShoppingCart size={20} className="cursor-pointer hover:text-[#D4AF37] transition" />
+        <div className="flex items-center gap-4 relative">
+          <Search size={20} className="cursor-pointer hover:text-[#D4AF37]" />
+
+          {/* USER */}
+          <div className="relative">
+            <User
+              size={20}
+              className="cursor-pointer hover:text-[#D4AF37]"
+              onClick={() => setUserOpen(!userOpen)}
+            />
+
+            {userOpen && (
+              <div className="absolute right-0 top-8 w-40 bg-white text-black rounded shadow-md z-50">
+                {!user ? (
+                  <>
+                    <Link href="/login" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                      Login
+                    </Link>
+                    <Link href="/signup" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                      Signup
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <div className="px-4 py-2 text-sm border-b">
+                      Hi, <b>{user.name}</b>
+                    </div>
+                    <Link href="/account" className="block px-4 py-2 text-sm hover:bg-gray-100">
+                      My Account
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+
+          <ShoppingCart size={20} className="cursor-pointer hover:text-[#D4AF37]" />
         </div>
       </div>
 
@@ -62,130 +149,65 @@ export default function MobileNav() {
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
-            className="block border-b border-black/20 pb-3 hover:text-[#690303]"
+            className="block border-b border-black/20 pb-3"
           >
             Home
           </Link>
 
-          {/* ABOUT */}
+          {/* SHOP BY CATEGORY (DYNAMIC) */}
           <div className="border-b border-black/20 pb-3">
             <button
-              onClick={() => setMobileSub(mobileSub === "about" ? null : "about")}
-              className="flex justify-between w-full items-center hover:text-[#690303]"
+              onClick={() =>
+                setMobileSub(mobileSub === "category" ? null : "category")
+              }
+              className="flex justify-between w-full items-center"
             >
-              About
-              <span className={`transform transition-transform duration-300 ${mobileSub === "about" ? "rotate-45" : ""}`}>
+              Shop by Category
+              <span className={`transform transition ${mobileSub === "category" ? "rotate-45" : ""}`}>
                 +
               </span>
             </button>
 
-            {mobileSub === "about" && (
+            {mobileSub === "category" && (
               <div className="pl-4 mt-3 flex flex-col space-y-3 text-sm">
-                <Link href="/about/know-us" onClick={() => setMobileOpen(false)}>Know Us</Link>
-                <Link href="/contact" onClick={() => setMobileOpen(false)}>Contact</Link>
-                <Link href="/faq" onClick={() => setMobileOpen(false)}>FAQ</Link>
-              </div>
-            )}
-          </div>
 
-          {/* NECKLACES */}
-          <div className="border-b border-black/20 pb-3">
-            <button
-              onClick={() => setMobileSub(mobileSub === "necklaces" ? null : "necklaces")}
-              className="flex justify-between w-full items-center hover:text-[#690303]"
-            >
-              Necklaces
-              <span className={`transform transition-transform duration-300 ${mobileSub === "necklaces" ? "rotate-45" : ""}`}>
-                +
-              </span>
-            </button>
-
-            {mobileSub === "necklaces" && (
-              <div className="pl-4 mt-3 flex flex-col space-y-3 text-sm">
-                {[
-                  "All Necklaces",
-                  "Temple Jewellery",
-                  "Kundan Necklaces",
-                  "Vilandi Necklaces",
-                  "Antique Traditional Necklaces",
-                  "Meenakari",
-                  "Choker",
-                  "Hasli",
-                  "Long Necklaces",
-                  "Western Necklaces",
-                  "Pendant Sets",
-                  "Pearl Necklaces",
-                ].map((item) => (
-                  <Link key={item} href="#" onClick={() => setMobileOpen(false)}>
-                    {item}
+                {categories.map((cat: any) => (
+                  <Link
+                    key={cat._id}
+                    href={`/products/${cat.slug}`}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2"
+                  >
+                    <Image
+                      src={cat.image || "/placeholder.png"}
+                      alt={cat.name}
+                      width={28}
+                      height={28}
+                      className="rounded"
+                    />
+                    {cat.name}
                   </Link>
                 ))}
+
               </div>
             )}
           </div>
 
-          {/* BANGLES */}
-          <div className="border-b border-black/20 pb-3">
-            <button
-              onClick={() => setMobileSub(mobileSub === "bangles" ? null : "bangles")}
-              className="flex justify-between w-full items-center hover:text-[#690303]"
-            >
-              Bangles / Bracelet
-              <span className={`transform transition-transform duration-300 ${mobileSub === "bangles" ? "rotate-45" : ""}`}>
-                +
-              </span>
-            </button>
-
-            {mobileSub === "bangles" && (
-              <div className="pl-4 mt-3 flex flex-col space-y-3 text-sm">
-                <Link href="#" onClick={() => setMobileOpen(false)}>Kada</Link>
-                <Link href="#" onClick={() => setMobileOpen(false)}>Bracelet</Link>
-                <Link href="#" onClick={() => setMobileOpen(false)}>Bangles</Link>
-              </div>
-            )}
-          </div>
-
-          {/* EARRINGS */}
-          <div className="border-b border-black/20 pb-3">
-            <button
-              onClick={() => setMobileSub(mobileSub === "earrings" ? null : "earrings")}
-              className="flex justify-between w-full items-center hover:text-[#690303]"
-            >
-              Earrings
-              <span className={`transform transition-transform duration-300 ${mobileSub === "earrings" ? "rotate-45" : ""}`}>
-                +
-              </span>
-            </button>
-
-            {mobileSub === "earrings" && (
-              <div className="pl-4 mt-3 flex flex-col space-y-3 text-sm">
-                {[
-                  "All Earrings",
-                  "Studs",
-                  "Long Earrings",
-                  "Jhumki & Baali",
-                  "EarCuffs",
-                  "Ruby and Emerald Earrings",
-                ].map((item) => (
-                  <Link key={item} href="#" onClick={() => setMobileOpen(false)}>
-                    {item}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* SIMPLE LINKS */}
-          <Link href="/" onClick={() => setMobileOpen(false)} className="block border-b border-black/20 pb-3">
-            Party Ready Collection
+          {/* SAME LINKS AS DESKTOP */}
+          <Link
+            href="/party-ready-collections"
+            onClick={() => setMobileOpen(false)}
+            className="block border-b border-black/20 pb-3"
+          >
+            The Complete Set
           </Link>
 
-          <Link href="/" onClick={() => setMobileOpen(false)} className="block border-b border-black/20 pb-3">
-            Rings
-          </Link>
-
-          <Link href="/" onClick={() => setMobileOpen(false)} className="block border-b border-black/20 pb-3">
-            Return & Exchange
+          <Link
+            href="/party-ready-collections"
+            onClick={() => setMobileOpen(false)}
+            className="block border-b border-black/20 pb-3"
+          >
+            Review
           </Link>
 
         </div>
