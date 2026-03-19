@@ -21,6 +21,7 @@ export async function POST(req: Request) {
   await writeFile(uploadPath, buffer);
 
   return NextResponse.json({
-    url: `/uploads/${fileName}`,
+    // url: `/uploads/${fileName}`,
+    url: `https://your-backend.onrender.com/uploads/${fileName}` // ✅ CORRECT
   });
 }
