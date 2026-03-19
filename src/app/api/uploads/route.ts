@@ -22,6 +22,6 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     // url: `/uploads/${fileName}`,
-    url: `https://your-backend.onrender.com/uploads/${fileName}` // ✅ CORRECT
+    url: `https://rani-backend.onrender.com/uploads/${fileName}` // ✅ CORRECT
   });
 }
