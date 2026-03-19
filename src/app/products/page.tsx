@@ -1,217 +1,140 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Star, SlidersHorizontal, Eye, X } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import QuickViewDrawer from "../components/QuickViewDrawer";
-import { Heart, ShoppingBag } from "lucide-react";
-
-
+import ProductGrid from "../components/ProductGrid";
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    const [products, setProducts] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 36500]);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [cart, setCart] = useState<string[]>([]);
 
-    useEffect(() => {
-
-        const fetchProducts = async () => {
-
-            const res = await fetch("/api/products");
-            const data = await res.json();
-
-            setProducts(data);
-
-        }
-
-        fetchProducts()
-
-    }, [])
-
-
-    const [priceRange, setPriceRange] = useState([0, 36500]);
-    const [selectedProduct, setSelectedProduct] = useState<any>(null);
-    const [wishlist, setWishlist] = useState<string[]>([]);
-    const [cart, setCart] = useState<string[]>([]);
-    const toggleWishlist = (id: string) => {
-        setWishlist((prev) =>
-            prev.includes(id)
-                ? prev.filter((item) => item !== id)
-                : [...prev, id]
-        );
-    };
-    const addToCart = (product: any) => {
-        setCart((prev) => [...prev, product._id]);
-        alert("Product added to cart");
+  // ✅ Fetch Products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    return (
+    fetchProducts();
+  }, []);
 
-        <div className="w-full ">
+  // ✅ Wishlist toggle
+  const toggleWishlist = (id: string) => {
+    setWishlist((prev) =>
+      prev.includes(id)
+        ? prev.filter((item) => item !== id)
+        : [...prev, id]
+    );
+  };
 
+  // ✅ Add to Cart (no duplicates)
+  const addToCart = (product: any) => {
+    setCart((prev) => {
+      if (prev.includes(product._id)) return prev;
+      return [...prev, product._id];
+    });
+  };
 
-            <div className="max-w-8xl pt-40 mx-auto px-6 lg:px-10">
+  // ✅ Price filter
+  const filteredProducts = products.filter((p: any) => {
+    return p.price >= priceRange[0] && p.price <= priceRange[1];
+  });
 
-                {/* Header */}
-                <div className="text-center">
-                    <h1 className="text-4xl font-serif">Products</h1>
-                </div>
+  return (
+    <div className="w-full">
+      <div className="max-w-8xl pt-40 mx-auto px-6 lg:px-10">
 
-                <div className="flex gap-10 py-8">
-
-                    {/* Sidebar */}
-                    <aside className="max-w-8xl mx-auto hidden lg:block">
-                        <div className="mb-8">
-                            <div className="flex items-center gap-2 font-medium mb-4">
-                                <SlidersHorizontal size={18} />
-                                Filter
-                            </div>
-
-                            {/* Availability */}
-                            <div className="border-t pt-6">
-                                <h3 className="font-medium mb-3">Availability</h3>
-                                <div className="space-y-2 text-sm">
-                                    <label className="flex items-center gap-2">
-                                        <input type="checkbox" />
-                                        In Stock (291)
-                                    </label>
-                                    <label className="flex items-center gap-2">
-                                        <input type="checkbox" />
-                                        Out Of Stock (16)
-                                    </label>
-                                </div>
-                            </div>
-
-                            {/* Price */}
-                            <div className="border-t pt-6 mt-6">
-                                <h3 className="font-medium mb-3">Price</h3>
-                                <input
-                                    type="range"
-                                    min={0}
-                                    max={36500}
-                                    value={priceRange[1]}
-                                    onChange={(e) =>
-                                        setPriceRange([0, parseInt(e.target.value)])
-                                    }
-                                    className="w-full"
-                                />
-                                <div className="flex justify-between mt-3 text-sm">
-                                    <span>₹ 0</span>
-                                    <span>₹ {priceRange[1]}</span>
-                                </div>
-                            </div>
-
-                            {/* Color (Placeholder) */}
-                            {/* <div className="border-t pt-6 mt-6">
-                            <h3 className="font-medium mb-3">Color</h3>
-                            <div className="flex gap-3">
-                                <div className="w-5 h-5 bg-green-600 rounded-full cursor-pointer" />
-                                <div className="w-5 h-5 bg-red-500 rounded-full cursor-pointer" />
-                                <div className="w-5 h-5 bg-yellow-400 rounded-full cursor-pointer" />
-                            </div>
-                        </div> */}
-                        </div>
-                    </aside>
-
-                    {/* Products */}
-                    <div className="flex-1 max-w-8xl mx-auto">
-
-                        {/* Grid */}
-                        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-
-                            {products.map((product: any) => (
-                                <div key={product._id} className="group">
-
-                                    <div className="relative overflow-hidden">
-
-                                        {/* Product Image */}
-                                        <Link
-                                            href={`/products/${product.category.slug}/${product.slug}`}
-                                            className="block"
-                                        >
-                                            <img
-                                                src={product.images?.[0] || "/placeholder.png"}
-                                                className="w-full h-[380px] object-cover transition duration-500 group-hover:scale-105"
-                                                alt={product.name}
-                                            />
-                                        </Link>
-                                        {/* Overlay Buttons */}
-                                        <div className="absolute inset-0 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition pointer-events-none">
-
-                                            <div className="flex gap-3 pointer-events-auto">
-
-                                                {/* Quick View */}
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setSelectedProduct(product);
-                                                    }}
-                                                    className="bg-white p-3 rounded-full shadow hover:scale-110 transition"
-                                                >
-                                                    <Eye size={18} />
-                                                </button>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    {/* Product Info */}
-
-                                    <div className="mt-3 mb-5">
-                                        <div className="gap-10 flex">
-                                            <button
-                                                onClick={() => addToCart(product)}
-                                                className="bg-black text-white px-4 py-2 text-sm rounded"
-                                            >
-                                                Add to Cart
-                                            </button>
-                                            <button
-                                                onClick={() => toggleWishlist(product._id)}
-                                                className="p-3 rounded-full shadow transition hover:scale-110"
-                                            >
-                                                <Heart
-                                                    size={18}
-                                                    className={
-                                                        wishlist.includes(product._id)
-                                                            ? "fill-red-500 text-red-500"
-                                                            : "text-black"
-                                                    }
-                                                />
-                                            </button>
-                                        </div>
-
-                                        <h3 className="text-sm font-medium">
-                                            {product.name}
-                                        </h3>
-
-                                        <div className="text-lg font-semibold">
-                                            £{product.price}
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            ))}
-
-                        </div>
-                    </div>
-                </div>
-
-
-                {/* Quick View Drawer */}
-                <>
-
-
-                    {selectedProduct && (
-                        <QuickViewDrawer
-                            product={selectedProduct}
-                            onClose={() => setSelectedProduct(null)}
-                        />
-                    )}
-                </>
-            </div>
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-4xl font-serif">All Products</h1>
         </div>
 
+        <div className="flex gap-10 py-8">
 
+          {/* Sidebar */}
+          <aside className="hidden lg:block w-64">
+            <div className="mb-8">
+              <div className="flex items-center gap-2 font-medium mb-4">
+                <SlidersHorizontal size={18} />
+                Filter
+              </div>
 
-    )
+              {/* Availability */}
+              <div className="border-t pt-6">
+                <h3 className="font-medium mb-3">Availability</h3>
+                <div className="space-y-2 text-sm">
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" />
+                    In Stock
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" />
+                    Out Of Stock
+                  </label>
+                </div>
+              </div>
+
+              {/* Price */}
+              <div className="border-t pt-6 mt-6">
+                <h3 className="font-medium mb-3">Price</h3>
+                <input
+                  type="range"
+                  min={0}
+                  max={36500}
+                  value={priceRange[1]}
+                  onChange={(e) =>
+                    setPriceRange([0, parseInt(e.target.value)])
+                  }
+                  className="w-full"
+                />
+                <div className="flex justify-between mt-3 text-sm">
+                  <span>£ 0</span>
+                  <span>£ {priceRange[1]}</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          {/* Products */}
+          <div className="flex-1">
+
+            {loading ? (
+              <p className="text-center">Loading products...</p>
+            ) : (
+              <ProductGrid
+                products={filteredProducts}
+                onQuickView={(p) => setSelectedProduct(p)}
+                wishlist={wishlist}
+                toggleWishlist={toggleWishlist}
+                addToCart={addToCart}
+              />
+            )}
+
+          </div>
+        </div>
+
+        {/* Quick View Drawer */}
+        {selectedProduct && (
+          <QuickViewDrawer
+            product={selectedProduct}
+            onClose={() => setSelectedProduct(null)}
+          />
+        )}
+
+      </div>
+    </div>
+  );
 }

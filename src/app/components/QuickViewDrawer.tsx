@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function QuickViewDrawer({ product, onClose }: any) {
 
@@ -10,7 +10,20 @@ export default function QuickViewDrawer({ product, onClose }: any) {
     ? product.images
     : ["/placeholder.png"];
 
-  const [activeImage, setActiveImage] = useState(images[0]);
+  // ✅ use index instead of image
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const nextImage = () => {
+    setActiveIndex((prev) =>
+      prev === images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevImage = () => {
+    setActiveIndex((prev) =>
+      prev === 0 ? images.length - 1 : prev - 1
+    );
+  };
 
   return (
     <>
@@ -32,7 +45,7 @@ export default function QuickViewDrawer({ product, onClose }: any) {
           {/* Close */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-600 hover:text-black"
+            className="absolute top-4 right-4 z-10 text-gray-600 hover:text-black"
           >
             <X size={22} />
           </button>
@@ -45,8 +58,10 @@ export default function QuickViewDrawer({ product, onClose }: any) {
               {images.map((img: string, i: number) => (
                 <button
                   key={i}
-                  onClick={() => setActiveImage(img)}
-                  className="border rounded overflow-hidden"
+                  onClick={() => setActiveIndex(i)}
+                  className={`border rounded overflow-hidden ${
+                    activeIndex === i ? "border-black" : ""
+                  }`}
                 >
                   <Image
                     src={img}
@@ -60,14 +75,32 @@ export default function QuickViewDrawer({ product, onClose }: any) {
             </div>
 
             {/* Main Image */}
-            <div className="flex-1">
+            <div className="flex-1 relative">
+
               <Image
-                src={activeImage}
+                src={images[activeIndex]}
                 alt={product.name}
                 width={400}
                 height={500}
                 className="w-full h-[420px] object-cover rounded"
               />
+
+              {/* Prev Button */}
+              <button
+                onClick={prevImage}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:scale-110"
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              {/* Next Button */}
+              <button
+                onClick={nextImage}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:scale-110"
+              >
+                <ChevronRight size={18} />
+              </button>
+
             </div>
 
           </div>
@@ -81,20 +114,20 @@ export default function QuickViewDrawer({ product, onClose }: any) {
 
             <div className="flex items-center gap-3 mb-4">
               <span className="text-lg font-bold">
-                £{product.price}
+                ₹{product.price}
               </span>
             </div>
 
             {/* Buttons */}
-            <div className="space-y-3">
+            <div className="flex gap-4">
 
-              <button className="w-full bg-black text-white py-3 rounded hover:bg-gray-900 transition">
+              <button className="bg-black text-white px-6 py-3 rounded hover:bg-gray-900 transition">
                 Add to Cart
               </button>
 
               <a
                 href={`/products/${product.category.slug}/${product.slug}`}
-                className="block text-center border py-3 rounded hover:bg-gray-100"
+                className="flex-1 text-center border py-3 rounded hover:bg-gray-100"
               >
                 View Full Details
               </a>

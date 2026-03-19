@@ -2,22 +2,28 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
-import { SlidersHorizontal, Eye } from "lucide-react";
-import { Heart } from "lucide-react";
-
+import { SlidersHorizontal } from "lucide-react";
 import QuickViewDrawer from "@/app/components/QuickViewDrawer";
+import ProductGrid from "@/app/components/ProductGrid";
 
 export default function CategoryPage() {
 
   const params = useParams();
-  const category = params.category;
 
-  const [products, setProducts] = useState([]);
+  // ✅ FIX: ensure string
+  const category = Array.isArray(params.category)
+    ? params.category[0]
+    : params.category;
+
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [cart, setCart] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState([0, 36500]);
+
+  // ✅ Wishlist
   const toggleWishlist = (id: string) => {
     setWishlist((prev) =>
       prev.includes(id)
@@ -25,34 +31,47 @@ export default function CategoryPage() {
         : [...prev, id]
     );
   };
+
+  // ✅ Fetch + category filter
   useEffect(() => {
-
     const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
 
-      const res = await fetch("/api/products");
-      const data = await res.json();
+        const filtered = data.filter(
+          (p: any) => p.category.slug === category
+        );
 
-      const filtered = data.filter(
-        (p: any) => p.category.slug === category
-      );
-
-      setProducts(filtered);
-
+        setProducts(filtered);
+      } catch (err) {
+        console.error("Error fetching category products", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchProducts();
+    if (category) fetchProducts();
 
   }, [category]);
 
+  // ✅ Cart (no duplicates)
   const addToCart = (product: any) => {
-    setCart((prev) => [...prev, product._id]);
-    alert("Product added to cart");
+    setCart((prev) => {
+      if (prev.includes(product._id)) return prev;
+      return [...prev, product._id];
+    });
   };
 
-  return (
+  // ✅ Price filter
+  const filteredProducts = products.filter((p: any) => {
+    return p.price >= priceRange[0] && p.price <= priceRange[1];
+  });
 
+  return (
     <div className="max-w-8xl pt-40 mx-auto px-6 lg:px-10">
 
+      {/* Title */}
       <h1 className="text-4xl mb-10 capitalize text-center">
         {category}
       </h1>
@@ -60,9 +79,9 @@ export default function CategoryPage() {
       <div className="flex gap-10">
 
         {/* Sidebar */}
-
-        <aside className="max-w-8xl mx-auto hidden lg:block">
+        <aside className="hidden lg:block w-64">
           <div className="mb-8">
+
             <div className="flex items-center gap-2 font-medium mb-4">
               <SlidersHorizontal size={18} />
               Filter
@@ -74,11 +93,11 @@ export default function CategoryPage() {
               <div className="space-y-2 text-sm">
                 <label className="flex items-center gap-2">
                   <input type="checkbox" />
-                  In Stock (291)
+                  In Stock
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" />
-                  Out Of Stock (16)
+                  Out Of Stock
                 </label>
               </div>
             </div>
@@ -97,114 +116,33 @@ export default function CategoryPage() {
                 className="w-full"
               />
               <div className="flex justify-between mt-3 text-sm">
-                <span>₹ 0</span>
-                <span>₹ {priceRange[1]}</span>
+                <span>£ 0</span>
+                <span>£ {priceRange[1]}</span>
               </div>
             </div>
 
-            {/* Color (Placeholder) */}
-            {/* <div className="border-t pt-6 mt-6">
-                                  <h3 className="font-medium mb-3">Color</h3>
-                                  <div className="flex gap-3">
-                                      <div className="w-5 h-5 bg-green-600 rounded-full cursor-pointer" />
-                                      <div className="w-5 h-5 bg-red-500 rounded-full cursor-pointer" />
-                                      <div className="w-5 h-5 bg-yellow-400 rounded-full cursor-pointer" />
-                                  </div>
-                              </div> */}
           </div>
         </aside>
 
         {/* Products */}
+        <div className="flex-1">
 
-        <div className="flex-1 max-w-8xl mx-auto">
-
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-
-            {products.map((product: any) => (
-
-              <div key={product._id} className="group">
-
-                <div className="relative overflow-hidden">
-
-                  <Link
-                    href={`/products/${product.category.slug}/${product.slug}`}
-                    className="block"
-                  >
-                    <img
-                      src={product.images?.[0] || "/placeholder.png"}
-                      className="w-full h-[380px] object-cover transition duration-500 group-hover:scale-105"
-                      alt={product.name}
-                    />
-                  </Link>
-                  {/* Overlay Buttons */}
-                   {/* Overlay Buttons */}
-                                        <div className="absolute inset-0 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition pointer-events-none">
-
-                                            <div className="flex gap-3 pointer-events-auto">
-
-                                                {/* Quick View */}
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setSelectedProduct(product);
-                                                    }}
-                                                    className="bg-white p-3 rounded-full shadow hover:scale-110 transition"
-                                                >
-                                                    <Eye size={18} />
-                                                </button>
-
-                                            </div>
-                                        </div>
-
-                </div>
-
-                {/* Product Info */}
-
-                <div className="mt-3 mb-5">
-                  <div className="gap-20 flex">
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="bg-black text-white px-4 py-2 text-sm rounded"
-                    >
-                      Add to Cart
-                    </button>
-                    <button
-                      onClick={() => toggleWishlist(product._id)}
-                      className="p-3 rounded-full shadow transition hover:scale-110"
-                    >
-                      <Heart
-                        size={18}
-                        className={
-                          wishlist.includes(product._id)
-                            ? "fill-red-500 text-red-500"
-                            : "text-black"
-                        }
-                      />
-                    </button>
-                  </div>
-
-                  <h3 className="text-sm font-medium mt-3">
-                    {product.name}
-                  </h3>
-
-                  <div className="text-lg font-semibold">
-                    £{product.price}
-                  </div>
-
-                </div>
-
-              </div>
-
-            ))}
-
-          </div>
+          {loading ? (
+            <p className="text-center">Loading products...</p>
+          ) : (
+            <ProductGrid
+              products={filteredProducts}
+              onQuickView={(p) => setSelectedProduct(p)}
+              wishlist={wishlist}
+              toggleWishlist={toggleWishlist}
+              addToCart={addToCart}
+            />
+          )}
 
         </div>
-
       </div>
 
-      {/* Quick View Drawer */}
-
+      {/* Quick View */}
       {selectedProduct && (
         <QuickViewDrawer
           product={selectedProduct}
@@ -213,6 +151,5 @@ export default function CategoryPage() {
       )}
 
     </div>
-
   );
 }

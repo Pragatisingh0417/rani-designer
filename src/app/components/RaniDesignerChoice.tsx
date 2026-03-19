@@ -23,44 +23,88 @@ export default function RaniDesignerChoice() {
       image: "/images/dailywear.webp",
       link: "#",
     },
-   
-    
-   
   ];
 
   return (
-    <section className="py-16">
+    <section className="py-10 sm:py-14 md:py-16">
+
       {/* Heading */}
-     <h2 className="text-3xl md:text-5xl leading-tight text-black mb-5 text-center">
-Rani’s Designer Choice
-
+      <h2 className="
+        text-2xl 
+        sm:text-3xl 
+        md:text-5xl 
+        leading-tight 
+        text-black 
+        mb-3 sm:mb-5 
+        text-center
+      ">
+        Rani’s Designer Choice
       </h2>
-      <p className="text-center font-base text-3xl md:text-2xl mb-12 max-w-4xl mx-auto">
 
-Our jewellery is inspired by the beauty of Indian traditions, with a touch of modern
-elegance and uncompromising quality.      </p>
+      <p className="
+        text-sm 
+        sm:text-base 
+        md:text-lg 
+        text-center 
+        mb-8 sm:mb-10 md:mb-12 
+        max-w-2xl md:max-w-4xl 
+        mx-auto 
+        text-gray-700
+      ">
+        Our jewellery is inspired by the beauty of Indian traditions, with a touch of modern
+        elegance and uncompromising quality.
+      </p>
 
       {/* Grid */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6">
+      <div className="
+        max-w-7xl mx-auto 
+        grid grid-cols-1 
+        sm:grid-cols-2 
+        md:grid-cols-3 
+        lg:grid-cols-4 
+        gap-4 sm:gap-6 
+        px-4 sm:px-6
+      ">
         {catalogs.map((item, index) => (
           <Link
             key={index}
             href={item.link}
-            className="group relative overflow-hidden shadow-md rounded-2xl"
+            className="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-sm hover:shadow-lg transition"
           >
-            {/* Image Container */}
-            <div className="relative h-[300px] w-full ">
+            {/* Image */}
+            <div className="
+              relative w-full 
+              h-[220px] 
+              sm:h-[260px] 
+              md:h-[280px] 
+              lg:h-[300px]
+            ">
               <Image
                 src={item.image}
                 alt={item.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110 rounded-2xl"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
               />
             </div>
 
             {/* Overlay */}
-            <div className="absolute inset-0 group-hover:bg-black/50 transition duration-300 flex items-end justify-center pb-6">
-              <h3 className="text-white text-xl font-semibold tracking-wide">
+            <div className="
+              absolute inset-0 
+              flex items-end justify-center 
+              pb-4 sm:pb-6 
+              bg-black/20 
+              group-hover:bg-black/50 
+              transition
+            ">
+              <h3 className="
+                text-white 
+                text-base 
+                sm:text-lg 
+                md:text-xl 
+                font-semibold 
+                tracking-wide 
+                text-center px-2
+              ">
                 {item.title}
               </h3>
             </div>

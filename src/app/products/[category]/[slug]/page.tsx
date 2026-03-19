@@ -2,55 +2,78 @@ import { connectDB } from "@/app/lib/mongodb";
 import Product from "@/app/models/Product";
 import Category from "@/app/models/Category";
 import { notFound } from "next/navigation";
+import ProductGallery from "@/app/components/ProductGallery";
+import RelatedProducts from "@/app/components/RelatedProducts";
 
-export default async function ProductPage({ params }: { params: Promise<{category:string,slug:string}> }) {
-
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ category: string; slug: string }>;
+}) {
   const { category, slug } = await params;
 
   await connectDB();
 
   const categoryDoc = await Category.findOne({
-    slug: category
+    slug: category,
   });
 
   if (!categoryDoc) return notFound();
 
   const product = await Product.findOne({
     slug: slug,
-    category: categoryDoc._id
+    category: categoryDoc._id,
   });
 
   if (!product) return notFound();
 
+// after fetching product
+
+const relatedProducts = await Product.find({
+  category: categoryDoc._id,
+  _id: { $ne: product._id }, // exclude current product
+})
+.limit(8); // optional limit
+
   return (
+    <div className="max-w-7xl mx-auto pt-32 px-6 lg:px-10 pb-16">
 
-    <div className="max-w-7xl mx-auto pt-40 grid grid-cols-2 gap-10 mb-10 ">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-10">
 
-      <img
-        src={product.images?.[0] || "/placeholder.png"}
-        className="w-full object-cover"
-      />
+        {/* 🔥 IMAGE SECTION */}
+        <ProductGallery images={product.images} />
 
-      <div>
+        {/* 🔥 PRODUCT INFO */}
+        <div className="flex flex-col">
 
-        <h1 className="text-3xl font-semibold mb-4">
-          {product.name}
-        </h1>
+          <h1 className="text-2xl lg:text-3xl font-semibold mb-3">
+            {product.name}
+          </h1>
 
-        <p className="text-2xl font-bold mb-4">
-          £{product.price}
-        </p>
+          <p className="text-2xl font-bold mb-4">
+            £{product.price}
+          </p>
 
-        <p className="mb-6">
-          {product.longDescription}
-        </p>
+          <p className="text-gray-600 leading-relaxed mb-6">
+            {product.longDescription}
+          </p>
 
-        <button className="bg-black text-white px-6 py-3">
-          Add to Cart
-        </button>
+          {/* Buttons */}
+          <div className="flex gap-4">
+            <button className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition">
+              Add to Cart
+            </button>
 
+            <button className="border px-6 py-3 rounded hover:bg-gray-100 transition">
+              Buy Now
+            </button>
+          </div>
+
+        </div>
       </div>
 
-    </div>
+{/* 🔥 RELATED PRODUCTS */}
+<RelatedProducts products={relatedProducts} />  
+  </div>
   );
 }
