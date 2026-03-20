@@ -2,9 +2,13 @@
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ChevronDown, Search, User, ShoppingCart } from "lucide-react";
+import { ChevronDown, Search, User, ShoppingCart, Heart } from "lucide-react";
+import { useWishlist } from "@/app/context/WishlistContext";
 import Image from "next/image";
 import { useAuth } from "@/app/context/AuthContext";
+import { useCart } from "@/app/context/CartContext";
+
+
 
 /* USER TYPE */
 type UserType = {
@@ -21,6 +25,8 @@ export default function DesktopNav() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const pathname = usePathname();
+  const { wishlist } = useWishlist();
+  const { cart, setIsCartOpen } = useCart();
   const isHome = pathname === "/";
   /* AUTH CONTEXT */
   const { user, logout } = useAuth() as {
@@ -84,7 +90,7 @@ ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}
         <Link href="/">Home</Link>
 
         {/* ABOUT */}
-        {/* <div
+        <div
           className="relative"
           onMouseEnter={() => setActiveMenu("about")}
           onMouseLeave={() => setActiveMenu(null)}
@@ -106,7 +112,7 @@ ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}
               </Link>
             </div>
           )}
-        </div> */}
+        </div>
 
         {/* SHOP BY CATEGORY */}
         <div
@@ -148,7 +154,6 @@ ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}
         </div>
 
         <Link href="/party-ready-collections">The Complete Set</Link>
-        <Link href="/party-ready-collections">Review</Link>
 
 
         {/* RIGHT SECTION */}
@@ -205,7 +210,27 @@ ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}
 
           </div>
 
-          <ShoppingCart size={20} className="cursor-pointer hover:text-[#D4AF37]" />
+{/* ❤️ WISHLIST */}
+<Link href="/wishlist" className="relative">
+  <Heart className="cursor-pointer hover:text-[#D4AF37]" size={20} />
+
+  {wishlist.length > 0 && (
+<span className="absolute -top-2 -right-2 bg-[#D4AF37] text-black text-[10px] font-semibold px-1.5 py-[1px] rounded-full">      {wishlist.length}
+    </span>
+  )}
+</Link>
+
+{/* 🛒 CART */}
+<div className="relative cursor-pointer" onClick={() => setIsCartOpen(true)}>
+  <ShoppingCart size={20} />
+
+  {cart.length > 0 && (
+    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-[1px] rounded-full">
+      {cart.length}
+    </span>
+  )}
+</div>
+
           {/* LOGO */}
           <Link href="/" className="flex items-center">
             <Image

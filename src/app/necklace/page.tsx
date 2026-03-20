@@ -124,8 +124,8 @@ export default function NecklacesPage() {
                                 className="w-full"
                             />
                             <div className="flex justify-between mt-3 text-sm">
-                                <span>₹ 0</span>
-                                <span>₹ {priceRange[1]}</span>
+                                <span>£ 0</span>
+                                <span>£ {priceRange[1]}</span>
                             </div>
                         </div>
 

@@ -53,7 +53,7 @@ export default function ProductGallery({ images = [] }: any) {
           alt="product"
           width={600}
           height={700}
-          className="w-full h-[450px] lg:h-[550px] object-cover rounded"
+          className="w-full h-[450px] lg:h-[400px] object-cover rounded"
         />
 
         {/* Left */}

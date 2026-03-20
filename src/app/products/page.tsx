@@ -11,8 +11,8 @@ export default function ProductsPage() {
 
   const [priceRange, setPriceRange] = useState([0, 36500]);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const [wishlist, setWishlist] = useState<string[]>([]);
-  const [cart, setCart] = useState<string[]>([]);
+  // const [wishlist, setWishlist] = useState<string[]>([]);
+  // const [cart, setCart] = useState<string[]>([]);
 
   // ✅ Fetch Products
   useEffect(() => {
@@ -32,21 +32,21 @@ export default function ProductsPage() {
   }, []);
 
   // ✅ Wishlist toggle
-  const toggleWishlist = (id: string) => {
-    setWishlist((prev) =>
-      prev.includes(id)
-        ? prev.filter((item) => item !== id)
-        : [...prev, id]
-    );
-  };
+  // const toggleWishlist = (id: string) => {
+  //   setWishlist((prev) =>
+  //     prev.includes(id)
+  //       ? prev.filter((item) => item !== id)
+  //       : [...prev, id]
+  //   );
+  // };
 
   // ✅ Add to Cart (no duplicates)
-  const addToCart = (product: any) => {
-    setCart((prev) => {
-      if (prev.includes(product._id)) return prev;
-      return [...prev, product._id];
-    });
-  };
+  // const addToCart = (product: any) => {
+  //   setCart((prev) => {
+  //     if (prev.includes(product._id)) return prev;
+  //     return [...prev, product._id];
+  //   });
+  // };
 
   // ✅ Price filter
   const filteredProducts = products.filter((p: any) => {
@@ -115,12 +115,9 @@ export default function ProductsPage() {
               <p className="text-center">Loading products...</p>
             ) : (
               <ProductGrid
-                products={filteredProducts}
-                onQuickView={(p) => setSelectedProduct(p)}
-                wishlist={wishlist}
-                toggleWishlist={toggleWishlist}
-                addToCart={addToCart}
-              />
+  products={filteredProducts}
+  onQuickView={(p) => setSelectedProduct(p)}
+/>
             )}
 
           </div>

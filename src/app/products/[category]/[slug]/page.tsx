@@ -4,8 +4,10 @@ import Category from "@/app/models/Category";
 import { notFound } from "next/navigation";
 import ProductGallery from "@/app/components/ProductGallery";
 import RelatedProducts from "@/app/components/RelatedProducts";
+import WishlistButton from "@/app/components/WishlistButton";
+import AddToCartButton from "@/app/components/AddToCartButton";
 
-export default async function ProductPage({
+export default async function ProductSlugPage({
   params,
 }: {
   params: Promise<{ category: string; slug: string }>;
@@ -60,13 +62,10 @@ const relatedProducts = await Product.find({
 
           {/* Buttons */}
           <div className="flex gap-4">
-            <button className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition">
-              Add to Cart
-            </button>
+           <AddToCartButton product={JSON.parse(JSON.stringify(product))} />
+           
 
-            <button className="border px-6 py-3 rounded hover:bg-gray-100 transition">
-              Buy Now
-            </button>
+           <WishlistButton productId={product._id.toString()} />
           </div>
 
         </div>
@@ -77,3 +76,5 @@ const relatedProducts = await Product.find({
   </div>
   );
 }
+
+
