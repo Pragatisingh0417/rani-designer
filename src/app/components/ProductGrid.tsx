@@ -8,24 +8,16 @@ import { useCart } from "@/app/context/CartContext";
 interface Props {
   products: any[];
   onQuickView: (product: any) => void;
-  wishlist: string[];
-  toggleWishlist: (id: string) => void;
-  addToCart: (product: any) => void;
-  cart: any[];
-  setIsCartOpen: (value: boolean) => void;
 }
 
 export default function ProductGrid({
-   products,
+  products,
   onQuickView,
-  wishlist,
-  toggleWishlist,
-  addToCart,
-  cart,
-  setIsCartOpen,
 }: Props) {
 
- 
+  const { wishlist, toggleWishlist } = useWishlist();
+  const { addToCart, cart, setIsCartOpen } = useCart();
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
       
