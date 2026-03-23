@@ -14,7 +14,7 @@ export default function RaniDesignerChoice() {
       link: "#",
     },
     {
-      title: "Kangan Choice",
+      title: "Kangans Choice",
       image: "/images/diamond.webp",
       link: "#",
     },

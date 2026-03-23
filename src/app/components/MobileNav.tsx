@@ -58,7 +58,7 @@ useEffect(() => {
 
   return (
 <nav
-  className={`md:hidden fixed w-full z-50 transition-all duration-300  shadow
+  className={`md:hidden fixed w-full z-50 transition-all duration-300  shadow 
   ${
     scrolled
       ? "bg-black text-white shadow-md"

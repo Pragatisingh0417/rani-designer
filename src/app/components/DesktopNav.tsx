@@ -79,9 +79,11 @@ export default function DesktopNav() {
 
 
   return (
-    <nav className={`hidden md:block py-1 absolute top-0 left-0 w-full z-50 
-${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}
-`}>
+   <nav
+  className={`hidden md:block py-1 absolute top-0 left-0 w-full z-50  
+  ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}`}
+  style={{ fontFamily: "'Playfair Display', serif" }}
+>
       <div
         className="w-full   mx-auto p-10 flex justify-center gap-10 text-[17.5px] tracking-wide relative  items-center "
         ref={menuRef}

@@ -25,7 +25,7 @@ className="w-full h-full object-cover object-left md:object-right"
           <div className="max-w-xl md:max-w-2xl text-center md:text-right">
 
             {/* Tagline */}
-            <p className="text-white text-xs sm:text-sm tracking-[2px] sm:tracking-[3px] mb-4 sm:mb-6">
+            <p className="text-gray-200 text-sm sm:text-base md:text-lg tracking-wide sm:tracking-widest">
               Welcome To RaniDesignerHut,
             </p>
 
@@ -53,7 +53,7 @@ className="w-full h-full object-cover object-left md:object-right"
 
               <a
                 href="/products"
-                className="bg-[#B9AA52] text-white px-6 py-3 font-medium hover:bg-[#a29345] transition"
+                className="bg-[#f60505] text-white px-6 py-3 font-medium hover:bg-[#a29345] transition"
               >
                 Shop Now
               </a>
