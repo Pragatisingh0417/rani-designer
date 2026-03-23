@@ -7,7 +7,6 @@ import QuickViewDrawer from "@/app/components/QuickViewDrawer";
 import ProductGrid from "@/app/components/ProductGrid";
 
 export default function CategoryPage() {
-
   const params = useParams();
 
   // ✅ FIX: ensure string
@@ -37,9 +36,7 @@ export default function CategoryPage() {
         const res = await fetch("/api/products");
         const data = await res.json();
 
-        const filtered = data.filter(
-          (p: any) => p.category.slug === category
-        );
+        const filtered = data.filter((p: any) => p.category.slug === category);
 
         setProducts(filtered);
       } catch (err) {
@@ -50,7 +47,6 @@ export default function CategoryPage() {
     };
 
     if (category) fetchProducts();
-
   }, [category]);
 
   // ✅ Cart (no duplicates)
@@ -68,18 +64,13 @@ export default function CategoryPage() {
 
   return (
     <div className="max-w-8xl pt-40 mx-auto px-6 lg:px-10">
-
       {/* Title */}
-      <h1 className="text-4xl mb-10 capitalize text-center">
-        {category}
-      </h1>
+      <h1 className="text-4xl mb-10 capitalize text-center">{category}</h1>
 
       <div className="flex gap-10">
-
         {/* Sidebar */}
         <aside className="hidden lg:block w-64">
           <div className="mb-8">
-
             <div className="flex items-center gap-2 font-medium mb-4">
               <SlidersHorizontal size={18} />
               Filter
@@ -108,9 +99,7 @@ export default function CategoryPage() {
                 min={0}
                 max={36500}
                 value={priceRange[1]}
-                onChange={(e) =>
-                  setPriceRange([0, parseInt(e.target.value)])
-                }
+                onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
                 className="w-full"
               />
               <div className="flex justify-between mt-3 text-sm">
@@ -118,22 +107,19 @@ export default function CategoryPage() {
                 <span>£ {priceRange[1]}</span>
               </div>
             </div>
-
           </div>
         </aside>
 
         {/* Products */}
         <div className="flex-1">
-
           {loading ? (
             <p className="text-center">Loading products...</p>
           ) : (
             <ProductGrid
-  products={filteredProducts}
-  onQuickView={(p) => setSelectedProduct(p)}
-/>
+              products={filteredProducts}
+              onQuickView={(p) => setSelectedProduct(p)}
+            />
           )}
-
         </div>
       </div>
 
@@ -144,7 +130,6 @@ export default function CategoryPage() {
           onClose={() => setSelectedProduct(null)}
         />
       )}
-
     </div>
   );
 }
