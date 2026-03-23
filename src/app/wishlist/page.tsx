@@ -40,7 +40,6 @@ export default function WishlistPage() {
         <ProductGrid
           products={products}
           onQuickView={(p) => setSelectedProduct(p)} // ✅ FIX
-          addToCart={() => {}}
         />
       )}
 
