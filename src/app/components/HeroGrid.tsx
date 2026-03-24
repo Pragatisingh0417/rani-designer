@@ -48,7 +48,7 @@ export default function HeroGrid() {
 
             <Link
               href="/shop"
-              className="inline-block mt-5 px-6 py-2 bg-[#B9AA52] text-black font-medium hover:bg-white transition"
+              className="inline-block mt-5 px-6 py-2 bg-red-600 text-black font-medium hover:bg-white transition"
             >
               SHOP NOW
             </Link>
@@ -75,7 +75,7 @@ export default function HeroGrid() {
 
             <Link
               href="/shop"
-              className="inline-block mt-5 px-6 py-2 bg-[#B9AA52] text-black font-medium hover:bg-white transition"
+              className="inline-block mt-5 px-6 py-2 bg-red-600 text-black font-medium hover:bg-white transition"
             >
               SHOP NOW
             </Link>

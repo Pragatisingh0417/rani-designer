@@ -58,13 +58,16 @@ useEffect(() => {
 
   return (
 <nav
-  className={`md:hidden fixed w-full z-50 transition-all duration-300  shadow 
+  className={`md:hidden fixed w-full z-50 transition-all duration-300 shadow 
   ${
     scrolled
       ? "bg-black text-white shadow-md"
       : "bg-transparent text-white"
   }`}
->      {/* TOP BAR */}
+  style={{ fontFamily: "'Playfair Display', serif" }}
+>
+  
+        {/* TOP BAR */}
       <div className="flex items-center justify-between px-4 py-4">
         <button onClick={() => setMobileOpen(true)}>
           <Menu size={26} />
@@ -133,7 +136,7 @@ useEffect(() => {
 
       {/* SIDE DRAWER */}
       <div
-        className={`fixed top-0 left-0 h-full w-[80%] max-w-[360px] bg-[#B9AA52] text-black
+        className={`fixed top-0 left-0 h-full w-[80%] max-w-[360px] bg-red-600 text-black
         transform transition-transform duration-300 ease-in-out z-50
         ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}
       >

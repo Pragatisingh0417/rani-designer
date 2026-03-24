@@ -45,14 +45,14 @@ export default function HomeBanner() {
 
               <a
                 href="/shop-by-catalogs"
-                className="bg-[#B9AA52] text-black px-6 py-3 font-medium hover:bg-[#a29345] transition"
+                className="bg-red-600 text-black px-6 py-3 font-medium hover:bg-[#a29345] transition"
               >
                 Shop Collection
               </a>
 
               <a
                 href="/shop-by-catalogs"
-                className="border border-[#B9AA52] text-[#B9AA52] px-6 py-3 hover:bg-[#B9AA52] hover:text-black transition"
+                className="border border-[#B9AA52] text-[#B9AA52] px-6 py-3 hover:bg-red-600 hover:text-black transition"
               >
                 Explore Collections
               </a>
@@ -60,7 +60,7 @@ export default function HomeBanner() {
             </div>
 
             {/* Gold Accent Line */}
-            <div className="w-20 h-[2px] bg-[#B9AA52] mt-10"></div>
+            <div className="w-20 h-[2px] bg-red-600 mt-10"></div>
 
           </div>
         </div>

@@ -42,7 +42,10 @@ CategorySchema.pre("save", async function () {
     let slug = baseSlug;
     let count = 1;
 
-    const Category = mongoose.models.Category;
+    // ✅ FIX: always get model safely
+    const Category =
+      mongoose.models.Category ||
+      mongoose.model("Category", CategorySchema);
 
     while (await Category.findOne({ slug })) {
       slug = `${baseSlug}-${count}`;

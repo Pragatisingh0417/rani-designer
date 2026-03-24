@@ -6,6 +6,8 @@ import { X, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import { useWishlist } from "@/app/context/WishlistContext";
 import { useCart } from "@/app/context/CartContext";
 import { useRouter } from "next/navigation";
+import { formatCurrency } from "@/app/lib/format";
+
 
 export default function QuickViewDrawer({ product, onClose }: any) {
 
@@ -134,8 +136,8 @@ export default function QuickViewDrawer({ product, onClose }: any) {
             </h2>
 
             <div className="text-lg font-bold mb-4">
-              £{product.price}
-            </div>
+ {formatCurrency(product.price)}
+             </div>
 
             {/* Buttons */}
             <div className="flex gap-4">

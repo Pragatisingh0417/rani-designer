@@ -1,6 +1,8 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
 import Link from "next/link";
 
@@ -14,10 +16,17 @@ export default function CartDrawer() {
     setIsCartOpen,
   } = useCart();
 
+  const pathname = usePathname();
+
+  // FIX: close drawer on route change
+  useEffect(() => {
+    setIsCartOpen(false);
+  }, [pathname]);
+
   // ✅ Total price
   const total = cart.reduce(
     (acc: number, item: any) =>
-      acc + item.price * item.quantity,
+      acc + Number(item.price) * Number(item.quantity),
     0
   );
 

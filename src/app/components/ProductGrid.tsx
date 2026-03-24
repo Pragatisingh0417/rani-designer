@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye, Heart } from "lucide-react";
 import { useWishlist } from "@/app/context/WishlistContext";
 import { useCart } from "@/app/context/CartContext";
+import { formatCurrency } from "@/app/lib/format";
 
 interface Props {
   products: any[];
@@ -18,23 +19,38 @@ export default function ProductGrid({
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart, cart, setIsCartOpen } = useCart();
 
+  const visibleProducts = products.filter((p:any) => p.isActive);
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-      
-      {products.map((product: any) => {
 
-        // ✅ Check if already in cart
+      {visibleProducts.map((product: any) => {
+
         const isInCart = cart.some(
           (item: any) => item._id === product._id
         );
 
+        const inStock = product.stock > 0;
+
+        // ✅ SAFE SALE LOGIC
+        const isOnSale =
+          (product.isOnSale === true || product.isOnSale === "true") &&
+          Number(product.salePrice) > 0;
+
+        const discount =
+          isOnSale
+            ? Math.round(
+                ((product.price - product.salePrice) / product.price) * 100
+              )
+            : 0;
+
         return (
           <div
             key={product._id}
-            className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 group"
+            className="bg-amber-50 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 group mb-6"
           >
 
-            {/* 🔥 Image */}
+            {/* IMAGE */}
             <div className="relative overflow-hidden">
 
               <Link
@@ -47,6 +63,20 @@ export default function ProductGrid({
                   alt={product.name}
                 />
               </Link>
+
+              {/* 🔥 % OFF BADGE */}
+              {isOnSale && (
+                <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded font-medium">
+                  {discount}% OFF
+                </span>
+              )}
+
+              {/* ❌ OUT OF STOCK */}
+              {!inStock && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-sm font-medium">
+                  Out of Stock
+                </div>
+              )}
 
               {/* ❤️ Wishlist */}
               <button
@@ -67,47 +97,84 @@ export default function ProductGrid({
               </button>
 
               {/* 👁 Quick View */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/20 pointer-events-none">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onQuickView(product);
-                  }}
-                  className="bg-white px-4 py-2 text-sm rounded-full shadow hover:scale-105 transition pointer-events-auto"
-                >
-                  <Eye size={16} />
-                </button>
-              </div>
+              {inStock && (
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/20 pointer-events-none">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onQuickView(product);
+                    }}
+                    className="bg-white px-4 py-2 text-sm rounded-full shadow hover:scale-105 transition pointer-events-auto"
+                  >
+                    <Eye size={16} />
+                  </button>
+                </div>
+              )}
 
             </div>
 
-            {/* 🔥 Info */}
+            {/* INFO */}
             <div className="p-4">
 
               <h3 className="text-sm font-medium text-center line-clamp-2 min-h-[40px]">
                 {product.name}
               </h3>
 
-              <div className="mt-2 text-lg font-semibold text-center">
-                £{product.price}
+              {/* 💰 PRICE */}
+              <div className="mt-2 text-center">
+
+                {isOnSale ? (
+                  <div className="flex flex-col items-center">
+
+                    {/* SALE PRICE */}
+                    <span className="text-lg font-semibold text-red-600">
+                      {formatCurrency(product.salePrice)}
+                    </span>
+
+                    {/* ORIGINAL PRICE */}
+                    <span className="text-sm line-through text-gray-400">
+                      {formatCurrency(product.price)}
+                    </span>
+
+                    {/* SAVE */}
+                    <span className="text-xs text-green-600">
+                      Save {formatCurrency(product.price - product.salePrice)}
+                    </span>
+
+                  </div>
+                ) : (
+                  <span className="text-lg font-semibold">
+                    {formatCurrency(product.price)}
+                  </span>
+                )}
+
               </div>
 
-              {/* 🛒 Cart Button */}
+              {/* 🛒 BUTTON */}
               <button
+                disabled={!inStock}
                 onClick={() => {
+                  if (!inStock) return;
+
                   if (isInCart) {
-                    setIsCartOpen(true); // open cart drawer
+                    setIsCartOpen(true);
                   } else {
                     addToCart(product);
                   }
                 }}
                 className={`mt-4 w-full py-2 rounded-lg text-sm transition ${
-                  isInCart
-                    ? "bg-[#D4AF37] text-white"
+                  !inStock
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : isInCart
+                    ? "bg-red-600 text-white"
                     : "bg-black text-white hover:bg-gray-800"
                 }`}
               >
-                {isInCart ? "Go to Cart" : "Add to Cart"}
+                {!inStock
+                  ? "Out of Stock"
+                  : isInCart
+                  ? "Go to Cart"
+                  : "Add to Cart"}
               </button>
 
             </div>

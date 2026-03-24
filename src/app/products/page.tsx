@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import QuickViewDrawer from "../components/QuickViewDrawer";
 import ProductGrid from "../components/ProductGrid";
+import { formatCurrency } from "@/app/lib/format";
+
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -11,8 +13,10 @@ export default function ProductsPage() {
 
   const [priceRange, setPriceRange] = useState([0, 36500]);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  // const [wishlist, setWishlist] = useState<string[]>([]);
-  // const [cart, setCart] = useState<string[]>([]);
+const [availability, setAvailability] = useState({
+    inStock: false,
+    outOfStock: false,
+  });
 
   // ✅ Fetch Products
   useEffect(() => {
@@ -31,27 +35,36 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
-  // ✅ Wishlist toggle
-  // const toggleWishlist = (id: string) => {
-  //   setWishlist((prev) =>
-  //     prev.includes(id)
-  //       ? prev.filter((item) => item !== id)
-  //       : [...prev, id]
-  //   );
-  // };
 
-  // ✅ Add to Cart (no duplicates)
-  // const addToCart = (product: any) => {
-  //   setCart((prev) => {
-  //     if (prev.includes(product._id)) return prev;
-  //     return [...prev, product._id];
-  //   });
-  // };
+
+
 
   // ✅ Price filter
   const filteredProducts = products.filter((p: any) => {
-    return p.price >= priceRange[0] && p.price <= priceRange[1];
+
+    // ✅ Only active products
+    if (!p.isActive) return false;
+
+    // ✅ Use correct price (sale or original)
+    const finalPrice = p.isOnSale ? p.salePrice : p.price;
+
+    // ✅ Price filter
+    if (finalPrice < priceRange[0] || finalPrice > priceRange[1]) {
+      return false;
+    }
+
+    // ✅ Stock filter
+    const inStock = p.stock > 0;
+
+    if (availability.inStock && !inStock) return false;
+    if (availability.outOfStock && inStock) return false;
+
+    return true;
   });
+
+
+  
+
 
   return (
     <div className="w-full">
@@ -77,11 +90,24 @@ export default function ProductsPage() {
                 <h3 className="font-medium mb-3">Availability</h3>
                 <div className="space-y-2 text-sm">
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      checked={availability.inStock}
+                      onChange={(e) =>
+                        setAvailability({ ...availability, inStock: e.target.checked })
+                      }
+                    />
                     In Stock
                   </label>
+
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      checked={availability.outOfStock}
+                      onChange={(e) =>
+                        setAvailability({ ...availability, outOfStock: e.target.checked })
+                      }
+                    />
                     Out Of Stock
                   </label>
                 </div>
@@ -101,23 +127,23 @@ export default function ProductsPage() {
                   className="w-full"
                 />
                 <div className="flex justify-between mt-3 text-sm">
-                  <span>£ 0</span>
-                  <span>£ {priceRange[1]}</span>
+                  <span>{formatCurrency(0)}</span>
+                  <span>{formatCurrency(priceRange[1])}</span>
                 </div>
               </div>
             </div>
           </aside>
 
           {/* Products */}
-          <div className="flex-1">
+          <div className="flex-1 ">
 
             {loading ? (
               <p className="text-center">Loading products...</p>
             ) : (
               <ProductGrid
-  products={filteredProducts}
-  onQuickView={(p) => setSelectedProduct(p)}
-/>
+                products={filteredProducts}
+                onQuickView={(p) => setSelectedProduct(p)}
+              />
             )}
 
           </div>

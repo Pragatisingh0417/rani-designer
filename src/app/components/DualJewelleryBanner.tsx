@@ -69,7 +69,7 @@ export default function DualJewelleryBanner() {
               Every Jewellery Has Its <br /> Own Story
             </h2>
 
-            <button className="bg-black text-white px-10 py-4 w-fit flex items-center gap-4 hover:bg-[#B9AA52] hover:text-black transition duration-300">
+            <button className="bg-black text-white px-10 py-4 w-fit flex items-center gap-4 hover:bg-red-600 hover:text-black transition duration-300">
               Shop Now
               <span className="bg-white text-black rounded-full w-7 h-7 flex items-center justify-center text-sm">
                 →
@@ -82,7 +82,7 @@ export default function DualJewelleryBanner() {
       </div>
 
       {/* Bottom Gold Accent Line */}
-      <div className="h-[2px] w-full bg-[#B9AA52]/60"></div>
+      <div className="h-[2px] w-full bg-red-600/60"></div>
 
     </section>
   );

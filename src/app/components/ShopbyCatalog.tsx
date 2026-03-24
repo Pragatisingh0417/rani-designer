@@ -77,7 +77,7 @@ export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
         <div className="text-center mt-12">
           <Link
             href="/shop-by-category"
-            className="inline-block bg-[#B9AA52] text-white px-8 py-3 hover:bg-black transition"
+            className="inline-block bg-red-600 text-white px-8 py-3 hover:bg-black transition"
           >
             View All Categories
           </Link>

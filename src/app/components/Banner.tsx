@@ -44,16 +44,16 @@ className="w-full h-full object-cover object-left md:object-right"
 
             {/* <a
                 href="/shop-by-catalogs"
-                className="bg-[#B9AA52] text-black px-6 py-3 font-medium hover:bg-[#a29345] transition mt-10"
+                className="bg-red-600 text-black px-6 py-3 font-medium hover:bg-[#a29345] transition mt-10"
               >
                 Shop Collection
               </a> */}
 
-  <div className="  mt-10 gap-4">
+  <div className="mt-10 gap-4">
 
               <a
                 href="/products"
-                className="bg-[#f60505] text-white px-6 py-3 font-medium hover:bg-[#a29345] transition"
+                className="bg-red-600 text-white px-6 py-3 font-medium hover:bg-[#a29345] transition"
               >
                 Shop Now
               </a>

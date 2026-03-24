@@ -35,7 +35,7 @@ export default function About() {
       </p>
 
       {/* Optional Gold Accent Line */}
-      <div className="w-24 h-[2px] bg-[#B9AA52] mt-8"></div>
+      <div className="w-24 h-[2px] bg-red-600 mt-8"></div>
 
     </div>
   </div>
@@ -70,7 +70,7 @@ We design pieces that celebrate individuality, enhance everyday elegance, and ma
           <p className="text-gray-900 leading-relaxed mb-6">
             We believe jewellery is more than adornment — it is a symbol of love, celebration, heritage, and individuality. Whether it is a bridal masterpiece passed down through generations or an elegant everyday design that enhances your daily confidence, our collections are designed to make you feel extraordinary.
           </p>
-          <button className="bg-[#B9AA52] text-white px-10 py-4 w-fit flex items-center gap-4 hover:bg-black hover:text-white transition duration-300">
+          <button className="bg-red-600 text-white px-10 py-4 w-fit flex items-center gap-4 hover:bg-black hover:text-white transition duration-300">
               Shop Now
               <span className="bg-white text-black rounded-full w-7 h-7 flex items-center justify-center text-sm">
                 →
@@ -119,7 +119,7 @@ Our mission is to deliver jewellery of certified purity and exceptional craftsma
           <p className="text-gray-900 leading-relaxed mb-6">
             We are committed to offering exclusive designs, personalized service, and an unforgettable luxury experience — ensuring that every customer feels valued, confident, and truly royal.
           </p>
-          <button className="bg-[#B9AA52] text-white px-10 py-4 w-fit flex items-center gap-4 hover:bg-black hover:text-white  transition duration-300">
+          <button className="bg-red-600 text-white px-10 py-4 w-fit flex items-center gap-4 hover:bg-black hover:text-white  transition duration-300">
               Shop Now
               <span className="bg-white text-black rounded-full w-7 h-7 flex items-center justify-center text-sm">
                 →
@@ -158,7 +158,7 @@ Our mission is to deliver jewellery of certified purity and exceptional craftsma
 
     {/* Right Button */}
     <div>
-      <button className="group relative inline-flex items-center gap-4 border border-[#B9AA52] px-10 py-4 text-[#B9AA52] font-semibold transition duration-300 hover:bg-[#B9AA52] hover:text-black">
+      <button className="group relative inline-flex items-center gap-4 border border-[#B9AA52] px-10 py-4 text-[#B9AA52] font-semibold transition duration-300 hover:bg-red-600 hover:text-black">
 
         Visit Our Store
 
@@ -172,7 +172,7 @@ Our mission is to deliver jewellery of certified purity and exceptional craftsma
   </div>
 
   {/* Bottom Gold Accent Line */}
-  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#B9AA52]/60"></div>
+  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-red-600/60"></div>
 
 </section>
 

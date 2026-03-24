@@ -42,6 +42,9 @@ export default function Sidebar() {
         <Link href="/admin/users" className={linkClass("/admin/users")}>
           Users
         </Link>
+        <Link href="/admin/blogs" className={linkClass("/admin/users")}>
+          Blogs
+        </Link>
 
       </nav>
 

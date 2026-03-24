@@ -158,7 +158,7 @@ export default function LuxuryProductSection() {
               Rs. {product.price}
             </div>
 
-            <button className="mt-4 bg-[#B9AA52] text-white px-4 py-2 rounded text-sm hover:opacity-90">
+            <button className="mt-4 bg-red-600 text-white px-4 py-2 rounded text-sm hover:opacity-90">
               Buy on EMI
             </button>
           </div>
@@ -167,7 +167,7 @@ export default function LuxuryProductSection() {
 
       {/* VIEW ALL */}
       <div className="flex justify-center mt-12">
-        <button className="bg-[#B9AA52] text-white px-10 py-3 rounded hover:opacity-90 transition">
+        <button className="bg-red-600 text-white px-10 py-3 rounded hover:opacity-90 transition">
           VIEW ALL
         </button>
       </div>

@@ -23,20 +23,19 @@ export async function PUT(req: Request, { params }: any) {
 
   const product = await Product.findByIdAndUpdate(
     id,
-    body,
+    {
+      ...body,
+
+      // ✅ FORCE CORRECT TYPES
+      isOnSale: Boolean(body.isOnSale),
+      isActive: Boolean(body.isActive),
+
+      price: Number(body.price),
+      salePrice: Number(body.salePrice || 0),
+      stock: Number(body.stock || 0),
+    },
     { new: true }
   );
 
   return NextResponse.json(product);
-}
-
-export async function DELETE(req: Request, { params }: any) {
-
-  await connectDB();
-
-  const { id } = await params;
-
-  await Product.findByIdAndDelete(id);
-
-  return NextResponse.json({ message: "Product deleted" });
 }

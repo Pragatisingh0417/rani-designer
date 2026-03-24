@@ -6,7 +6,7 @@ export default function AdminLayout({ children }: any) {
     <div className="flex min-h-screen">
 <Sidebar />
       {/* Right Content */}
-      <main className="flex-1 p-10 bg-gray-100">
+      <main className="flex-1 p-10 bg-white ">
         {children}
       </main>
 

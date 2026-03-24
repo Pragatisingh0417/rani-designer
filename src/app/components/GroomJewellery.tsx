@@ -29,7 +29,7 @@ const products = [
 export default function GroomJewellerySection() {
   return (
     <section className="max-w-8xl mx-auto py-12 px-10 bg-black">
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6 mt-20">
 
         {/* LEFT IMAGE */}
         <div className="relative h-[600px]">

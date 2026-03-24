@@ -27,7 +27,17 @@ export async function POST(req: Request) {
   // auto generate slug
   data.slug = generateSlug(data.name);
 
-  const product = await Product.create(data);
+  const product = await Product.create({
+    ...data,
+
+    // ✅ FORCE TYPES (VERY IMPORTANT)
+    isOnSale: Boolean(data.isOnSale),
+    isActive: Boolean(data.isActive),
+
+    price: Number(data.price),
+    salePrice: Number(data.salePrice || 0),
+    stock: Number(data.stock || 0),
+  });
 
   return NextResponse.json(product);
 }

@@ -202,7 +202,7 @@ export default function ReligiousJewellery() {
                                 Rs. {product.price}
                             </div>
 
-                            <button className="mt-4 bg-[#B9AA52] text-white px-4 py-2 rounded text-sm hover:opacity-90 transition">
+                            <button className="mt-4 bg-red-600 text-white px-4 py-2 rounded text-sm hover:opacity-90 transition">
                                 Buy on EMI
                             </button>
                         </div>
@@ -213,7 +213,7 @@ export default function ReligiousJewellery() {
 
             {/* VIEW ALL */}
             <div className="flex justify-center mt-14">
-                <button className="bg-[#B9AA52] text-white px-10 py-3 rounded hover:opacity-90 transition">
+                <button className="bg-red-600 text-white px-10 py-3 rounded hover:opacity-90 transition">
                     VIEW ALL
                 </button>
             </div>

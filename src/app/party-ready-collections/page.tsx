@@ -4,7 +4,7 @@ import GroomJewellerySection from "../components/GroomJewellery";
 
 export default function PartyReadyPage() {
   return (
-    <section className=" text-white">
+    <section className="">
     
 
 <GroomJewellerySection />

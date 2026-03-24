@@ -81,7 +81,7 @@ export default function DesktopNav() {
   return (
    <nav
   className={`hidden md:block py-1 absolute top-0 left-0 w-full z-50  
-  ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}`}
+  ${isHome ? "text-white" : "text-black bg-transpareant  shadow-sm"}`}
   style={{ fontFamily: "'Playfair Display', serif" }}
 >
       <div

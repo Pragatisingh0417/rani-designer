@@ -76,7 +76,7 @@ export default function InstagramSection() {
             @rani_designer_hut
           </h2>
 
-          <div className="w-24 h-[2px] bg-[#B9AA52] mx-auto mt-6"></div>
+          <div className="w-24 h-[2px] bg-red-600 mx-auto mt-6"></div>
         </div>
 
         {/* GRID */}
@@ -164,7 +164,7 @@ className="relative group overflow-hidden aspect-square border border-transparen
             href="https://www.instagram.com/rani_designer_hut/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-black text-white px-10 py-4 hover:bg-[#B9AA52] hover:text-black transition duration-300"
+            className="inline-block bg-black text-white px-10 py-4 hover:bg-red-600 hover:text-black transition duration-300"
           >
             Visit Instagram
           </a>

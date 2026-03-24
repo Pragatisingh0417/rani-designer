@@ -37,7 +37,7 @@ export default function NecklaceShowcase() {
             your inner royalty.
           </p>
 
-          <button className="bg-[#B9AA52] text-white px-8 py-4 font-medium hover:bg-black transition duration-300 flex items-center gap-3">
+          <button className="bg-red-600 text-white px-8 py-4 font-medium hover:bg-black transition duration-300 flex items-center gap-3">
             Know More
             <span className="bg-white text-black rounded-full w-6 h-6 flex items-center justify-center text-sm">
               →
