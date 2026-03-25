@@ -89,13 +89,13 @@ export default function QuickViewDrawer({ product, onClose }: any) {
 
             {/* Thumbnails */}
             <div className="flex flex-col gap-3">
+              
               {images.map((img: string, i: number) => (
                 <button
                   key={i}
                   onClick={() => setActiveIndex(i)}
-                  className={`border rounded overflow-hidden ${
-                    activeIndex === i ? "border-black" : ""
-                  }`}
+                  className={`border rounded overflow-hidden ${activeIndex === i ? "border-black" : ""
+                    }`}
                 >
                   <Image src={img} alt="" width={70} height={80} />
                 </button>
@@ -104,6 +104,13 @@ export default function QuickViewDrawer({ product, onClose }: any) {
 
             {/* Main Image */}
             <div className="flex-1 relative">
+              {Number(product.salePrice) > 0 && (
+  <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
+    {Math.round(
+  ((product.price - product.salePrice) / product.price) * 100
+)}% OFF
+  </span>
+)}
               <Image
                 src={images[activeIndex]}
                 alt={product.name}
@@ -135,9 +142,36 @@ export default function QuickViewDrawer({ product, onClose }: any) {
               {product.name}
             </h2>
 
-            <div className="text-lg font-bold mb-4">
- {formatCurrency(product.price)}
-             </div>
+            <div className="mb-4">
+
+              {Number(product.salePrice) > 0 ? (
+                <div className="flex flex-col">
+
+                  {/* 💰 SALE PRICE */}
+                  <span className="text-xl font-bold text-red-600">
+                    {formatCurrency(product.salePrice)}
+                  </span>
+
+                  {/* ORIGINAL PRICE */}
+                  <span className="text-sm line-through text-gray-400">
+                    {formatCurrency(product.price)}
+                  </span>
+
+                  {/* 💸 DISCOUNT */}
+                  <span className="text-xs text-green-600 font-medium">
+                    {Math.round(
+                      ((product.price - product.salePrice) / product.price) * 100
+                    )}% OFF
+                  </span>
+
+                </div>
+              ) : (
+                <span className="text-xl font-bold">
+                  {formatCurrency(product.price)}
+                </span>
+              )}
+
+            </div>
 
             {/* Buttons */}
             <div className="flex gap-4">
@@ -161,17 +195,16 @@ export default function QuickViewDrawer({ product, onClose }: any) {
                     }, 1000);
                   }
                 }}
-                className={`px-6 py-3 rounded transition ${
-                  isInCart
+                className={`px-6 py-3 rounded transition ${isInCart
                     ? "bg-green-600 text-white"
                     : "bg-black text-white hover:bg-gray-900"
-                }`}
+                  }`}
               >
                 {isInCart
                   ? "Go to Cart"
                   : added
-                  ? "Added ✓"
-                  : "Add to Cart"}
+                    ? "Added ✓"
+                    : "Add to Cart"}
               </button>
 
               <a

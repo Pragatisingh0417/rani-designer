@@ -26,8 +26,9 @@ export async function PUT(req: Request, { params }: any) {
     {
       ...body,
 
-      // ✅ FORCE CORRECT TYPES
-      isOnSale: Boolean(body.isOnSale),
+      // ✅ AUTO SALE DETECTION
+      isOnSale: Boolean(body.isOnSale || Number(body.salePrice) > 0),
+
       isActive: Boolean(body.isActive),
 
       price: Number(body.price),

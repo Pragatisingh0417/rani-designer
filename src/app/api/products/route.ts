@@ -24,14 +24,14 @@ export async function POST(req: Request) {
 
   const data = await req.json();
 
-  // auto generate slug
   data.slug = generateSlug(data.name);
 
   const product = await Product.create({
     ...data,
 
-    // ✅ FORCE TYPES (VERY IMPORTANT)
-    isOnSale: Boolean(data.isOnSale),
+    // ✅ AUTO SALE DETECTION
+    isOnSale: Boolean(data.isOnSale || Number(data.salePrice) > 0),
+
     isActive: Boolean(data.isActive),
 
     price: Number(data.price),

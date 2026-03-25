@@ -7,31 +7,31 @@ export default function AddProduct() {
 
   const router = useRouter();
 
-  const [form,setForm] = useState({
-    name:"",
-    price:"",
-    salePrice:"",
-    shortDescription:"",
-    longDescription:"",
-    stock:"",
-    stone:"",
-    category:"",
-    sku:"",
-    isOnSale:false,
-    isActive:true
+  const [form, setForm] = useState({
+    name: "",
+    price: "",
+    salePrice: "",
+    shortDescription: "",
+    longDescription: "",
+    stock: "",
+    stone: "",
+    category: "",
+    sku: "",
+    isOnSale: false,
+    isActive: true
   });
 
   const [images, setImages] = useState<string[]>([]);
-  const [categories,setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
   /* HANDLE CHANGE */
-  const handleChange = (e:any)=>{
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setForm({...form,[name]:value});
+    setForm({ ...form, [name]: value });
   };
 
   /* SUBMIT */
-  const handleSubmit = async(e:any)=>{
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     // ✅ VALIDATION
@@ -40,16 +40,23 @@ export default function AddProduct() {
       return;
     }
 
-    await fetch("/api/products",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
+    await fetch("/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
       },
-      body:JSON.stringify({
+      body: JSON.stringify({
         ...form,
+
         price: Number(form.price),
         salePrice: Number(form.salePrice || 0),
         stock: Number(form.stock),
+
+        // ✅ AUTO SALE
+        isOnSale: Number(form.salePrice) > 0,
+
+        isActive: Boolean(form.isActive),
+
         shortDescription: form.shortDescription || "",
         images
       })
@@ -76,19 +83,19 @@ export default function AddProduct() {
     e.target.value = "";
   };
 
-  const removeImage = (index:number) => {
-    setImages((prev)=>prev.filter((_,i)=>i !== index));
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   /* FETCH CATEGORY */
-  useEffect(()=>{
-    const fetchCategories = async()=>{
+  useEffect(() => {
+    const fetchCategories = async () => {
       const res = await fetch("/api/categories");
       const data = await res.json();
       setCategories(data);
     };
     fetchCategories();
-  },[]);
+  }, []);
 
   return (
 
@@ -143,7 +150,7 @@ export default function AddProduct() {
             <input type="file" onChange={uploadImage} />
 
             <div className="flex gap-3 mt-4 flex-wrap">
-              {images.map((img,i)=>(
+              {images.map((img, i) => (
                 <div key={i} className="relative">
                   <img
                     src={img}
@@ -151,7 +158,7 @@ export default function AddProduct() {
                   />
                   <button
                     type="button"
-                    onClick={()=>removeImage(i)}
+                    onClick={() => removeImage(i)}
                     className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
                   >
                     ×
@@ -184,21 +191,19 @@ export default function AddProduct() {
 
               <button
                 type="button"
-                onClick={() => 
+                onClick={() =>
                   setForm({
                     ...form,
                     isOnSale: !form.isOnSale,
                     salePrice: form.isOnSale ? "" : form.salePrice
                   })
                 }
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
-                  form.isOnSale ? "bg-red-500" : "bg-gray-300"
-                }`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition ${form.isOnSale ? "bg-red-500" : "bg-gray-300"
+                  }`}
               >
                 <div
-                  className={`bg-white w-4 h-4 rounded-full shadow transform transition ${
-                    form.isOnSale ? "translate-x-6" : ""
-                  }`}
+                  className={`bg-white w-4 h-4 rounded-full shadow transform transition ${form.isOnSale ? "translate-x-6" : ""
+                    }`}
                 />
               </button>
             </div>
@@ -206,11 +211,16 @@ export default function AddProduct() {
             <input
               name="salePrice"
               placeholder="Sale Price (£)"
-              disabled={!form.isOnSale}
-              className={`border p-3 w-full rounded-lg ${
-                !form.isOnSale ? "bg-gray-100 cursor-not-allowed" : ""
-              }`}
-              onChange={handleChange}
+              className="border p-3 w-full rounded-lg"
+              onChange={(e) => {
+                const value = e.target.value;
+
+                setForm({
+                  ...form,
+                  salePrice: value,
+                  isOnSale: Number(value) > 0
+                });
+              }}
             />
 
             {/* DISCOUNT */}
@@ -269,7 +279,7 @@ export default function AddProduct() {
               required
             >
               <option value="">Select Category</option>
-              {categories.map((c:any)=>(
+              {categories.map((c: any) => (
                 <option key={c._id} value={c._id}>
                   {c.name}
                 </option>
@@ -288,15 +298,13 @@ export default function AddProduct() {
 
               <button
                 type="button"
-                onClick={() => setForm({...form, isActive: !form.isActive})}
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
-                  form.isActive ? "bg-green-600" : "bg-gray-300"
-                }`}
+                onClick={() => setForm({ ...form, isActive: !form.isActive })}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition ${form.isActive ? "bg-green-600" : "bg-gray-300"
+                  }`}
               >
                 <div
-                  className={`bg-white w-4 h-4 rounded-full shadow transform transition ${
-                    form.isActive ? "translate-x-6" : ""
-                  }`}
+                  className={`bg-white w-4 h-4 rounded-full shadow transform transition ${form.isActive ? "translate-x-6" : ""
+                    }`}
                 />
               </button>
             </div>

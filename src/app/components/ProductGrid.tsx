@@ -19,7 +19,7 @@ export default function ProductGrid({
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart, cart, setIsCartOpen } = useCart();
 
-  const visibleProducts = products.filter((p:any) => p.isActive);
+  const visibleProducts = products.filter((p: any) => p.isActive);
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -33,15 +33,13 @@ export default function ProductGrid({
         const inStock = product.stock > 0;
 
         // ✅ SAFE SALE LOGIC
-        const isOnSale =
-          (product.isOnSale === true || product.isOnSale === "true") &&
-          Number(product.salePrice) > 0;
+        const isOnSale = Number(product.salePrice) > 0;
 
         const discount =
           isOnSale
             ? Math.round(
-                ((product.price - product.salePrice) / product.price) * 100
-              )
+              ((product.price - product.salePrice) / product.price) * 100
+            )
             : 0;
 
         return (
@@ -162,19 +160,18 @@ export default function ProductGrid({
                     addToCart(product);
                   }
                 }}
-                className={`mt-4 w-full py-2 rounded-lg text-sm transition ${
-                  !inStock
+                className={`mt-4 w-full py-2 rounded-lg text-sm transition ${!inStock
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : isInCart
-                    ? "bg-red-600 text-white"
-                    : "bg-black text-white hover:bg-gray-800"
-                }`}
+                      ? "bg-red-600 text-white"
+                      : "bg-black text-white hover:bg-gray-800"
+                  }`}
               >
                 {!inStock
                   ? "Out of Stock"
                   : isInCart
-                  ? "Go to Cart"
-                  : "Add to Cart"}
+                    ? "Go to Cart"
+                    : "Add to Cart"}
               </button>
 
             </div>

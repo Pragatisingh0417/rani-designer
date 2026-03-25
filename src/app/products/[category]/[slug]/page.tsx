@@ -58,16 +58,31 @@ export default async function ProductSlugPage({
 
           {/* 💰 PRICE */}
           <div className="mb-4">
+            {Number(product.salePrice) > 0 && (
+              <span className="inline-block bg-red-500 text-white text-xs px-2 py-1 rounded mb-2">
+                SALE
+              </span>
+            )}
+            {Number(product.salePrice) > 0 ? (
+              <div className="flex flex-col gap-1">
 
-            {product.isOnSale ? (
-              <div className="flex items-center gap-3">
-                <span className="text-2xl font-bold text-red-600">
-                  {formatCurrency(product.salePrice)}
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl font-bold text-red-600">
+                    {formatCurrency(product.salePrice)}
+                  </span>
+
+                  <span className="text-lg line-through text-gray-400">
+                    {formatCurrency(product.price)}
+                  </span>
+                </div>
+
+                {/* 💸 DISCOUNT */}
+                <span className="text-sm text-green-600 font-medium">
+                  {Math.round(
+                    ((product.price - product.salePrice) / product.price) * 100
+                  )}% OFF
                 </span>
 
-                <span className="text-lg line-through text-gray-400">
-                  {formatCurrency(product.price)}
-                </span>
               </div>
             ) : (
               <p className="text-2xl font-bold">

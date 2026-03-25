@@ -93,9 +93,7 @@ export default function ProductsPage() {
               const inStock = p.stock > 0;
 
               // ✅ SALE LOGIC (SAFE)
-              const isOnSale =
-                (p.isOnSale === true || p.isOnSale === "true") &&
-                Number(p.salePrice) > 0;
+           const isOnSale = Number(p.salePrice) > 0;
 
               return (
                 <tr key={p._id} className="border-t hover:bg-gray-50 transition">
