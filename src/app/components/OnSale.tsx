@@ -18,7 +18,7 @@ export default function OnSale() {
       // ✅ ONLY SALE PRODUCTS
       const saleProducts = data
         .filter((p: any) => Number(p.salePrice) > 0 && p.isActive)
-        .slice(0, 8); // show limited on homepage
+        .slice(0, 4); // show limited on homepage
 
       setProducts(saleProducts);
     };

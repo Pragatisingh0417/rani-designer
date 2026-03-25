@@ -19,12 +19,14 @@ export default function ProductGrid({
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart, cart, setIsCartOpen } = useCart();
 
-  const visibleProducts = products.filter((p: any) => p.isActive);
-
+const visibleProducts = products?.filter(
+  (p: any) => p && p.slug && p.isActive
+);
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 
       {visibleProducts.map((product: any) => {
+          if (!product || !product.slug) return null;
 
         const isInCart = cart.some(
           (item: any) => item._id === product._id
@@ -51,10 +53,14 @@ export default function ProductGrid({
             {/* IMAGE */}
             <div className="relative overflow-hidden">
 
-              <Link
-                href={`/products/${product.category.slug}/${product.slug}`}
-                className="block"
-              >
+             <Link
+  href={
+    product?.category?.slug
+      ? `/products/${product.category.slug}/${product.slug}`
+      : `/products/${product.slug}` // fallback
+  }
+  className="block"
+>
                 <img
                   src={product.images?.[0] || "/placeholder.png"}
                   className="w-full h-[260px] object-cover transition duration-500 group-hover:scale-105"

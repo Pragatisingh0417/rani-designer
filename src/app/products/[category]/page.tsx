@@ -34,9 +34,13 @@ export default function CategoryPage() {
         const res = await fetch("/api/products");
         const data = await res.json();
 
-        const filtered = data.filter(
-          (p: any) => p.category.slug === category
-        );
+      const filtered = data.filter(
+  (p: any) =>
+    p &&
+    p.slug &&
+    p.category &&
+    p.category.slug === category
+);
 
         setProducts(filtered);
       } catch (err) {

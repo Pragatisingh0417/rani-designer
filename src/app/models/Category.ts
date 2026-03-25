@@ -8,27 +8,23 @@ function generateSlug(text: string) {
     .replace(/(^-|-$)/g, "");
 }
 
-const CategorySchema = new mongoose.Schema({
+const CategorySchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+    },
 
-  name: {
-    type: String,
+    slug: {
+      type: String,
+      unique: true,
+    },
+
+    image: {
+      type: String,
+    },
   },
-
-  slug: {
-    type: String,
-    unique: true
-  },
-
-  image: {
-    type: String   // 👈 NEW FIELD
-  },
-
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-
-});
+  { timestamps: true } 
+);
 
 /* AUTO SLUG BEFORE SAVE */
 CategorySchema.pre("save", async function () {

@@ -40,27 +40,25 @@ const [availability, setAvailability] = useState({
 
 
   // ✅ Price filter
-  const filteredProducts = products.filter((p: any) => {
+ const filteredProducts = products?.filter((p: any) => {
+  if (!p || !p.slug) return false; // ✅ prevent crashes
 
-    // ✅ Only active products
-    if (!p.isActive) return false;
+  // ✅ Only active products
+  if (!p.isActive) return false;
 
-    // ✅ Use correct price (sale or original)
-    const finalPrice = p.isOnSale ? p.salePrice : p.price;
+  const finalPrice = p.isOnSale ? p.salePrice : p.price;
 
-    // ✅ Price filter
-    if (finalPrice < priceRange[0] || finalPrice > priceRange[1]) {
-      return false;
-    }
+  if (finalPrice < priceRange[0] || finalPrice > priceRange[1]) {
+    return false;
+  }
 
-    // ✅ Stock filter
-    const inStock = p.stock > 0;
+  const inStock = p.stock > 0;
 
-    if (availability.inStock && !inStock) return false;
-    if (availability.outOfStock && inStock) return false;
+  if (availability.inStock && !inStock) return false;
+  if (availability.outOfStock && inStock) return false;
 
-    return true;
-  });
+  return true;
+});
 
 
   
