@@ -7,7 +7,7 @@ export default function AddProduct() {
 
   const router = useRouter();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<any>({
     name: "",
     price: "",
     salePrice: "",
@@ -17,12 +17,15 @@ export default function AddProduct() {
     stone: "",
     category: "",
     sku: "",
+    designerChoices: [], // ✅ ADD THIS
+
     isOnSale: false,
     isActive: true
   });
 
   const [images, setImages] = useState<string[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [designerChoices, setDesignerChoices] = useState([]);
 
   /* HANDLE CHANGE */
   const handleChange = (e: any) => {
@@ -56,6 +59,9 @@ export default function AddProduct() {
         isOnSale: Number(form.salePrice) > 0,
 
         isActive: Boolean(form.isActive),
+
+        designerChoices: form.designerChoices || [], // ✅ IMPORTANT
+
 
         shortDescription: form.shortDescription || "",
         images
@@ -96,6 +102,15 @@ export default function AddProduct() {
     };
     fetchCategories();
   }, []);
+
+
+
+  useEffect(() => {
+    fetch("/api/designer-choice")
+      .then(res => res.json())
+      .then(setDesignerChoices);
+  }, []);
+
 
   return (
 
@@ -192,11 +207,11 @@ export default function AddProduct() {
               <button
                 type="button"
                 onClick={() =>
-                  setForm({
-                    ...form,
-                    isOnSale: !form.isOnSale,
-                    salePrice: form.isOnSale ? "" : form.salePrice
-                  })
+                  setForm((prev: any) => ({
+                    ...prev,
+                    isOnSale: !prev.isOnSale,
+                    salePrice: prev.isOnSale ? "" : prev.salePrice
+                  }))
                 }
                 className={`w-12 h-6 flex items-center rounded-full p-1 transition ${form.isOnSale ? "bg-red-500" : "bg-gray-300"
                   }`}
@@ -221,6 +236,8 @@ export default function AddProduct() {
                   isOnSale: Number(value) > 0
                 });
               }}
+
+
             />
 
             {/* DISCOUNT */}
@@ -287,6 +304,45 @@ export default function AddProduct() {
             </select>
           </div>
 
+
+          <div className="bg-white border rounded-xl p-5 space-y-4">
+            <h3 className="font-semibold text-lg">Designer Choice</h3>
+
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+
+              {designerChoices.map((dc: any) => (
+                <label key={dc._id} className="flex items-center gap-2">
+
+                  <input
+                    type="checkbox"
+                    value={dc._id}
+                    checked={form.designerChoices.includes(dc._id)} // ✅ ADD THIS
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      setForm((prev: any) => {
+                        if (e.target.checked) {
+                          return {
+                            ...prev,
+                            designerChoices: [...(prev.designerChoices || []), value]
+                          };
+                        } else {
+                          return {
+                            ...prev,
+                            designerChoices: prev.designerChoices.filter((id: string) => id !== value)
+                          };
+                        }
+                      });
+                    }}
+                  />
+
+                  {dc.name}
+
+                </label>
+              ))}
+
+            </div>
+          </div>
           {/* STATUS */}
           <div className="bg-white border rounded-xl p-5 shadow-sm space-y-4">
             <h3 className="font-semibold text-lg">Status</h3>
@@ -309,6 +365,8 @@ export default function AddProduct() {
               </button>
             </div>
           </div>
+
+
 
           <button
             className="w-full bg-red-500 hover:bg-blue-900 text-white py-3 rounded-xl mt-4 transition font-medium"

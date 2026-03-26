@@ -27,8 +27,17 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
 <WishlistProvider>  
-  <Toaster position="top-right" />
-          {!isAdmin && <Header />}
+<Toaster
+  position="top-right"
+  toastOptions={{
+    style: {
+      background: "#111",
+      color: "#fff",
+      borderRadius: "12px",
+      padding: "12px 16px",
+    },
+  }}
+/>          {!isAdmin && <Header />}
 
           {children}
 

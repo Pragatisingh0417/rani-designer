@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/app/lib/format";
+import toast from "react-hot-toast";
+
+
+
 
 export default function ProductsPage() {
 
@@ -18,12 +22,35 @@ export default function ProductsPage() {
     setProducts(data);
   };
 
-  const deleteProduct = async (id: string) => {
-    await fetch(`/api/products/${id}`, {
+ const [deletingId, setDeletingId] = useState<string | null>(null);
+
+const deleteProduct = async (id: string) => {
+  try {
+    setDeletingId(id);
+
+    const res = await fetch(`/api/products/${id}`, {
       method: "DELETE",
     });
-    fetchProducts();
-  };
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      toast.error(data?.error || "Delete failed ❌");
+      return;
+    }
+
+    // ✅ instant UI update
+    setProducts((prev) => prev.filter((p) => p._id !== id));
+
+    toast.success("Product deleted 🗑️");
+
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong ⚠️");
+  } finally {
+    setDeletingId(null);
+  }
+};
 
   const toggleStatus = async (product: any) => {
     await fetch(`/api/products/${product._id}`, {
@@ -38,6 +65,11 @@ export default function ProductsPage() {
 
     fetchProducts();
   };
+
+const [search, setSearch] = useState("");
+const [selectedCategory, setSelectedCategory] = useState("");
+const [showSaleOnly, setShowSaleOnly] = useState(false);
+
 
   return (
     <div>
@@ -55,170 +87,220 @@ export default function ProductsPage() {
       </div>
 
       {/* FILTERS */}
-      <div className="flex gap-4 mb-6">
+     <div className="flex flex-wrap gap-4 mb-6">
 
-        <input
-          type="text"
-          placeholder="Search products..."
-          className="border px-3 py-2 w-72 rounded-lg"
-        />
+  {/* 🔍 SEARCH */}
+  <input
+    type="text"
+    placeholder="Search products..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    className="border px-3 py-2 w-72 rounded-lg"
+  />
 
-        <select className="border px-3 py-2 rounded-lg">
-          <option>Status</option>
-          <option>Active</option>
-          <option>Hidden</option>
-        </select>
+  {/* 🏷 CATEGORY FILTER */}
+  <select
+    value={selectedCategory}
+    onChange={(e) => setSelectedCategory(e.target.value)}
+    className="border px-3 py-2 rounded-lg"
+  >
+    <option value="">All Categories</option>
 
-      </div>
+    {[...new Set(products.map((p) => p.category?.name))].map(
+      (cat, i) =>
+        cat && (
+          <option key={i} value={cat}>
+            {cat}
+          </option>
+        )
+    )}
+  </select>
+
+  {/* 🔥 SALE FILTER */}
+  <label className="flex items-center gap-2 text-sm">
+    <input
+      type="checkbox"
+      checked={showSaleOnly}
+      onChange={(e) => setShowSaleOnly(e.target.checked)}
+    />
+    On Sale Only
+  </label>
+
+</div>
 
       {/* TABLE */}
       <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
 
         <table className="w-full">
 
-          <thead className="bg-gray-100 text-sm">
-            <tr>
-              <th className="p-4 text-left">Product</th>
-              <th className="text-left">Price</th>
-              <th>Stock</th>
-              <th>Status</th>
-              <th className="text-right pr-6">Actions</th>
-            </tr>
-          </thead>
+  <thead className="bg-gray-100 text-sm">
+    <tr>
+      <th className="p-4 text-left">Product</th>
+      <th className="text-left">Category</th>
+      <th className="text-left">Price</th>
+      <th>Stock</th>
+      <th>Status</th>
+      <th className="text-right pr-6">Actions</th>
+    </tr>
+  </thead>
 
-          <tbody>
+  <tbody>
+{products
+  .filter((p: any) => {
 
-            {products.map((p: any) => {
+    const matchesSearch = p.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
-              const inStock = p.stock > 0;
+    const matchesCategory = selectedCategory
+      ? p.category?.name === selectedCategory
+      : true;
 
-              // ✅ SALE LOGIC (SAFE)
-           const isOnSale = Number(p.salePrice) > 0;
+    const isOnSale = Number(p.salePrice) > 0;
 
-              return (
-                <tr key={p._id} className="border-t hover:bg-gray-50 transition">
+    const matchesSale = showSaleOnly ? isOnSale : true;
 
-                  {/* PRODUCT */}
-                  <td className="p-4 flex items-center gap-4">
+    return matchesSearch && matchesCategory && matchesSale;
+  })
+  .map((p: any) => {
 
-                    <img
-                      src={p.images?.[0] || "/placeholder.png"}
-                      className="w-14 h-14 object-cover rounded-lg border"
-                    />
 
-                    <div>
-                      <p className="font-medium flex items-center gap-2">
-                        {p.name}
+    
+      const inStock = p.stock > 0;
 
-                        {/* 🔥 SALE BADGE */}
-                        {isOnSale && (
-                          <span className="text-xs bg-red-500 text-white px-2 py-1 rounded">
-                            SALE
-                          </span>
-                        )}
-                      </p>
+      const isOnSale = Number(p.salePrice) > 0;
 
-                      {!inStock && (
-                        <p className="text-xs text-red-500">
-                          Out of stock
-                        </p>
-                      )}
-                    </div>
+      const discount = isOnSale
+        ? Math.round(((p.price - p.salePrice) / p.price) * 100)
+        : 0;
 
-                  </td>
+      return (
+        <tr key={p._id} className="border-t hover:bg-gray-50 transition">
 
-                  {/* 💰 PRICE */}
-                  <td>
-                    {isOnSale ? (
-                      <div className="flex flex-col">
+          {/* PRODUCT */}
+          <td className="p-4 flex items-center gap-4">
 
-                        {/* SALE PRICE */}
-                        <span className="font-semibold text-red-600">
-                          {formatCurrency(p.salePrice)}
-                        </span>
+            <img
+              src={p.images?.[0] || "/placeholder.png"}
+              className="w-14 h-14 object-cover rounded-lg border"
+            />
 
-                        {/* ORIGINAL PRICE */}
-                        <span className="text-xs line-through text-gray-400">
-                          {formatCurrency(p.price)}
-                        </span>
+            <div>
+              <p className="font-medium flex items-center gap-2">
+                {p.name}
 
-                        {/* DISCOUNT */}
-                        <span className="text-xs text-green-600 font-medium">
-                          {Math.round(
-                            ((p.price - p.salePrice) / p.price) * 100
-                          )}% OFF
-                        </span>
+                {isOnSale && (
+                  <span className="text-xs bg-red-500 text-white px-2 py-1 rounded">
+                    SALE
+                  </span>
+                )}
+              </p>
 
-                      </div>
-                    ) : (
-                      <span>{formatCurrency(p.price)}</span>
-                    )}
-                  </td>
+              {!inStock && (
+                <p className="text-xs text-red-500">
+                  Out of stock
+                </p>
+              )}
+            </div>
 
-                  {/* STOCK */}
-                  <td className="text-center">
-                    {inStock ? (
-                      <span className="text-green-600 text-sm font-medium">
-                        ● In Stock
-                      </span>
-                    ) : (
-                      <span className="text-red-500 text-sm font-medium">
-                        ● Out
-                      </span>
-                    )}
-                  </td>
+          </td>
 
-                  {/* STATUS */}
-                  <td className="text-center">
+          {/* 🏷 CATEGORY */}
+          <td className="text-sm text-gray-600">
+            {p.category?.name || "—"}
+          </td>
 
-                    <button
-                      onClick={() => toggleStatus(p)}
-                      className={`w-12 h-6 flex items-center rounded-full p-1 transition mx-auto ${
-                        p.isActive ? "bg-green-600" : "bg-gray-300"
-                      }`}
-                    >
-                      <div
-                        className={`bg-white w-4 h-4 rounded-full shadow transform transition ${
-                          p.isActive ? "translate-x-6" : ""
-                        }`}
-                      />
-                    </button>
+          {/* 💰 PRICE */}
+          <td>
+            {isOnSale ? (
+              <div className="flex flex-col">
 
-                  </td>
+                <span className="font-semibold text-red-600">
+                  {formatCurrency(p.salePrice)}
+                </span>
 
-                  {/* ACTIONS */}
-                  <td className="text-right pr-6 space-x-4 text-sm">
+                <span className="text-xs line-through text-gray-400">
+                  {formatCurrency(p.price)}
+                </span>
 
-                    <Link
-                      href={`/products/${p.slug}`}
-                      className="text-green-600 hover:underline"
-                    >
-                      View
-                    </Link>
+                <span className="text-xs text-green-600 font-medium">
+                  {discount}% OFF
+                </span>
 
-                    <Link
-                      href={`/admin/products/edit/${p._id}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Edit
-                    </Link>
+              </div>
+            ) : (
+              <span className="font-medium">
+                {formatCurrency(p.price)}
+              </span>
+            )}
+          </td>
 
-                    <button
-                      onClick={() => deleteProduct(p._id)}
-                      className="text-red-600 hover:underline"
-                    >
-                      Delete
-                    </button>
+          {/* 📦 STOCK */}
+          <td className="text-center">
+            {inStock ? (
+              <span className="px-2 py-1 text-xs rounded bg-green-100 text-green-700 font-medium">
+                In Stock ({p.stock})
+              </span>
+            ) : (
+              <span className="px-2 py-1 text-xs rounded bg-red-100 text-red-600 font-medium">
+                Out of Stock
+              </span>
+            )}
+          </td>
 
-                  </td>
+          {/* STATUS */}
+          <td className="text-center">
+            <button
+              onClick={() => toggleStatus(p)}
+              className={`w-12 h-6 flex items-center rounded-full p-1 transition mx-auto ${
+                p.isActive ? "bg-green-600" : "bg-gray-300"
+              }`}
+            >
+              <div
+                className={`bg-white w-4 h-4 rounded-full shadow transform transition ${
+                  p.isActive ? "translate-x-6" : ""
+                }`}
+              />
+            </button>
+          </td>
 
-                </tr>
-              );
-            })}
+          {/* ACTIONS */}
+          <td className="text-right pr-6 space-x-4 text-sm">
 
-          </tbody>
+            <Link
+              href={`/products/${p.slug}`}
+              className="text-green-600 hover:underline"
+            >
+              View
+            </Link>
 
-        </table>
+            <Link
+              href={`/admin/products/edit/${p._id}`}
+              className="text-blue-600 hover:underline"
+            >
+              Edit
+            </Link>
+
+            <button
+              disabled={deletingId === p._id}
+              onClick={() => {
+                if (confirm("Delete this product?")) {
+                  deleteProduct(p._id);
+                }
+              }}
+              className="text-red-600 hover:underline disabled:opacity-50"
+            >
+              {deletingId === p._id ? "Deleting..." : "Delete"}
+            </button>
+
+          </td>
+
+        </tr>
+      );
+    })}
+  </tbody>
+
+</table>
 
       </div>
 

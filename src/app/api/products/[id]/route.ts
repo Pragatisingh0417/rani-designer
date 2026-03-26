@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Product from "@/app/models/Product";
 import { connectDB } from "@/app/lib/mongodb";
 
+// ✅ GET
 export async function GET(req: Request, { params }: any) {
 
   await connectDB();
@@ -13,6 +14,7 @@ export async function GET(req: Request, { params }: any) {
   return NextResponse.json(product);
 }
 
+// ✅ PUT
 export async function PUT(req: Request, { params }: any) {
 
   await connectDB();
@@ -26,9 +28,7 @@ export async function PUT(req: Request, { params }: any) {
     {
       ...body,
 
-      // ✅ AUTO SALE DETECTION
       isOnSale: Boolean(body.isOnSale || Number(body.salePrice) > 0),
-
       isActive: Boolean(body.isActive),
 
       price: Number(body.price),
@@ -39,4 +39,23 @@ export async function PUT(req: Request, { params }: any) {
   );
 
   return NextResponse.json(product);
+}
+
+// ✅ DELETE (FIXED)
+export async function DELETE(req: Request, { params }: any) {
+
+  await connectDB();
+
+  const { id } = await params; // ✅ FIX HERE
+
+  const deleted = await Product.findByIdAndDelete(id);
+
+  if (!deleted) {
+    return NextResponse.json(
+      { error: "Product not found" },
+      { status: 404 }
+    );
+  }
+
+  return NextResponse.json({ message: "Deleted successfully" });
 }

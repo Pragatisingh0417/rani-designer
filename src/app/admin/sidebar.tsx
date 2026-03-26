@@ -34,7 +34,9 @@ export default function Sidebar() {
         <Link href="/admin/categories" className={linkClass("/admin/categories")}>
           Categories
         </Link>
-
+ <Link href="/admin/designer-choice" className={linkClass("/admin/users")}>
+          Desingner Choice
+        </Link>
         <Link href="/admin/orders" className={linkClass("/admin/orders")}>
           Orders
         </Link>

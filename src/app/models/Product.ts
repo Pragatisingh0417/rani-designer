@@ -49,7 +49,14 @@ const ProductSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    designerChoices: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "DesignerChoice",
   },
+],
+  },
+  
   { timestamps: true }
 );
 

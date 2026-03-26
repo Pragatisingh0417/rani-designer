@@ -8,17 +8,17 @@ export default function EditProduct() {
   const router = useRouter();
   const params = useParams();
 
-  const [form,setForm] = useState<any>(null);
+  const [form, setForm] = useState<any>(null);
   const [images, setImages] = useState<string[]>([]);
-  const [categories,setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
-  /* FETCH PRODUCT */
-  useEffect(()=>{
+  /* FETCH */
+  useEffect(() => {
     fetchProduct();
     fetchCategories();
-  },[]);
+  }, []);
 
-  const fetchProduct = async ()=>{
+  const fetchProduct = async () => {
     const res = await fetch(`/api/products/${params.id}`);
     const data = await res.json();
 
@@ -27,25 +27,26 @@ export default function EditProduct() {
       price: data.price || "",
       salePrice: data.salePrice || "",
       stock: data.stock || "",
+      isOnSale: Number(data.salePrice) > 0, // ✅ FIX
     });
 
     setImages(data.images || []);
   };
 
-  const fetchCategories = async()=>{
+  const fetchCategories = async () => {
     const res = await fetch("/api/categories");
     const data = await res.json();
     setCategories(data);
   };
 
   /* HANDLE CHANGE */
-  const handleChange = (e:any)=>{
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setForm({...form,[name]:value});
+    setForm({ ...form, [name]: value });
   };
 
   /* IMAGE UPLOAD */
-  const uploadImage = async (e:any)=>{
+  const uploadImage = async (e: any) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -58,33 +59,39 @@ export default function EditProduct() {
     });
 
     const data = await res.json();
-    setImages((prev)=>[...prev,data.url]);
+    setImages((prev) => [...prev, data.url]);
   };
 
-  const removeImage = (index:number)=>{
-    setImages((prev)=>prev.filter((_,i)=>i !== index));
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   /* SUBMIT */
-  const handleSubmit = async (e:any)=>{
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    // ✅ validation
     if (form.isOnSale && Number(form.salePrice) >= Number(form.price)) {
       alert("Sale price must be less than original price");
       return;
     }
 
-    await fetch(`/api/products/${params.id}`,{
-      method:"PUT",
-      headers:{
-        "Content-Type":"application/json"
+    await fetch(`/api/products/${params.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
       },
-      body:JSON.stringify({
+      body: JSON.stringify({
         ...form,
+
         price: Number(form.price),
         salePrice: Number(form.salePrice || 0),
         stock: Number(form.stock),
+
+        // ✅ AUTO SALE FIX
+        isOnSale: Number(form.salePrice) > 0,
+
+        isActive: Boolean(form.isActive),
+
         images
       })
     });
@@ -92,9 +99,9 @@ export default function EditProduct() {
     router.push("/admin/products");
   };
 
-  if(!form) return <p>Loading...</p>;
+  if (!form) return <p>Loading...</p>;
 
-  return(
+  return (
 
     <div className="max-w-6xl mx-auto">
 
@@ -134,12 +141,12 @@ export default function EditProduct() {
             <input type="file" onChange={uploadImage} />
 
             <div className="flex gap-3 mt-4 flex-wrap">
-              {images.map((img,i)=>(
+              {images.map((img, i) => (
                 <div key={i} className="relative">
                   <img src={img} className="w-20 h-20 rounded border" />
                   <button
                     type="button"
-                    onClick={()=>removeImage(i)}
+                    onClick={() => removeImage(i)}
                     className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full"
                   >
                     ×
@@ -157,75 +164,137 @@ export default function EditProduct() {
           {/* PRICING */}
           <div className="bg-white border rounded-xl p-5 space-y-4">
 
+            <h3 className="font-semibold">Pricing</h3>
+
             <input
               name="price"
               value={form.price}
-              placeholder="Price"
-              className="border p-2 w-full rounded"
+              placeholder="Original Price"
+              className="border p-3 w-full rounded"
               onChange={handleChange}
             />
 
-            <button
-              type="button"
-              onClick={()=>setForm({
-                ...form,
-                isOnSale: !form.isOnSale,
-                salePrice: form.isOnSale ? "" : form.salePrice
-              })}
-              className={`w-12 h-6 rounded-full ${
-                form.isOnSale ? "bg-red-500" : "bg-gray-300"
-              }`}
-            />
+            {/* TOGGLE */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm">On Sale</span>
 
+              <button
+                type="button"
+                onClick={() =>
+                  setForm({
+                    ...form,
+                    isOnSale: !form.isOnSale,
+                    salePrice: form.isOnSale ? "" : form.salePrice
+                  })
+                }
+                className={`w-12 h-6 flex items-center rounded-full p-1 ${
+                  form.isOnSale ? "bg-red-500" : "bg-gray-300"
+                }`}
+              >
+                <div
+                  className={`bg-white w-4 h-4 rounded-full transform ${
+                    form.isOnSale ? "translate-x-6" : ""
+                  }`}
+                />
+              </button>
+            </div>
+
+            {/* SALE PRICE */}
             <input
               name="salePrice"
               value={form.salePrice}
-              disabled={!form.isOnSale}
-              className="border p-2 w-full rounded"
-              onChange={handleChange}
+              placeholder="Sale Price"
+              className="border p-3 w-full rounded"
+              onChange={(e) => {
+                const value = e.target.value;
+
+                setForm({
+                  ...form,
+                  salePrice: value,
+                  isOnSale: Number(value) > 0
+                });
+              }}
             />
+
+            {/* DISCOUNT */}
+            {form.isOnSale && form.price && form.salePrice && (
+              <p className="text-green-600 text-sm">
+                Discount: {Math.round(
+                  ((Number(form.price) - Number(form.salePrice)) /
+                    Number(form.price)) * 100
+                )}%
+              </p>
+            )}
 
           </div>
 
           {/* STOCK */}
           <div className="bg-white border rounded-xl p-5 space-y-4">
 
+            <h3 className="font-semibold">Inventory</h3>
+
             <input
               name="stock"
               value={form.stock}
               type="number"
-              className="border p-2 w-full rounded"
+              className="border p-3 w-full rounded"
               onChange={handleChange}
             />
 
-            <p>
-              {Number(form.stock) > 0 ? "In Stock" : "Out of Stock"}
+            <p className="text-sm">
+              {Number(form.stock) > 0
+                ? "In Stock ✅"
+                : "Out of Stock ❌"}
             </p>
 
           </div>
 
           {/* CATEGORY */}
-          <select
-            name="category"
-            value={form.category}
-            className="border p-2 w-full rounded"
-            onChange={handleChange}
-          >
-            {categories.map((c:any)=>(
-              <option key={c._id} value={c._id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          <div className="bg-white border rounded-xl p-5">
+
+            <h3 className="font-semibold mb-3">Category</h3>
+
+            <select
+              name="category"
+              value={form.category}
+              className="border p-3 w-full rounded"
+              onChange={handleChange}
+            >
+              {categories.map((c: any) => (
+                <option key={c._id} value={c._id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+
+          </div>
 
           {/* STATUS */}
-          <button
-            type="button"
-            onClick={()=>setForm({...form,isActive:!form.isActive})}
-            className={`w-12 h-6 rounded-full ${
-              form.isActive ? "bg-green-500" : "bg-gray-300"
-            }`}
-          />
+          <div className="bg-white border rounded-xl p-5">
+
+            <div className="flex items-center justify-between">
+              <span className="text-sm">
+                {form.isActive ? "Active" : "Hidden"}
+              </span>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setForm({ ...form, isActive: !form.isActive })
+                }
+                className={`w-12 h-6 flex items-center rounded-full p-1 ${
+                  form.isActive ? "bg-green-600" : "bg-gray-300"
+                }`}
+              >
+                <div
+                  className={`bg-white w-4 h-4 rounded-full transform ${
+                    form.isActive ? "translate-x-6" : ""
+                  }`}
+                />
+              </button>
+            </div>
+
+          </div>
 
           <button className="w-full bg-black text-white py-3 rounded">
             Update Product

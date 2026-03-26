@@ -1,116 +1,60 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function RaniDesignerChoice() {
-  const catalogs = [
-    {
-      title: "Brass/Rajwadi Choice",
-      image: "/images/wedding-image.webp",
-      link: "#",
-    },
-    {
-      title: "Meenakari Choice",
-      image: "/images/gold.webp",
-      link: "#",
-    },
-    {
-      title: "Kangans Choice",
-      image: "/images/diamond.webp",
-      link: "#",
-    },
-    {
-      title: "Punjabi Traditional Choice",
-      image: "/images/dailywear.webp",
-      link: "#",
-    },
-  ];
+
+  const [choices, setChoices] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/designer-choice")
+      .then(res => res.json())
+      .then(setChoices);
+  }, []);
 
   return (
-    <section className="py-10 sm:py-14 md:py-16">
+    <section className="py-15">
 
-      {/* Heading */}
-      <h2 className="
-        text-2xl 
-        sm:text-3xl 
-        md:text-5xl 
-        leading-tight 
-        text-black 
-        mb-3 sm:mb-5 
-        text-center
-      ">
+      <h2 className="text-3xl md:text-5xl text-black mb-5 text-center">
         Rani’s Designer Choice
       </h2>
+      <p className="max-w-4xl mx-auto text-sm sm:text-base md:text-lg text-center mb-8 text-gray-700">
+        Our jewellery is inspired by the beauty of Indian traditions, with a touch of modern elegance and uncompromising quality.
 
-      <p className="
-        text-sm 
-        sm:text-base 
-        md:text-lg 
-        text-center 
-        mb-8 sm:mb-10 md:mb-12 
-        max-w-2xl md:max-w-4xl 
-        mx-auto 
-        text-gray-700
-      ">
-        Our jewellery is inspired by the beauty of Indian traditions, with a touch of modern
-        elegance and uncompromising quality.
+
       </p>
 
-      {/* Grid */}
-      <div className="
-        max-w-7xl mx-auto 
-        grid grid-cols-1 
-        sm:grid-cols-2 
-        md:grid-cols-3 
-        lg:grid-cols-4 
-        gap-4 sm:gap-6 
-        px-4 sm:px-6
-      ">
-        {catalogs.map((item, index) => (
-          <Link
-            key={index}
-            href={item.link}
-            className="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-sm hover:shadow-lg transition"
-          >
-            {/* Image */}
-            <div className="
-              relative w-full 
-              h-[220px] 
-              sm:h-[260px] 
-              md:h-[280px] 
-              lg:h-[300px]
-            ">
-              <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-            </div>
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6">
 
-            {/* Overlay */}
-            <div className="
-              absolute inset-0 
-              flex items-end justify-center 
-              pb-4 sm:pb-6 
-              bg-black/20 
-              group-hover:bg-black/50 
-              transition
-            ">
-              <h3 className="
-                text-white 
-                text-base 
-                sm:text-lg 
-                md:text-xl 
-                font-semibold 
-                tracking-wide 
-                text-center px-2
-              ">
-                {item.title}
-              </h3>
-            </div>
-          </Link>
-        ))}
+        {choices.length === 0 ? (
+          <p className="text-center col-span-4">Loading...</p>
+        ) : (
+          choices.map((c: any) => (
+            <Link
+              key={c._id}
+              href={`/designer-choice/${c.slug}`}
+              className="relative group rounded-xl overflow-hidden"
+            >
+              <div className="relative h-[350px] w-full">
+                <img
+                  src={c.image}
+                  className="object-cover transition-transform duration-500 group-hover:scale-110 rounded-2xl"
+                />
+              </div>
+
+
+              <div className="absolute inset-0 bg-black/30 flex items-end justify-center pb-4">
+                <h3 className="text-white font-semibold">
+                  {c.name}
+                </h3>
+              </div>
+            </Link>
+          ))
+        )}
+
       </div>
+
     </section>
   );
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Category from "@/app/models/Category";
 import { connectDB } from "@/app/lib/mongodb";
+import Product from "@/app/models/Product";
 
 export async function PUT(req: Request, { params }: any) {
   try {
@@ -56,14 +57,22 @@ export async function DELETE(req: Request, { params }: any) {
       );
     }
 
+    // ✅ DELETE ALL PRODUCTS UNDER THIS CATEGORY
+    const deletedProducts = await Product.deleteMany({
+      category: id
+    });
+
     // 👉 OPTIONAL (Cloudinary cleanup)
     // if (category.imagePublicId) {
     //   await cloudinary.uploader.destroy(category.imagePublicId);
     // }
 
+    // ✅ DELETE CATEGORY
     await Category.findByIdAndDelete(id);
 
-    return NextResponse.json({ message: "Deleted successfully" });
+    return NextResponse.json({
+      message: `Deleted category + ${deletedProducts.deletedCount} products`
+    });
 
   } catch (error: any) {
     return NextResponse.json(

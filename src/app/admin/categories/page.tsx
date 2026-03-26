@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
 
 export default function CategoriesPage() {
 
@@ -76,12 +78,19 @@ export default function CategoriesPage() {
 
   /* DELETE */
   const deleteCategory = async (id: string) => {
-    await fetch(`/api/categories/${id}`, {
-      method: "DELETE"
-    });
 
-    fetchCategories();
-  };
+  if (!confirm("Delete category + ALL products?")) return;
+
+  const res = await fetch(`/api/categories/${id}`, {
+    method: "DELETE"
+  });
+
+  const data = await res.json();
+
+  toast.success(data.message || "Deleted successfully");
+
+  fetchCategories();
+};
 
   /* EDIT CLICK */
   const editCategory = (category: any) => {
@@ -193,9 +202,11 @@ export default function CategoriesPage() {
                 <button
                   onClick={() => deleteCategory(c._id)}
                   className="text-red-600"
+                  
                 >
                   Delete
                 </button>
+                
 
               </td>
 
