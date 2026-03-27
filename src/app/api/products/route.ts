@@ -13,8 +13,9 @@ export async function GET() {
 
   await connectDB();
 
-  const products = await Product.find().populate("category");
-
+  const products = await Product.find()
+    .populate("category")
+    .populate("designerChoices"); // ✅ ADD THIS
   return NextResponse.json(products);
 }
 
@@ -28,6 +29,8 @@ export async function POST(req: Request) {
 
   const product = await Product.create({
     ...data,
+
+// category: data.category || null,
 
     // ✅ AUTO SALE DETECTION
     isOnSale: Boolean(data.isOnSale || Number(data.salePrice) > 0),

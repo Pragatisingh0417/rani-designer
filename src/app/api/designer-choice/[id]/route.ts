@@ -2,14 +2,6 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import DesignerChoice from "@/app/models/DesignerChoice";
 
-function generateSlug(text: string) {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
 export async function PUT(req: Request, { params }: any) {
   await connectDB();
 
@@ -20,7 +12,6 @@ export async function PUT(req: Request, { params }: any) {
     id,
     {
       name: body.name,
-      slug: generateSlug(body.name), // ✅ FIX
       image: body.image,
     },
     { new: true }

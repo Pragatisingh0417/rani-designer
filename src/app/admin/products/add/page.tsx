@@ -133,6 +133,7 @@ export default function AddProduct() {
               onChange={handleChange}
               required
             />
+            
           </div>
 
           <div>

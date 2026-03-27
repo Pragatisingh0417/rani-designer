@@ -8,47 +8,43 @@ import QuickViewDrawer from "@/app/components/QuickViewDrawer";
 export default function DesignerChoicePage() {
 
   const params = useParams();
-  const slug = params.slug;
+
+  const slug = Array.isArray(params.slug)
+    ? params.slug[0]
+    : params.slug;
 
   const [products, setProducts] = useState<any[]>([]);
-  const [choice, setChoice] = useState<any>(null);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchProducts = async () => {
+      const res = await fetch("/api/products");
+      const data = await res.json();
 
-  const fetchData = async () => {
-    const res = await fetch(`/api/designer-choice/${slug}`);
-    const data = await res.json();
+      const filtered = data.filter((p: any) =>
+        p.designerChoices?.some(
+          (dc: any) => dc.slug === slug
+        )
+      );
 
-    setChoice(data.choice);
-    setProducts(data.products);
-  };
+      setProducts(filtered);
+    };
+
+    if (slug) fetchProducts();
+  }, [slug]);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-32 pb-16">
+    <div className="max-w-7xl mx-auto pt-40 px-6 pb-16">
 
-      {/* HEADER */}
-      <div className="text-center mb-10">
+      <h1 className="text-4xl text-center mb-10 capitalize">
+        {slug}
+      </h1>
 
-        <h1 className="text-3xl md:text-4xl font-semibold">
-          {choice?.name}
-        </h1>
-
-        <p className="text-gray-500 mt-2">
-          Explore our curated collection
-        </p>
-
-      </div>
-
-      {/* PRODUCTS */}
       <ProductGrid
         products={products}
-        onQuickView={(product) => setSelectedProduct(product)}
+        onQuickView={(p) => setSelectedProduct(p)}
       />
 
-      {/* QUICK VIEW */}
       {selectedProduct && (
         <QuickViewDrawer
           product={selectedProduct}

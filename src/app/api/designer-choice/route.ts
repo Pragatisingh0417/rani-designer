@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import DesignerChoice from "@/app/models/DesignerChoice";
 
+/* 🔥 ADD THIS FUNCTION */
 function generateSlug(text: string) {
   return text
     .toLowerCase()
@@ -15,8 +16,8 @@ export async function GET() {
   await connectDB();
 
   const data = await DesignerChoice.find().sort({ createdAt: 1 });
-    console.log("GET DATA 👉", data); // ✅ ADD THIS
 
+  console.log("GET DATA 👉", data);
 
   return NextResponse.json(data);
 }
@@ -27,9 +28,11 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
+  const slug = generateSlug(body.name); // 🔥 IMPORTANT
+
   const newItem = await DesignerChoice.create({
     name: body.name,
-    slug: generateSlug(body.name),
+    slug: slug,        // ✅ FIX HERE
     image: body.image,
   });
 
