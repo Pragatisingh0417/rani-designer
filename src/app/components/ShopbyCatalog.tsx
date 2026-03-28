@@ -37,8 +37,7 @@ export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
         Shop By Category
       </h2>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6">
-
+<div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 px-6">
         {displayed.map((cat: any) => (
 
           <Link
@@ -47,7 +46,7 @@ export default function ShopByCatalog({ limit }: ShopByCatalogProps) {
             className="group relative overflow-hidden shadow-md rounded-2xl"
           >
 
-            <div className="relative h-[300px] w-full">
+            <div className="relative h-[300px] sm:h-[220px] md:h-[300px]  w-full">
 
               <Image
                 src={cat.image || "/placeholder.png"}

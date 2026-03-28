@@ -25,7 +25,7 @@ export default function RaniDesignerChoice() {
 
       </p>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6">
+<div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 px-6">
 
         {choices.length === 0 ? (
           <p className="text-center col-span-4">Loading...</p>
@@ -36,12 +36,13 @@ export default function RaniDesignerChoice() {
               href={`/designer-choice/${c.slug}`}
               className="relative group rounded-xl overflow-hidden"
             >
-              <div className="relative h-[350px] w-full">
-                <img
-                  src={c.image}
-                  className="object-cover transition-transform duration-500 group-hover:scale-110 rounded-2xl"
-                />
-              </div>
+            <div className="relative h-[300px] sm:h-[220px] md:h-[300px]  w-full">
+  <img
+    src={c.image}
+    alt={c.name}
+    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 md:group-hover:scale-110"
+  />
+</div>
 
 
               <div className="absolute inset-0 bg-black/30 flex items-end justify-center pb-4">

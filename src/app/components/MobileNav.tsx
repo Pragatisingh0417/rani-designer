@@ -136,7 +136,7 @@ useEffect(() => {
 
       {/* SIDE DRAWER */}
       <div
-        className={`fixed top-0 left-0 h-full w-[80%] max-w-[360px] bg-red-600 text-black
+        className={`fixed top-0 left-0 h-full w-[80%] max-w-[360px] bg-amber-50 text-black
         transform transition-transform duration-300 ease-in-out z-50
         ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}
       >

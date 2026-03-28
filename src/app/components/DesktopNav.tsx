@@ -8,8 +8,6 @@ import Image from "next/image";
 import { useAuth } from "@/app/context/AuthContext";
 import { useCart } from "@/app/context/CartContext";
 
-
-
 /* USER TYPE */
 type UserType = {
   name: string;
@@ -19,15 +17,18 @@ type UserType = {
 export default function DesktopNav() {
 
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const menuRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const pathname = usePathname();
   const { wishlist } = useWishlist();
   const { cart, setIsCartOpen } = useCart();
   const isHome = pathname === "/";
+  
+
   /* AUTH CONTEXT */
   const { user, logout } = useAuth() as {
     user: UserType | null;
@@ -37,36 +38,21 @@ export default function DesktopNav() {
   /* HANDLE LOGOUT */
   const handleLogout = () => {
     logout();
-    setOpen(false);
   };
 
-  /* CLOSE DROPDOWN ON OUTSIDE CLICK */
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
+  /* HOVER HANDLERS (NO FLICKER) */
+  const handleEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsHovering(true);
+  };
 
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(target) &&
-        dropdownRef.current &&
-        !dropdownRef.current.contains(target)
-      ) {
-        setActiveMenu(null);
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-
+  const handleLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsHovering(false);
+    }, 150);
+  };
 
   useEffect(() => {
-
     const fetchCategories = async () => {
       const res = await fetch("/api/categories");
       const data = await res.json();
@@ -74,18 +60,16 @@ export default function DesktopNav() {
     };
 
     fetchCategories();
-
   }, []);
 
-
   return (
-   <nav
-  className={`hidden md:block py-1 absolute top-0 left-0 w-full z-50  
-  ${isHome ? "text-white" : "text-black bg-transpareant  shadow-sm"}`}
-  style={{ fontFamily: "'Playfair Display', serif" }}
->
+    <nav
+      className={`hidden md:block py-1 absolute top-0 left-0 w-full z-50  
+      ${isHome ? "text-white" : "text-black bg-transpareant shadow-sm"}`}
+      style={{ fontFamily: "'Playfair Display', serif" }}
+    >
       <div
-        className="w-full   mx-auto p-10 flex justify-center gap-10 text-[17.5px] tracking-wide relative  items-center "
+        className="w-full mx-auto p-10 flex justify-center gap-10 text-[17.5px] tracking-wide relative items-center"
         ref={menuRef}
       >
 
@@ -130,13 +114,11 @@ export default function DesktopNav() {
             <div className="absolute left-1/2 -translate-x-1/2 top-full bg-amber-50 text-black shadow-2xl w-[900px] p-8 grid grid-cols-4 gap-6 z-[1000]">
 
               {categories.map((cat: any) => (
-
                 <Link
                   key={cat._id}
                   href={`/products/${cat.slug}`}
                   className="flex items-center gap-3 hover:text-[#8B0000]"
                 >
-
                   <Image
                     src={cat.image || "/placeholder.png"}
                     alt={cat.name}
@@ -144,11 +126,8 @@ export default function DesktopNav() {
                     height={40}
                     className="rounded-md"
                   />
-
                   {cat.name}
-
                 </Link>
-
               ))}
 
             </div>
@@ -157,26 +136,26 @@ export default function DesktopNav() {
 
         <Link href="/party-ready-collections">The Complete Set</Link>
 
-
         {/* RIGHT SECTION */}
         <div className="absolute right-0 flex items-center gap-6">
 
-
-
-          {/* ICONS */}
+          {/* SEARCH */}
           <Search size={20} className="cursor-pointer hover:text-[#D4AF37]" />
 
-          {/* USER */}
-          <div ref={dropdownRef} className="relative">
+          {/* USER (HOVER) */}
+          <div
+            className="relative"
+            onMouseEnter={handleEnter}
+            onMouseLeave={handleLeave}
+          >
 
             <User
               size={20}
               className="cursor-pointer hover:text-[#D4AF37]"
-              onClick={() => setOpen(!open)}
             />
 
-            {open && (
-              <div className="absolute right-0 top-full mt-2 w-44 bg-white text-black shadow-lg rounded-md py-2 z-[999]">
+            {isHovering && (
+              <div className="absolute right-0 top-full mt-2 w-44 bg-white text-black shadow-lg rounded-md py-2 z-[999] transition-all duration-200">
 
                 {!user ? (
                   <>
@@ -212,26 +191,25 @@ export default function DesktopNav() {
 
           </div>
 
-{/* ❤️ WISHLIST */}
-<Link href="/wishlist" className="relative">
-  <Heart className="cursor-pointer hover:text-[#D4AF37]" size={20} />
+          {/* ❤️ WISHLIST */}
+          <Link href="/wishlist" className="relative">
+            <Heart className="cursor-pointer hover:text-[#D4AF37]" size={20} />
+            {wishlist.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-black text-[10px] font-semibold px-1.5 py-[1px] rounded-full">
+                {wishlist.length}
+              </span>
+            )}
+          </Link>
 
-  {wishlist.length > 0 && (
-<span className="absolute -top-2 -right-2 bg-[#D4AF37] text-black text-[10px] font-semibold px-1.5 py-[1px] rounded-full">      {wishlist.length}
-    </span>
-  )}
-</Link>
-
-{/* 🛒 CART */}
-<div className="relative cursor-pointer" onClick={() => setIsCartOpen(true)}>
-  <ShoppingCart size={20} />
-
-  {cart.length > 0 && (
-    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-[1px] rounded-full">
-      {cart.length}
-    </span>
-  )}
-</div>
+          {/* 🛒 CART */}
+          <div className="relative cursor-pointer" onClick={() => setIsCartOpen(true)}>
+            <ShoppingCart size={20} />
+            {cart.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-[1px] rounded-full">
+                {cart.length}
+              </span>
+            )}
+          </div>
 
           {/* LOGO */}
           <Link href="/" className="flex items-center">
@@ -244,10 +222,9 @@ export default function DesktopNav() {
               priority
             />
           </Link>
+
         </div>
-
       </div>
-
     </nav>
   );
 }
