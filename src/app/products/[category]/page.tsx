@@ -21,11 +21,13 @@ export default function CategoryPage() {
 
   const [priceRange, setPriceRange] = useState([0, 36500]);
 
-  // ✅ ADD THIS
   const [availability, setAvailability] = useState({
     inStock: false,
     outOfStock: false,
   });
+
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [sort, setSort] = useState("");
 
   // ✅ FETCH
   useEffect(() => {
@@ -34,13 +36,13 @@ export default function CategoryPage() {
         const res = await fetch("/api/products");
         const data = await res.json();
 
-      const filtered = data.filter(
-  (p: any) =>
-    p &&
-    p.slug &&
-    p.category &&
-    p.category.slug === category
-);
+        const filtered = data.filter(
+          (p: any) =>
+            p &&
+            p.slug &&
+            p.category &&
+            p.category.slug === category
+        );
 
         setProducts(filtered);
       } catch (err) {
@@ -53,20 +55,17 @@ export default function CategoryPage() {
     if (category) fetchProducts();
   }, [category]);
 
-  // ✅ FIXED FILTER
-  const filteredProducts = products.filter((p: any) => {
+  // ✅ FILTER
+  let filteredProducts = products.filter((p: any) => {
 
-    // 🔒 Only active
     if (!p.isActive) return false;
 
-    // 💰 Use correct price
     const finalPrice = p.isOnSale ? p.salePrice : p.price;
 
     if (finalPrice < priceRange[0] || finalPrice > priceRange[1]) {
       return false;
     }
 
-    // 📦 Stock logic
     const inStock = p.stock > 0;
 
     if (availability.inStock && !inStock) return false;
@@ -75,19 +74,59 @@ export default function CategoryPage() {
     return true;
   });
 
+  // ✅ SORT
+  if (sort === "low") {
+    filteredProducts.sort(
+      (a, b) =>
+        (a.isOnSale ? a.salePrice : a.price) -
+        (b.isOnSale ? b.salePrice : b.price)
+    );
+  }
+
+  if (sort === "high") {
+    filteredProducts.sort(
+      (a, b) =>
+        (b.isOnSale ? b.salePrice : b.price) -
+        (a.isOnSale ? a.salePrice : a.price)
+    );
+  }
+
   return (
-    <div className="max-w-8xl pt-40 mx-auto px-6 lg:px-10">
+    <div className="max-w-8xl pt-[150px] md:pt-[50px] mx-auto px-6 lg:px-10">
 
       {/* TITLE */}
-      <h1 className="text-4xl mb-10 capitalize text-center">
+      <h1 className="text-4xl mb-10 capitalize text-center font-serif">
         {category}
       </h1>
 
+      {/* ✅ FILTER + SORT BAR */}
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+
+        <button
+          onClick={() => setFilterOpen(true)}
+          className="flex items-center gap-2 border px-4 py-2 text-sm hover:bg-black hover:text-white transition md:hidden"
+        >
+          <SlidersHorizontal size={16} />
+          Filter
+        </button>
+
+        <select
+          className="border px-4 py-2 text-sm"
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+        >
+          <option value="">Sort</option>
+          <option value="low">Price: Low to High</option>
+          <option value="high">Price: High to Low</option>
+        </select>
+
+      </div>
+
+      {/* MAIN LAYOUT */}
       <div className="flex gap-10">
 
         {/* SIDEBAR */}
         <aside className="hidden lg:block w-64">
-
           <div className="mb-8">
 
             <div className="flex items-center gap-2 font-medium mb-4">
@@ -95,44 +134,40 @@ export default function CategoryPage() {
               Filter
             </div>
 
-            {/* AVAILABILITY */}
+            {/* Availability */}
             <div className="border-t pt-6">
               <h3 className="font-medium mb-3">Availability</h3>
 
-              <div className="space-y-2 text-sm">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={availability.inStock}
+                  onChange={(e) =>
+                    setAvailability({
+                      ...availability,
+                      inStock: e.target.checked,
+                    })
+                  }
+                />
+                In Stock
+              </label>
 
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={availability.inStock}
-                    onChange={(e) =>
-                      setAvailability({
-                        ...availability,
-                        inStock: e.target.checked,
-                      })
-                    }
-                  />
-                  In Stock
-                </label>
-
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={availability.outOfStock}
-                    onChange={(e) =>
-                      setAvailability({
-                        ...availability,
-                        outOfStock: e.target.checked,
-                      })
-                    }
-                  />
-                  Out Of Stock
-                </label>
-
-              </div>
+              <label className="flex items-center gap-2 text-sm mt-2">
+                <input
+                  type="checkbox"
+                  checked={availability.outOfStock}
+                  onChange={(e) =>
+                    setAvailability({
+                      ...availability,
+                      outOfStock: e.target.checked,
+                    })
+                  }
+                />
+                Out Of Stock
+              </label>
             </div>
 
-            {/* PRICE */}
+            {/* Price */}
             <div className="border-t pt-6 mt-6">
               <h3 className="font-medium mb-3">Price</h3>
 
@@ -163,7 +198,6 @@ export default function CategoryPage() {
             <p className="text-center">Loading products...</p>
           ) : (
             <>
-              {/* OPTIONAL COUNT */}
               <p className="text-sm text-gray-500 mb-4">
                 Showing {filteredProducts.length} products
               </p>
@@ -185,6 +219,84 @@ export default function CategoryPage() {
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
         />
+      )}
+
+      {/* ✅ MOBILE FILTER DRAWER */}
+      {filterOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/40 z-40"
+            onClick={() => setFilterOpen(false)}
+          />
+
+          <div className="fixed left-0 top-0 h-full w-[80%] max-w-[320px] bg-[#F5F0E6] z-50 p-6 overflow-y-auto shadow-xl">
+
+            <button
+              onClick={() => setFilterOpen(false)}
+              className="mb-6 text-sm"
+            >
+              Close
+            </button>
+
+            <div className="space-y-6">
+
+              {/* Availability */}
+              <div>
+                <h3 className="font-medium mb-3">Availability</h3>
+
+                <label className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    checked={availability.inStock}
+                    onChange={(e) =>
+                      setAvailability({
+                        ...availability,
+                        inStock: e.target.checked,
+                      })
+                    }
+                  />
+                  In Stock
+                </label>
+
+                <label className="flex gap-2 mt-2">
+                  <input
+                    type="checkbox"
+                    checked={availability.outOfStock}
+                    onChange={(e) =>
+                      setAvailability({
+                        ...availability,
+                        outOfStock: e.target.checked,
+                      })
+                    }
+                  />
+                  Out Of Stock
+                </label>
+              </div>
+
+              {/* Price */}
+              <div>
+                <h3 className="font-medium mb-3">Price</h3>
+
+                <input
+                  type="range"
+                  min={0}
+                  max={36500}
+                  value={priceRange[1]}
+                  onChange={(e) =>
+                    setPriceRange([0, parseInt(e.target.value)])
+                  }
+                  className="w-full"
+                />
+
+                <div className="flex justify-between text-sm mt-2">
+                  <span>{formatCurrency(0)}</span>
+                  <span>{formatCurrency(priceRange[1])}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </>
       )}
 
     </div>

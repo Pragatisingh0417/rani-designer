@@ -19,14 +19,14 @@ export default function ProductGrid({
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart, cart, setIsCartOpen } = useCart();
 
-const visibleProducts = products?.filter(
-  (p: any) => p && p.slug && p.isActive
-);
+  const visibleProducts = products?.filter(
+    (p: any) => p && p.slug && p.isActive
+  );
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 
       {visibleProducts.map((product: any) => {
-          if (!product || !product.slug) return null;
+        if (!product || !product.slug) return null;
 
         const isInCart = cart.some(
           (item: any) => item._id === product._id
@@ -53,14 +53,14 @@ const visibleProducts = products?.filter(
             {/* IMAGE */}
             <div className="relative overflow-hidden">
 
-             <Link
-  href={
-    product?.category?.slug
-      ? `/products/${product.category.slug}/${product.slug}`
-      : `/products/${product.slug}` // fallback
-  }
-  className="block"
->
+              <Link
+                href={
+                  product?.category?.slug
+                    ? `/products/${product.category.slug}/${product.slug}`
+                    : `/products/${product.slug}` // fallback
+                }
+                className="block"
+              >
                 <img
                   src={product.images?.[0] || "/placeholder.png"}
                   className="w-full h-[260px] object-cover transition duration-500 group-hover:scale-105"
@@ -123,62 +123,65 @@ const visibleProducts = products?.filter(
               <h3 className="text-sm font-medium text-center line-clamp-2 min-h-[40px]">
                 {product.name}
               </h3>
+              <div className="flex gap-12">
+                {/* 💰 PRICE */}
+                <div className="mt-2 text-center">
 
-              {/* 💰 PRICE */}
-              <div className="mt-2 text-center">
+                  {isOnSale ? (
+                    <div className="flex flex-col items-center">
+<div className="flex gap-2">{/* SALE PRICE */}
+                      <span className="text-[14px] text-lg font-semibold text-red-600">
+                        {formatCurrency(product.salePrice)}
+                      </span>
 
-                {isOnSale ? (
-                  <div className="flex flex-col items-center">
+                      {/* ORIGINAL PRICE */}
+                      <span className="text-[12px] line-through text-gray-400">
+                        {formatCurrency(product.price)}
+                      </span>
+                      
+                       </div>
+                      
+{/* SAVE */}
+                      <span className="text-[10px] text-green-600">
+                        Save {formatCurrency(product.price - product.salePrice)}
+                      </span>
+                      
 
-                    {/* SALE PRICE */}
-                    <span className="text-lg font-semibold text-red-600">
-                      {formatCurrency(product.salePrice)}
-                    </span>
-
-                    {/* ORIGINAL PRICE */}
-                    <span className="text-sm line-through text-gray-400">
+                    </div>
+                  ) : (
+                    <span className="text-lg font-semibold">
                       {formatCurrency(product.price)}
                     </span>
+                  )}
 
-                    {/* SAVE */}
-                    <span className="text-xs text-green-600">
-                      Save {formatCurrency(product.price - product.salePrice)}
-                    </span>
+                </div>
 
-                  </div>
-                ) : (
-                  <span className="text-lg font-semibold">
-                    {formatCurrency(product.price)}
-                  </span>
-                )}
+                {/* 🛒 BUTTON */}
+                <button
+                  disabled={!inStock}
+                  onClick={() => {
+                    if (!inStock) return;
 
-              </div>
-
-              {/* 🛒 BUTTON */}
-              <button
-                disabled={!inStock}
-                onClick={() => {
-                  if (!inStock) return;
-
-                  if (isInCart) {
-                    setIsCartOpen(true);
-                  } else {
-                    addToCart(product);
-                  }
-                }}
-                className={`mt-4 w-full py-2 rounded-lg text-sm transition ${!inStock
+                    if (isInCart) {
+                      setIsCartOpen(true);
+                    } else {
+                      addToCart(product);
+                    }
+                  }}
+                  className={` w-30 py-2 rounded-lg text-sm transition ${!inStock
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : isInCart
                       ? "bg-red-600 text-white"
                       : "bg-black text-white hover:bg-gray-800"
-                  }`}
-              >
-                {!inStock
-                  ? "Out of Stock"
-                  : isInCart
-                    ? "Go to Cart"
-                    : "Add to Cart"}
-              </button>
+                    }`}
+                >
+                  {!inStock
+                    ? "Out of Stock"
+                    : isInCart
+                      ? "Go to Cart"
+                      : "Add to Cart"}
+                </button>
+              </div>
 
             </div>
 

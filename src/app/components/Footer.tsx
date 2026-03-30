@@ -57,8 +57,8 @@ export default function Footer() {
           <h3 className="text-xl mb-6">Contact</h3>
           <ul className="space-y-3 text-sm">
             <li>Email: info@ranidesigner.com</li>
-            <li>Phone: +91 98765 43210</li>
-            <li>Mumbai, India</li>
+            <li>Phone: 07405769411</li>
+            <li>London, Uk</li>
           </ul>
 
           {/* Social Icons */}
