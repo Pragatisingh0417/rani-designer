@@ -103,11 +103,10 @@ export default function DesktopNav() {
   return (
     <nav
       className={`hidden md:block py-2 w-full z-50
-      ${
-        isHome
+      ${isHome
           ? "absolute top-0 left-0 text-white bg-transparent"
           : "relative bg-amber-50 text-black shadow-sm"
-      }`}
+        }`}
       style={{ fontFamily: "'Playfair Display', serif" }}
     >
       <div
@@ -174,11 +173,10 @@ export default function DesktopNav() {
               className={`absolute right-8 top-1/2 -translate-y-1/2
               bg-white text-black border rounded-md px-3 py-1 text-sm shadow-md
               transition-all duration-300 origin-right
-              ${
-                showSearch
+              ${showSearch
                   ? "w-35 opacity-100 scale-100"
                   : "w-0 opacity-0 scale-95 pointer-events-none"
-              }`}
+                }`}
             />
 
             {/* RESULTS */}
@@ -187,7 +185,7 @@ export default function DesktopNav() {
                 {results.map((item) => (
                   <Link
                     key={item._id}
-href={`/products/${item.category?.slug}/${item.slug}`}
+                    href={`/products/${item.category?.slug}/${item.slug}`}
                     className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100"
                     onClick={() => {
                       setShowSearch(false);

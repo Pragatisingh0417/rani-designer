@@ -294,7 +294,7 @@ export default function AddProduct() {
               name="category"
               className="border p-3 w-full rounded-lg"
               onChange={handleChange}
-              required
+              
             >
               <option value="">Select Category</option>
               {categories.map((c: any) => (

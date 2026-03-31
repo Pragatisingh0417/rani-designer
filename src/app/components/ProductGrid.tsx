@@ -68,7 +68,7 @@ export default function ProductGrid({
                 />
               </Link>
 
-              {/* 🔥 % OFF BADGE */}
+              {/* 🔥 % OFF BADGE */} 
               {isOnSale && (
                 <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded font-medium">
                   {discount}% OFF

@@ -19,28 +19,64 @@ export async function GET() {
   return NextResponse.json(products);
 }
 
-export async function POST(req: Request) {
+// export async function POST(req: Request) {
 
+//   await connectDB();
+
+//   const data = await req.json();
+
+//   data.slug = generateSlug(data.name);
+
+//   const product = await Product.create({
+//     ...data,
+
+// // category: data.category || null,
+
+//     // ✅ AUTO SALE DETECTION
+//     isOnSale: Boolean(data.isOnSale || Number(data.salePrice) > 0),
+
+//     isActive: Boolean(data.isActive),
+
+//     price: Number(data.price),
+//     salePrice: Number(data.salePrice || 0),
+//     stock: Number(data.stock || 0),
+//   });
+
+//   return NextResponse.json(product);
+// }
+
+
+
+export async function POST(req: Request) {
   await connectDB();
 
   const data = await req.json();
 
   data.slug = generateSlug(data.name);
 
-  const product = await Product.create({
+  // ✅ FIX: clean incoming data
+  const productData: any = {
     ...data,
 
-// category: data.category || null,
-
-    // ✅ AUTO SALE DETECTION
     isOnSale: Boolean(data.isOnSale || Number(data.salePrice) > 0),
-
     isActive: Boolean(data.isActive),
 
     price: Number(data.price),
     salePrice: Number(data.salePrice || 0),
     stock: Number(data.stock || 0),
-  });
+  };
+
+  // ✅ VERY IMPORTANT FIX
+  if (!data.category) {
+    delete productData.category;   // ❌ remove empty string
+  }
+
+  // (optional but recommended for your setup)
+  if (!data.designerChoices) {
+    delete productData.designerChoices;
+  }
+
+  const product = await Product.create(productData);
 
   return NextResponse.json(product);
 }
