@@ -63,8 +63,7 @@ export default function ProductGrid({
               >
                 <img
                   src={product.images?.[0] || "/placeholder.png"}
-                  className="w-full h-[260px] object-cover transition duration-500 group-hover:scale-105"
-                  alt={product.name}
+className="w-full h-[170px] sm:h-[220px] md:h-[250px] object-cover transition duration-500 group-hover:scale-105"                  alt={product.name}
                 />
               </Link>
 
