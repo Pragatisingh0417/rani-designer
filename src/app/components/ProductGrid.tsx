@@ -68,7 +68,7 @@ export default function ProductGrid({
                 />
               </Link>
 
-              {/* 🔥 % OFF BADGE */} 
+              {/* 🔥 % OFF BADGE */}
               {isOnSale && (
                 <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded font-medium">
                   {discount}% OFF
@@ -123,37 +123,29 @@ export default function ProductGrid({
               <h3 className="text-sm font-medium text-center line-clamp-2 min-h-[40px]">
                 {product.name}
               </h3>
-              <div className="flex gap-12">
-                {/* 💰 PRICE */}
-                <div className="mt-2 text-center">
-
+              <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"> 
+                 {/* 💰 PRICE */}
+                <div className="flex-1">
                   {isOnSale ? (
-                    <div className="flex flex-col items-center">
-<div className="flex gap-2">{/* SALE PRICE */}
-                      <span className="text-[14px] text-lg font-semibold text-red-600">
-                        {formatCurrency(product.salePrice)}
-                      </span>
+                    <div className="flex flex-col">
+<div className="flex gap-2 items-center justify-center sm:justify-start">
+                          <span className="text-sm font-semibold text-red-600">
+                          {formatCurrency(product.salePrice)}
+                        </span>
+                        <span className="text-xs line-through text-gray-400">
+                          {formatCurrency(product.price)}
+                        </span>
+                      </div>
 
-                      {/* ORIGINAL PRICE */}
-                      <span className="text-[12px] line-through text-gray-400">
-                        {formatCurrency(product.price)}
-                      </span>
-                      
-                       </div>
-                      
-{/* SAVE */}
-                      <span className="text-[10px] text-green-600">
+                      <span className="text-[10px] text-green-600 text-center">
                         Save {formatCurrency(product.price - product.salePrice)}
                       </span>
-                      
-
                     </div>
                   ) : (
-                    <span className="text-lg font-semibold">
+                    <span className="text-sm font-semibold">
                       {formatCurrency(product.price)}
                     </span>
                   )}
-
                 </div>
 
                 {/* 🛒 BUTTON */}
@@ -168,11 +160,11 @@ export default function ProductGrid({
                       addToCart(product);
                     }
                   }}
-                  className={` w-30 py-2 rounded-lg text-sm transition ${!inStock
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : isInCart
-                      ? "bg-red-600 text-white"
-                      : "bg-black text-white hover:bg-gray-800"
+                  className={`w-full sm:w-auto px-3 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap transition ${!inStock
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : isInCart
+                        ? "bg-red-600 text-white"
+                        : "bg-black text-white hover:bg-gray-800"
                     }`}
                 >
                   {!inStock
