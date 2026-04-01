@@ -11,7 +11,7 @@ export default function About() {
   {/* Background Image */}
   <div className="absolute inset-0">
     <img
-      src="/images/jwellery image .webp" // replace with your image
+      src="/images/jwellery image .webp" 
       alt="About Background"
       className="w-full h-full object-cover"
     />
@@ -81,7 +81,7 @@ We design pieces that celebrate individuality, enhance everyday elegance, and ma
         <div className="border border-[#B9AA52]/40 rounded-2xl h-96 flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-black shadow-2xl">
           <div className="relative h-[500px] w-full ">
                         <Image
-                          src="/images/banner-3.jpg"
+                          src="/images/banner-image-2.jpg"
                           alt=""
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-110 rounded-2xl"

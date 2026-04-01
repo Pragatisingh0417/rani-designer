@@ -3,9 +3,11 @@
 import { useCart } from "@/app/context/CartContext";
 import { useState } from "react";
 
-export default function CheckoutPage() {
 
+export default function CheckoutPage() {
   const { cart } = useCart();
+
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -14,6 +16,7 @@ export default function CheckoutPage() {
     address: "",
     city: "",
     zip: "",
+    paymentMethod: "ONLINE", // 👈 NEW
   });
 
   const total = cart.reduce(
@@ -26,15 +29,79 @@ export default function CheckoutPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    alert("Order placed successfully 🎉");
+
+    if (cart.length === 0) {
+      alert("Cart is empty");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+     const orderData = {
+  customerName: form.name,
+  customerEmail: form.email,
+  items: cart.map((item: any) => ({
+    productId: item._id,
+    name: item.name,
+    price: item.price,
+    quantity: item.quantity,
+    image: item.images?.[0] || "",
+  })),
+  total,
+  paymentMethod: form.paymentMethod,
+  shippingAddress: {
+    fullName: form.name,
+    phone: form.phone,
+    address: form.address,
+    city: form.city,
+    pincode: form.zip,
+  },
+};
+
+      // ✅ COD FLOW
+      if (form.paymentMethod === "COD") {
+        const res = await fetch("/api/orders", {
+          method: "POST",
+          body: JSON.stringify(orderData),
+        });
+
+        if (res.ok) {
+          alert("Order placed successfully 🎉");
+          window.location.href = "/";
+        }
+      }
+
+      // ✅ ONLINE (STRIPE) FLOW
+      else {
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          body: JSON.stringify(orderData),
+        });
+
+        const data = await res.json();
+
+        if (data.url) {
+          window.location.href = data.url;
+        }
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="max-w-7xl mx-auto pt-32 px-6 lg:px-10 pb-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 
+                pt-40 sm:pt-24 lg:pt-20
+                pb-10 sm:pb-14 lg:pb-20">
 
-      <h1 className="text-3xl font-semibold mb-10 text-center">
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif text-center mb-20">
         Checkout
       </h1>
 
@@ -43,7 +110,7 @@ export default function CheckoutPage() {
         {/* 🧾 FORM */}
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Floating Input */}
+          {/* Inputs */}
           {[
             { name: "name", label: "Full Name" },
             { name: "email", label: "Email" },
@@ -55,29 +122,23 @@ export default function CheckoutPage() {
                 value={(form as any)[field.name]}
                 onChange={handleChange}
                 required
-                className="peer w-full border rounded px-4 pt-5 pb-2 focus:outline-none focus:border-black"
+                className="w-full border rounded px-4 py-3 focus:outline-none focus:border-black"
               />
-              <label className="absolute left-4 top-2 text-gray-500 text-sm transition-all 
-                peer-placeholder-shown:top-3 peer-placeholder-shown:text-base 
-                peer-focus:top-2 peer-focus:text-sm">
+              <label className="text-sm text-gray-500">
                 {field.label}
               </label>
             </div>
           ))}
 
           {/* Address */}
-          <div className="relative">
-            <textarea
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-              required
-              className="peer w-full border rounded px-4 pt-5 pb-2 focus:outline-none focus:border-black"
-            />
-            <label className="absolute left-4 top-2 text-gray-500 text-sm">
-              Address
-            </label>
-          </div>
+          <textarea
+            name="address"
+            value={form.address}
+            onChange={handleChange}
+            required
+            placeholder="Address"
+            className="w-full border rounded px-4 py-3"
+          />
 
           {/* City + ZIP */}
           <div className="grid grid-cols-2 gap-4">
@@ -99,14 +160,44 @@ export default function CheckoutPage() {
             />
           </div>
 
+          {/* 💳 PAYMENT METHOD */}
+          <div>
+            <p className="font-medium mb-2">Payment Method</p>
+
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="ONLINE"
+                checked={form.paymentMethod === "ONLINE"}
+                onChange={handleChange}
+              />
+              Pay Online (Card)
+            </label>
+
+            <label className="flex items-center gap-2 mt-2">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="COD"
+                checked={form.paymentMethod === "COD"}
+                onChange={handleChange}
+              />
+              Cash on Delivery
+            </label>
+          </div>
+
           {/* Button */}
-          <button className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition">
-            Place Order
+          <button
+            disabled={loading}
+            className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
+          >
+            {loading ? "Processing..." : "Place Order"}
           </button>
 
         </form>
 
-        {/* 🛒 ORDER SUMMARY */}
+        {/* 🛒 ORDER SUMMARY (same as yours) */}
         <div className="border rounded-xl p-6 shadow-sm">
 
           <h2 className="text-xl font-semibold mb-6">
@@ -114,20 +205,14 @@ export default function CheckoutPage() {
           </h2>
 
           <div className="space-y-4 max-h-[350px] overflow-y-auto">
-
             {cart.map((item: any) => (
-              <div
-                key={item._id}
-                className="flex items-center gap-4"
-              >
+              <div key={item._id} className="flex items-center gap-4">
 
-                {/* Image */}
                 <img
                   src={item.images?.[0] || "/placeholder.png"}
                   className="w-16 h-16 object-cover rounded-lg"
                 />
 
-                {/* Info */}
                 <div className="flex-1">
                   <p className="text-sm font-medium line-clamp-1">
                     {item.name}
@@ -138,17 +223,14 @@ export default function CheckoutPage() {
                   </p>
                 </div>
 
-                {/* Price */}
                 <div className="font-semibold text-sm">
                   £{item.price * item.quantity}
                 </div>
 
               </div>
             ))}
-
           </div>
 
-          {/* Total */}
           <div className="border-t mt-6 pt-4 flex justify-between text-lg font-semibold">
             <span>Total</span>
             <span>£{total}</span>
@@ -156,7 +238,6 @@ export default function CheckoutPage() {
 
         </div>
       </div>
-
     </div>
   );
 }

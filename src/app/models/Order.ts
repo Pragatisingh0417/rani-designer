@@ -55,6 +55,12 @@ const OrderSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    stripeSessionId: {
+      type: String,
+    },
+    stripePaymentIntentId: {
+      type: String,
+    },
 
     // 📦 Order Status
     status: {
@@ -67,7 +73,7 @@ const OrderSchema = new Schema(
     shippingAddress: AddressSchema,
   },
   {
-    timestamps: true, // createdAt, updatedAt
+    timestamps: true,
   }
 );
 

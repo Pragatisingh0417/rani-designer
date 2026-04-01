@@ -8,9 +8,21 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
+    // ✅ Validation
+    if (!body.items || body.items.length === 0) {
+      return NextResponse.json({ error: "No items" }, { status: 400 });
+    }
+
+    if (!body.total) {
+      return NextResponse.json({ error: "Total missing" }, { status: 400 });
+    }
+
+    // ✅ CREATE ORDER (you forgot this)
     const order = await Order.create(body);
 
+    // ✅ Return order
     return NextResponse.json(order);
+
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Order failed" }, { status: 500 });

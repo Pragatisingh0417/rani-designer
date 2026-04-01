@@ -34,7 +34,7 @@ export default function OrdersPage() {
             <tr key={order._id} className="border-t">
               <td className="p-3">{order._id}</td>
               <td className="p-3">{order.customerName}</td>
-              <td className="p-3">₹{order.total}</td>
+              <td className="p-3">£{order.total}</td>
               <td className="p-3">{order.status}</td>
             </tr>
           ))}
