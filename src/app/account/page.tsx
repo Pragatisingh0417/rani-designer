@@ -3,7 +3,7 @@ export default function Account(){
         <section>
             <div>
                 <h1 className="text-black">
-My Account
+My Accounts
                 </h1>
             </div>
         </section>
