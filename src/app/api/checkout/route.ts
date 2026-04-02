@@ -3,11 +3,17 @@ import Stripe from "stripe";
 import { connectDB } from "@/app/lib/mongodb";
 import Order from "@/app/models/Order";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function POST(req: Request) {
   try {
     await connectDB();
+
+    // ✅ SAFE: initialize inside function
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error("Stripe key missing");
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
     const body = await req.json();
 
     // 1. Create Order (pending)
@@ -32,7 +38,7 @@ export async function POST(req: Request) {
         },
         quantity: item.quantity,
       })),
-success_url: `${process.env.NEXT_PUBLIC_URL}/success?orderId=${order._id}&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_URL}/success?orderId=${order._id}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart`,
     });
 
