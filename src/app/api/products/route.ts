@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Product from "@/app/models/Product";
 import { connectDB } from "@/app/lib/mongodb";
+import "@/app/models/DesignerChoice";
 
 function generateSlug(name: string) {
   return name
