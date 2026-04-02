@@ -3,9 +3,8 @@
 import { useCart } from "@/app/context/CartContext";
 import { useState } from "react";
 
-
 export default function CheckoutPage() {
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart(); // ✅ MUST be inside
 
   const [loading, setLoading] = useState(false);
 
@@ -69,6 +68,8 @@ export default function CheckoutPage() {
         });
 
         if (res.ok) {
+            clearCart(); // 🔥 clears cart properly
+
           alert("Order placed successfully 🎉");
           window.location.href = "/";
         }

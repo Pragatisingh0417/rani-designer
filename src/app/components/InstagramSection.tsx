@@ -35,7 +35,7 @@ const mockPosts: InstagramPost[] = [  {
   {
     id: 3,
     type: "image",
-    src: "/images/bracelet.jpg",
+    src: "/images/choker-1.jpg",
     link: "https://www.instagram.com/rani_designer_hut/",
   },
   {

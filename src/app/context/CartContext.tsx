@@ -6,16 +6,19 @@ import toast from "react-hot-toast";
 const CartContext = createContext<any>(null);
 
 export const CartProvider = ({ children }: any) => {
-  const [cart, setCart] = useState<any[]>([]);
+
+  // ✅ Initialize from localStorage (FIX)
+  const [cart, setCart] = useState<any[]>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("cart");
+      return stored ? JSON.parse(stored) : [];
+    }
+    return [];
+  });
+
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Load from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem("cart");
-    if (stored) setCart(JSON.parse(stored));
-  }, []);
-
-  // Save to localStorage
+  // 💾 Save to localStorage
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
@@ -26,10 +29,7 @@ export const CartProvider = ({ children }: any) => {
       const exists = prev.find((p) => p._id === product._id);
 
       if (exists) {
-        // optional: show toast for quantity update
-        toast.success("Quantity updated 🔄", {
-          duration: 2000,
-        });
+        toast.success("Quantity updated 🔄", { duration: 2000 });
 
         return prev.map((p) =>
           p._id === product._id
@@ -38,22 +38,18 @@ export const CartProvider = ({ children }: any) => {
         );
       }
 
-      // ✅ 2 sec toast
       toast.success("Item added to cart 🛍️", {
         duration: 2000,
-          id: product._id, // 👈 prevents duplicate
-
+        id: product._id,
       });
 
       return [...prev, { ...product, quantity: 1 }];
     });
 
-    if (openDrawer) {
-      setIsCartOpen(true);
-    }
+    if (openDrawer) setIsCartOpen(true);
   };
 
-  // ✅ Increase quantity
+  // ➕ Increase quantity
   const increaseQty = (id: string) => {
     setCart((prev) =>
       prev.map((p) =>
@@ -62,7 +58,7 @@ export const CartProvider = ({ children }: any) => {
     );
   };
 
-  // ✅ Decrease quantity
+  // ➖ Decrease quantity
   const decreaseQty = (id: string) => {
     setCart((prev) =>
       prev
@@ -75,14 +71,17 @@ export const CartProvider = ({ children }: any) => {
     );
   };
 
-  // ✅ Remove item
+  // ❌ Remove item
   const removeFromCart = (id: string) => {
     setCart((prev) => prev.filter((p) => p._id !== id));
 
-    // ✅ 2 sec toast
-    toast.error("Item removed ❌", {
-      duration: 1000,
-    });
+    toast.error("Item removed ❌", { duration: 1000 });
+  };
+
+  // 🧹 Clear cart
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
   };
 
   return (
@@ -95,6 +94,7 @@ export const CartProvider = ({ children }: any) => {
         decreaseQty,
         isCartOpen,
         setIsCartOpen,
+        clearCart,
       }}
     >
       {children}

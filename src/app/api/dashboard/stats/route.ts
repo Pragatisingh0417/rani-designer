@@ -1,63 +1,91 @@
 import { NextResponse } from "next/server";
-import Order from "@/app/models/Order";
-import Product from "@/app/models/Product";
 import { connectDB } from "@/app/lib/mongodb";
+import Order from "@/app/models/Order";
 
 export async function GET() {
   try {
     await connectDB();
 
-    // 🔹 Total Revenue
-    const revenueResult = await Order.aggregate([
-      { $match: { status: "Delivered" } },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$total" },
-        },
-      },
-    ]);
+    const orders = await Order.find({});
 
-    const totalRevenue: number = revenueResult[0]?.total || 0;
+    // 💰 Total Revenue
+    const totalRevenue = orders.reduce(
+      (acc, order) => acc + (order.total || 0),
+      0
+    );
 
-    // 🔹 Total Orders
-    const totalOrders = await Order.countDocuments();
+    const totalOrders = orders.length;
 
-    // 🔹 Visitors
-    const totalVisitors = 1200;
+    // 📊 Monthly revenue
+    const monthlyMap: any = {};
 
-    // 🔥 Top Products
-    const products = await Product.find()
-      .sort({ sales: -1 })
-      .limit(4);
+    orders.forEach((order) => {
+      const date = new Date(order.createdAt);
+      const month = date.toLocaleString("default", { month: "short" });
 
-    const topProducts = products.map((p: any) => ({
-      _id: p._id,
-      name: p.name,
-      sales: p.sales,
-      image: p.images?.[0] || null,
+      if (!monthlyMap[month]) {
+        monthlyMap[month] = 0;
+      }
+
+      monthlyMap[month] += order.total || 0;
+    });
+
+    const monthsOrder = [
+      "Jan","Feb","Mar","Apr","May","Jun",
+      "Jul","Aug","Sep","Oct","Nov","Dec"
+    ];
+
+    const monthlyRevenue = monthsOrder.map((m) => ({
+      name: m,
+      revenue: monthlyMap[m] || 0,
     }));
 
-    // 🔥 Growth (FIXED)
-    const lastMonthRevenue: number = 50000; // temporary
+    // 📈 Growth (last 2 months)
+    const currentMonth = monthlyRevenue[new Date().getMonth()].revenue;
+    const lastMonth =
+      monthlyRevenue[new Date().getMonth() - 1]?.revenue || 0;
 
     const growth =
-      lastMonthRevenue === 0
-        ? 0
-        : ((totalRevenue - lastMonthRevenue) / lastMonthRevenue) * 100;
+      lastMonth === 0
+        ? 100
+        : ((currentMonth - lastMonth) / lastMonth) * 100;
+
+    // 🛍️ Top Products
+    const productMap: any = {};
+
+    orders.forEach((order) => {
+      order.items?.forEach((item: any) => {
+        if 
+        (!productMap[item.productId]) {
+          productMap[item.productId] = {
+  productId: item.productId,
+  name: item.name,
+  image: item.image || item.images?.[0] || "", // ✅ FIX
+  sales: 0,
+};
+        }
+
+        productMap[item.productId].sales += item.quantity;
+      });
+    });
+
+    const topProducts = Object.values(productMap)
+      .sort((a: any, b: any) => b.sales - a.sales)
+      .slice(0, 5);
 
     return NextResponse.json({
       totalRevenue,
       totalOrders,
-      totalVisitors,
+      totalVisitors: 1200,
+      growth: Math.round(growth),
+      monthlyRevenue, // 🔥 IMPORTANT
       topProducts,
-      growth: Number(growth.toFixed(1)),
     });
 
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     return NextResponse.json(
-      { error: "Error fetching dashboard" },
+      { error: "Failed to fetch stats" },
       { status: 500 }
     );
   }

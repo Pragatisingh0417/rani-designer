@@ -17,7 +17,7 @@ const products = [
     link: "/product/necklace-3",
   },
   {
-    image: "/images/bracelet.jpg",
+    image: "/images/choker-1.jpg",
     link: "/product/necklace-4",
   },
   {
