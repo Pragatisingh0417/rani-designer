@@ -3,7 +3,8 @@ import Stripe from "stripe";
 import { connectDB } from "@/app/lib/mongodb";
 import Order from "@/app/models/Order";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_dummy");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
 export async function POST(req: Request) {
   try {
     await connectDB();
