@@ -1,40 +1,20 @@
 "use client";
-export const dynamic = "force-dynamic";
 
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import { useCart } from "@/app/context/CartContext"; // ✅ ADD THIS
+import { useCart } from "@/app/context/CartContext";
 
 export default function SuccessPage() {
-  const params = useSearchParams();
-  const { clearCart } = useCart(); // ✅ ADD THIS
-
-  const orderId = params.get("orderId");
-  const sessionId = params.get("session_id");
+  const { clearCart } = useCart();
 
   useEffect(() => {
-    if (!orderId || !sessionId) return;
-
-    const verifyPayment = async () => {
-      const res = await fetch("/api/verify-payment", {
-        method: "POST",
-        body: JSON.stringify({ orderId, sessionId }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        clearCart(); // 🔥 CLEAR CART AFTER PAYMENT SUCCESS
-      }
-    };
-
-    verifyPayment();
-  }, [orderId, sessionId, clearCart]);
+    // simulate success
+    clearCart();
+  }, [clearCart]);
 
   return (
     <div className="p-10 text-center">
-      <h1 className="text-2xl font-bold">✅ Payment Successful</h1>
-      <p>Your order has been placed successfully.</p>
+      <h1 className="text-2xl font-bold">✅ Order Placed (Test Mode)</h1>
+      <p>Your order flow is working. Payment integration pending.</p>
     </div>
   );
 }
