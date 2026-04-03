@@ -31,8 +31,11 @@ export async function POST(req: Request) {
   return NextResponse.json({
     token,
     user: {
+          _id: user._id, 
+
       name: user.name,
       email: user.email
     }
   });
 }
+

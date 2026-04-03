@@ -34,9 +34,12 @@ export default function Sidebar() {
         <Link href="/admin/categories" className={linkClass("/admin/categories")}>
           Categories
         </Link>
- <Link href="/admin/designer-choice" className={linkClass("/admin/users")}>
-          Desingner Choice
+
+        {/* ✅ FIXED */}
+        <Link href="/admin/designer-choice" className={linkClass("/admin/designer-choice")}>
+          Designer Choice
         </Link>
+
         <Link href="/admin/orders" className={linkClass("/admin/orders")}>
           Orders
         </Link>
@@ -44,7 +47,9 @@ export default function Sidebar() {
         <Link href="/admin/users" className={linkClass("/admin/users")}>
           Users
         </Link>
-        <Link href="/admin/blogs" className={linkClass("/admin/users")}>
+
+        {/* ✅ FIXED */}
+        <Link href="/admin/blogs" className={linkClass("/admin/blogs")}>
           Blogs
         </Link>
 

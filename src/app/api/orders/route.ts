@@ -18,7 +18,12 @@ export async function POST(req: Request) {
     }
 
     // ✅ CREATE ORDER (you forgot this)
-    const order = await Order.create(body);
+const order = await Order.create({
+  ...body,
+  userId: body.userId, // 🔥 MUST EXIST
+});
+
+console.log("BODY RECEIVED:", body);
 
     // ✅ Return order
     return NextResponse.json(order);

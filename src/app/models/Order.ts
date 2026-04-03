@@ -29,6 +29,10 @@ const AddressSchema = new Schema(
 
 const OrderSchema = new Schema(
   {
+    userId: {
+  type: String, // 🔥 important (keep string)
+  required: true,
+},
     // 👤 Customer Info
     customerName: {
       type: String,

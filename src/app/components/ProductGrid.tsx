@@ -1,10 +1,12 @@
 "use client";
-
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
 import { Eye, Heart } from "lucide-react";
 import { useWishlist } from "@/app/context/WishlistContext";
 import { useCart } from "@/app/context/CartContext";
 import { formatCurrency } from "@/app/lib/format";
+
 
 interface Props {
   products: any[];
@@ -16,12 +18,65 @@ export default function ProductGrid({
   onQuickView,
 }: Props) {
 
-  const { wishlist, toggleWishlist } = useWishlist();
+  const { user } = useAuth();
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const { addToCart, cart, setIsCartOpen } = useCart();
+  const [loadingId, setLoadingId] = useState<string | null>(null);
 
   const visibleProducts = products?.filter(
     (p: any) => p && p.slug && p.isActive
   );
+
+  //wishlist
+  useEffect(() => {
+    if (!user?._id) return;
+
+    const fetchWishlist = async () => {
+      const res = await fetch(`/api/wishlist?userId=${user._id}`);
+      const data = await res.json();
+
+      const ids = data.map((item: any) => item.productId._id);
+      setWishlistIds(ids);
+    };
+
+    fetchWishlist();
+  }, [user?._id]);
+
+
+  const handleWishlist = async (productId: string) => {
+    if (!user?._id) {
+      window.location.href = "/login";
+      return;
+    }
+
+    const exists = wishlistIds.includes(productId);
+
+    if (exists) {
+      // ❌ REMOVE
+      await fetch("/api/wishlist", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user._id,
+          productId,
+        }),
+      });
+
+      setWishlistIds((prev) => prev.filter((id) => id !== productId));
+    } else {
+      // ✅ ADD
+      await fetch("/api/wishlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user._id,
+          productId,
+        }),
+      });
+
+      setWishlistIds((prev) => [...prev, productId]);
+    }
+  };
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 
@@ -63,7 +118,7 @@ export default function ProductGrid({
               >
                 <img
                   src={product.images?.[0] || "/placeholder.png"}
-className="w-full h-[170px] sm:h-[220px] md:h-[250px] object-cover transition duration-500 group-hover:scale-105"                  alt={product.name}
+                  className="w-full h-[170px] sm:h-[220px] md:h-[250px] object-cover transition duration-500 group-hover:scale-105" alt={product.name}
                 />
               </Link>
 
@@ -85,17 +140,16 @@ className="w-full h-[170px] sm:h-[220px] md:h-[250px] object-cover transition du
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  toggleWishlist(product._id);
+                  handleWishlist(product._id);
                 }}
                 className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:scale-110 transition z-20"
               >
                 <Heart
                   size={16}
-                  className={
-                    wishlist.includes(product._id)
-                      ? "fill-red-500 text-red-500"
+                  className={`transition ${wishlistIds.includes(product._id)
+                      ? "fill-red-500 text-red-500 scale-110"
                       : "text-black"
-                  }
+                    }`}
                 />
               </button>
 
@@ -122,13 +176,13 @@ className="w-full h-[170px] sm:h-[220px] md:h-[250px] object-cover transition du
               <h3 className="text-sm font-medium text-center line-clamp-2 min-h-[40px]">
                 {product.name}
               </h3>
-              <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"> 
-                 {/* 💰 PRICE */}
+              <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                {/* 💰 PRICE */}
                 <div className="flex-1">
                   {isOnSale ? (
                     <div className="flex flex-col">
-<div className="flex gap-2 items-center justify-center sm:justify-start">
-                          <span className="text-sm font-semibold text-red-600">
+                      <div className="flex gap-2 items-center justify-center sm:justify-start">
+                        <span className="text-sm font-semibold text-red-600">
                           {formatCurrency(product.salePrice)}
                         </span>
                         <span className="text-xs line-through text-gray-400">
@@ -160,10 +214,10 @@ className="w-full h-[170px] sm:h-[220px] md:h-[250px] object-cover transition du
                     }
                   }}
                   className={`w-full sm:w-auto px-3 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap transition ${!inStock
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : isInCart
-                        ? "bg-red-600 text-white"
-                        : "bg-black text-white hover:bg-gray-800"
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : isInCart
+                      ? "bg-red-600 text-white"
+                      : "bg-black text-white hover:bg-gray-800"
                     }`}
                 >
                   {!inStock

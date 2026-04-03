@@ -1,12 +1,16 @@
 "use client";
 
 import { useCart } from "@/app/context/CartContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function CheckoutPage() {
-  const { cart, clearCart } = useCart(); // ✅ MUST be inside
+  const { user } = useAuth();
+  const { cart, clearCart } = useCart();
 
   const [loading, setLoading] = useState(false);
+  const [addresses, setAddresses] = useState<any[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("");
 
   const [form, setForm] = useState({
     name: "",
@@ -15,7 +19,7 @@ export default function CheckoutPage() {
     address: "",
     city: "",
     zip: "",
-    paymentMethod: "ONLINE", // 👈 NEW
+    paymentMethod: "ONLINE",
   });
 
   const total = cart.reduce(
@@ -24,6 +28,32 @@ export default function CheckoutPage() {
     0
   );
 
+  // 🔥 Fetch addresses
+  useEffect(() => {
+    if (!user?._id) return;
+
+    fetch(`/api/address?userId=${user._id}`)
+      .then((res) => res.json())
+      .then(setAddresses);
+  }, [user]);
+
+  // 🔥 Handle dropdown select
+  const handleSelectAddress = (id: string) => {
+    setSelectedAddressId(id);
+
+    const addr = addresses.find((a) => a._id === id);
+    if (!addr) return;
+
+    setForm((prev) => ({
+      ...prev,
+      name: addr.fullName,
+      phone: addr.phone,
+      address: addr.address,
+      city: addr.city,
+      zip: addr.pincode,
+    }));
+  };
+
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -31,202 +61,232 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    if (cart.length === 0) {
-      alert("Cart is empty");
-      return;
-    }
+    if (!user?._id) return alert("Login first");
+    if (cart.length === 0) return alert("Cart empty");
 
     setLoading(true);
 
+    const orderData = {
+      userId: user._id.toString(),
+      customerName: form.name,
+      customerEmail: form.email,
+      items: cart.map((item: any) => ({
+        productId: item._id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.images?.[0] || "",
+      })),
+      total,
+      paymentMethod: form.paymentMethod,
+      shippingAddress: {
+        fullName: form.name,
+        phone: form.phone,
+        address: form.address,
+        city: form.city,
+        pincode: form.zip,
+      },
+    };
+
     try {
-     const orderData = {
-  customerName: form.name,
-  customerEmail: form.email,
-  items: cart.map((item: any) => ({
-    productId: item._id,
-    name: item.name,
-    price: item.price,
-    quantity: item.quantity,
-    image: item.images?.[0] || "",
-  })),
-  total,
-  paymentMethod: form.paymentMethod,
-  shippingAddress: {
-    fullName: form.name,
-    phone: form.phone,
-    address: form.address,
-    city: form.city,
-    pincode: form.zip,
-  },
-};
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        body: JSON.stringify(orderData),
+      });
 
-      // ✅ COD FLOW
-      if (form.paymentMethod === "COD") {
-        const res = await fetch("/api/orders", {
-          method: "POST",
-          body: JSON.stringify(orderData),
-        });
-
-        if (res.ok) {
-            clearCart(); // 🔥 clears cart properly
-
-          alert("Order placed successfully 🎉");
-          window.location.href = "/";
-        }
+      if (res.ok) {
+        clearCart();
+        alert("Order placed 🎉");
+        window.location.href = "/";
       }
-
-      // ✅ ONLINE (STRIPE) FLOW
-      else {
-        const res = await fetch("/api/checkout", {
-          method: "POST",
-          body: JSON.stringify(orderData),
-        });
-
-        const data = await res.json();
-
-        if (data.url) {
-          window.location.href = data.url;
-        }
-      }
-
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong");
-    } finally {
-      setLoading(false);
+    } catch {
+      alert("Error placing order");
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 
-                pt-40 sm:pt-24 lg:pt-20
-                pb-10 sm:pb-14 lg:pb-20">
+    <div className="max-w-7xl mx-auto px-4 pt-28 pb-16">
 
-      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif text-center mb-20">
+      <h1 className="text-3xl font-semibold mb-10 text-center">
         Checkout
       </h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="grid lg:grid-cols-2 gap-12">
 
-        {/* 🧾 FORM */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {/* 🧾 LEFT */}
+        <div>
 
-          {/* Inputs */}
-          {[
-            { name: "name", label: "Full Name" },
-            { name: "email", label: "Email" },
-            { name: "phone", label: "Phone Number" },
-          ].map((field) => (
-            <div key={field.name} className="relative">
+          {/* 🔥 ADDRESS DROPDOWN */}
+          {addresses.length > 0 && (
+            <div className="mb-6">
+              <label className="text-sm font-medium mb-2 block">
+                Select Saved Address
+              </label>
+
+              <select
+                value={selectedAddressId}
+                onChange={(e) => handleSelectAddress(e.target.value)}
+                className="w-full border px-4 py-3 rounded-lg"
+              >
+                <option value="">Choose address</option>
+
+                {addresses.map((addr) => (
+                  <option key={addr._id} value={addr._id}>
+  {addr.fullName}, {addr.address}, {addr.city} - {addr.pincode}
+</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* 🔥 SELECTED ADDRESS PREVIEW */}
+          {selectedAddressId && (
+            <div className="bg-gray-50 border rounded-xl p-4 mb-6">
+              {(() => {
+                const addr = addresses.find(
+                  (a) => a._id === selectedAddressId
+                );
+                if (!addr) return null;
+
+                return (
+                  <>
+                    <p className="font-semibold">{addr.fullName}</p>
+                    <p className="text-sm text-gray-500">
+                      {addr.phone}
+                    </p>
+                    <p className="text-sm">
+                      {addr.address}, {addr.city}
+                    </p>
+                    <p className="text-sm">{addr.pincode}</p>
+                  </>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* 🧾 FORM */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Full Name"
+              className="w-full border px-4 py-3 rounded-lg"
+              required
+            />
+
+            <input
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="w-full border px-4 py-3 rounded-lg"
+              required
+            />
+
+            <input
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              placeholder="Phone"
+              className="w-full border px-4 py-3 rounded-lg"
+              required
+            />
+
+            <textarea
+              name="address"
+              value={form.address}
+              onChange={handleChange}
+              placeholder="Address"
+              className="w-full border px-4 py-3 rounded-lg"
+              required
+            />
+
+            <div className="grid grid-cols-2 gap-4">
               <input
-                name={field.name}
-                value={(form as any)[field.name]}
+                name="city"
+                value={form.city}
                 onChange={handleChange}
+                placeholder="City"
+                className="border px-4 py-3 rounded-lg"
                 required
-                className="w-full border rounded px-4 py-3 focus:outline-none focus:border-black"
               />
-              <label className="text-sm text-gray-500">
-                {field.label}
+
+              <input
+                name="zip"
+                value={form.zip}
+                onChange={handleChange}
+                placeholder="ZIP"
+                className="border px-4 py-3 rounded-lg"
+                required
+              />
+            </div>
+
+            {/* 💳 PAYMENT */}
+            <div>
+              <p className="font-medium mb-2">Payment Method</p>
+
+              <label className="flex gap-2">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="ONLINE"
+                  checked={form.paymentMethod === "ONLINE"}
+                  onChange={handleChange}
+                />
+                Pay Online
+              </label>
+
+              <label className="flex gap-2 mt-2">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="COD"
+                  checked={form.paymentMethod === "COD"}
+                  onChange={handleChange}
+                />
+                Cash on Delivery
               </label>
             </div>
-          ))}
 
-          {/* Address */}
-          <textarea
-            name="address"
-            value={form.address}
-            onChange={handleChange}
-            required
-            placeholder="Address"
-            className="w-full border rounded px-4 py-3"
-          />
+            <button className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800">
+              {loading ? "Processing..." : "Place Order"}
+            </button>
 
-          {/* City + ZIP */}
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              name="city"
-              placeholder="City"
-              value={form.city}
-              onChange={handleChange}
-              className="border p-3 rounded"
-              required
-            />
-            <input
-              name="zip"
-              placeholder="ZIP Code"
-              value={form.zip}
-              onChange={handleChange}
-              className="border p-3 rounded"
-              required
-            />
-          </div>
+          </form>
+        </div>
 
-          {/* 💳 PAYMENT METHOD */}
-          <div>
-            <p className="font-medium mb-2">Payment Method</p>
-
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="ONLINE"
-                checked={form.paymentMethod === "ONLINE"}
-                onChange={handleChange}
-              />
-              Pay Online (Card)
-            </label>
-
-            <label className="flex items-center gap-2 mt-2">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="COD"
-                checked={form.paymentMethod === "COD"}
-                onChange={handleChange}
-              />
-              Cash on Delivery
-            </label>
-          </div>
-
-          {/* Button */}
-          <button
-            disabled={loading}
-            className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
-          >
-            {loading ? "Processing..." : "Place Order"}
-          </button>
-
-        </form>
-
-        {/* 🛒 ORDER SUMMARY (same as yours) */}
-        <div className="border rounded-xl p-6 shadow-sm">
+        {/* 🛒 RIGHT */}
+        <div className="border rounded-2xl p-6">
 
           <h2 className="text-xl font-semibold mb-6">
             Order Summary
           </h2>
 
-          <div className="space-y-4 max-h-[350px] overflow-y-auto">
+          <div className="space-y-4 max-h-[300px] overflow-y-auto">
             {cart.map((item: any) => (
-              <div key={item._id} className="flex items-center gap-4">
+              <div key={item._id} className="flex gap-4">
 
                 <img
-                  src={item.images?.[0] || "/placeholder.png"}
-                  className="w-16 h-16 object-cover rounded-lg"
+                  src={item.images?.[0]}
+                  className="w-16 h-16 rounded-lg object-cover"
                 />
 
                 <div className="flex-1">
-                  <p className="text-sm font-medium line-clamp-1">
+                  <p className="text-sm font-medium">
                     {item.name}
                   </p>
-
                   <p className="text-xs text-gray-500">
                     £{item.price} × {item.quantity}
                   </p>
                 </div>
 
-                <div className="font-semibold text-sm">
+                <p className="text-sm font-semibold">
                   £{item.price * item.quantity}
-                </div>
+                </p>
 
               </div>
             ))}
@@ -238,6 +298,7 @@ export default function CheckoutPage() {
           </div>
 
         </div>
+
       </div>
     </div>
   );
