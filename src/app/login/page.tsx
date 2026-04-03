@@ -66,7 +66,7 @@ export default function LoginPage() {
       {/* Left Image */}
       <div className="relative hidden md:block">
         <Image
-          src="/images/gold.webp"
+          src="/images/j-1.jpg"
           alt="Rings Collection"
           fill
           priority
@@ -74,7 +74,7 @@ export default function LoginPage() {
         />
       </div>
 
-      <div className="flex items-center justify-center bg-black">
+      <div className="flex items-center justify-center bg-amber-50">
 
         <div className="w-full max-w-md bg-white shadow-md p-8 rounded">
 

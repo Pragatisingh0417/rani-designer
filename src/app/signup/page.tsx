@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // ✅ ADD THIS
+
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
+
 export default function SignupPage() {
+  const router = useRouter(); // ✅ ADD THIS
 
   const [form, setForm] = useState({
     name: "",
@@ -53,6 +57,12 @@ export default function SignupPage() {
       setMessage(data.error);
     } else {
       setMessage("Account created successfully!");
+
+      // ✅ REDIRECT TO HOME
+      router.push("/login");
+
+      // optional: refresh to update auth UI
+      router.refresh();
     }
 
     setLoading(false);
@@ -64,7 +74,7 @@ export default function SignupPage() {
       {/* Left Image */}
       <div className="relative hidden md:block">
         <Image
-          src="/images/diamond.webp"
+          src="/images/j-2.jpg"
           alt="Jewellery"
           fill
           priority
@@ -73,7 +83,7 @@ export default function SignupPage() {
       </div>
 
       {/* Signup Form */}
-      <div className="flex items-center justify-center bg-black">
+      <div className="flex items-center justify-center bg-amber-50">
 
         <div className="w-full max-w-md bg-white p-8 shadow-md rounded">
 
