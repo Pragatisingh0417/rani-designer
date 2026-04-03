@@ -3,10 +3,15 @@ import Stripe from "stripe";
 import { connectDB } from "@/app/lib/mongodb";
 import Order from "@/app/models/Order";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function POST(req: Request) {
   try {
+    // ✅ Initialize Stripe INSIDE function
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error("Stripe key missing");
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
     await connectDB();
 
     const { sessionId, orderId } = await req.json();
