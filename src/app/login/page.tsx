@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/app/context/AuthContext";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
 
@@ -17,6 +18,8 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handleChange = (e: any) => {
     setForm({
@@ -48,7 +51,7 @@ export default function LoginPage() {
         return;
       }
 
-    login(data.user, data.token);
+      login(data.user, data.token);
 
       router.push("/");
       router.refresh();
@@ -93,14 +96,27 @@ export default function LoginPage() {
               className="w-full border p-3 rounded"
             />
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-              onChange={handleChange}
-              className="w-full border p-3 rounded"
-            />
+          
+
+            {/* Password */}
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                required
+                onChange={handleChange}
+                className="w-full border p-3 rounded pr-10"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gray-500"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
 
             <button
               disabled={loading}

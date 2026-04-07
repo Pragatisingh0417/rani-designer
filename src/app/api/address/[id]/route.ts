@@ -4,13 +4,13 @@ import Address from "@/app/models/Address";
 
 export async function DELETE(
   req: Request,
-  context: { params: Promise<{ id: string }> } // ✅ FIXED TYPE
+  context: { params: Promise<{ id: string }> } 
 ) {
   await connectDB();
 
-  const { id } = await context.params; // ✅ MUST AWAIT
+  const { id } = await context.params; 
 
-  console.log("Deleting ID:", id); // optional debug
+  console.log("Deleting ID:", id); 
 
   await Address.findByIdAndDelete(id);
 

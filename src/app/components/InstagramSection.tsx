@@ -22,7 +22,7 @@ type InstagramPost =
 const mockPosts: InstagramPost[] = [  {
     id: 1,
     type: "image",
-    src: "/images/bangles.jpg",
+    src: "/images/bride.jpg",
     link: "https://www.instagram.com/rani_designer_hut/",
   },
   {

@@ -58,7 +58,7 @@ export default function SignupPage() {
     } else {
       setMessage("Account created successfully!");
 
-      // ✅ REDIRECT TO HOME
+      // ✅ REDIRECT TO HOME jfno dkf e
       router.push("/login");
 
       // optional: refresh to update auth UI

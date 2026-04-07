@@ -31,7 +31,7 @@ export default function OnSale() {
 
       {/* Heading */}
       <h2 className="text-2xl sm:text-3xl md:text-5xl text-black mb-3 text-center">
-        On Sale 🔥
+        On Sale 
       </h2>
 
       <p className="text-sm sm:text-base md:text-lg text-center mb-8 text-gray-700">
@@ -52,7 +52,7 @@ export default function OnSale() {
           href="/on-sale"
           className="inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-black transition"
         >
-          See More 🔥
+          See More 
         </Link>
       </div>
 

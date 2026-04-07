@@ -144,7 +144,8 @@ return matchesSearch && matchesStatus && matchesDate;  });
   return (
     <div className="p-6 max-w-7xl mx-auto">
 
-      <h1 className="text-3xl font-semibold mb-6">Orders</h1>
+      <h1 className="text-3xl font-semibold mb-6">
+        Orders</h1>
 
       {/* 🔍 SEARCH + FILTER */}
      <div className="flex gap-4 mb-4 items-center">
