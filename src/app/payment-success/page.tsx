@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const orderId = searchParams.get("orderId");
@@ -43,8 +43,10 @@ export default function PaymentSuccessPage() {
 
     if (sessionId && orderId) {
       verifyPayment();
+    } else {
+      setLoading(false);
     }
-  }, [sessionId, orderId]);
+  }, [sessionId, orderId, clearCart]);
 
   if (loading) {
     return (
@@ -56,7 +58,6 @@ export default function PaymentSuccessPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-
       {success ? (
         <>
           <h1 className="text-4xl font-bold mb-4">
@@ -85,7 +86,20 @@ export default function PaymentSuccessPage() {
           </p>
         </>
       )}
-
     </div>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center text-2xl">
+          Loading...
+        </div>
+      }
+    >
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }
