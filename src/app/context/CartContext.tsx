@@ -25,29 +25,42 @@ export const CartProvider = ({ children }: any) => {
 
   // ✅ Add to cart
   const addToCart = (product: any, openDrawer = true) => {
-    setCart((prev) => {
-      const exists = prev.find((p) => p._id === product._id);
 
-      if (exists) {
-        toast.success("Quantity updated 🔄", { duration: 2000 });
+  const finalPrice =
+    Number(product.salePrice) > 0
+      ? product.salePrice
+      : product.price;
 
-        return prev.map((p) =>
-          p._id === product._id
-            ? { ...p, quantity: p.quantity + 1 }
-            : p
-        );
-      }
+  setCart((prev) => {
+    const exists = prev.find((p) => p._id === product._id);
 
-      toast.success("Item added to cart 🛍️", {
-        duration: 2000,
-        id: product._id,
-      });
+    if (exists) {
+      toast.success("Quantity updated 🔄", { duration: 2000 });
 
-      return [...prev, { ...product, quantity: 1 }];
+      return prev.map((p) =>
+        p._id === product._id
+          ? { ...p, quantity: p.quantity + 1 }
+          : p
+      );
+    }
+
+    toast.success("Item added to cart 🛍️", {
+      duration: 2000,
+      id: product._id,
     });
 
-    if (openDrawer) setIsCartOpen(true);
-  };
+    return [
+      ...prev,
+      {
+        ...product,
+        price: finalPrice,
+        quantity: 1,
+      },
+    ];
+  });
+
+  if (openDrawer) setIsCartOpen(true);
+};
 
   // ➕ Increase quantity
   const increaseQty = (id: string) => {

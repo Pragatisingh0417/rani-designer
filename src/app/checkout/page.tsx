@@ -59,53 +59,96 @@ export default function CheckoutPage() {
   };
 
   const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!user?._id) return alert("Login first");
-    if (cart.length === 0) return alert("Cart empty");
+  if (!user?._id) return alert("Login first");
+  if (cart.length === 0) return alert("Cart empty");
 
-    setLoading(true);
+  setLoading(true);
 
-    const orderData = {
-      userId: user._id.toString(),
-      customerName: form.name,
-      customerEmail: form.email,
-      items: cart.map((item: any) => ({
-        productId: item._id,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        image: item.images?.[0] || "",
-      })),
-      total,
-      paymentMethod: form.paymentMethod,
-      shippingAddress: {
-        fullName: form.name,
-        phone: form.phone,
-        address: form.address,
-        city: form.city,
-        pincode: form.zip,
-      },
-    };
+  const orderData = {
+    userId: user._id.toString(),
 
-    try {
-      const res = await fetch("/api/orders", {
-        method: "POST",
-        body: JSON.stringify(orderData),
-      });
+    customerName: form.name,
+    customerEmail: form.email,
 
-      if (res.ok) {
-        clearCart();
-        alert("Order placed 🎉");
-        window.location.href = "/";
-      }
-    } catch {
-      alert("Error placing order");
-    }
+    items: cart.map((item: any) => ({
+      productId: item._id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.images?.[0] || "",
+    })),
 
-    setLoading(false);
+    total,
+
+    paymentMethod: form.paymentMethod,
+
+    shippingAddress: {
+      fullName: form.name,
+      phone: form.phone,
+      address: form.address,
+      city: form.city,
+      pincode: form.zip,
+    },
   };
 
+  try {
+
+    // ✅ CREATE ORDER FIRST
+    const orderRes = await fetch("/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    const order = await orderRes.json();
+
+    if (!orderRes.ok) {
+      throw new Error("Order creation failed");
+    }
+
+    // ✅ CASH ON DELIVERY
+    if (form.paymentMethod === "COD") {
+
+      clearCart();
+
+      alert("Order placed successfully 🎉");
+
+      window.location.href = "/";
+
+      return;
+    }
+
+    // ✅ ONLINE PAYMENT (STRIPE)
+    const stripeRes = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        items: cart,
+        orderId: order._id,
+      }),
+    });
+
+    const stripeData = await stripeRes.json();
+
+    // ✅ REDIRECT TO STRIPE
+    if (stripeData.url) {
+      window.location.href = stripeData.url;
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong");
+  }
+
+  setLoading(false);
+};
   return (
     <div className="max-w-7xl mx-auto px-4 pt-28 pb-16">
 

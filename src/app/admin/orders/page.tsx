@@ -14,10 +14,10 @@ export default function OrdersPage() {
   const ITEMS_PER_PAGE = 5;
 
   const [dateFilter, setDateFilter] = useState("all");
-const [customRange, setCustomRange] = useState({
-  from: "",
-  to: "",
-});
+  const [customRange, setCustomRange] = useState({
+    from: "",
+    to: "",
+  });
 
 
   useEffect(() => {
@@ -44,39 +44,40 @@ const [customRange, setCustomRange] = useState({
     const matchesStatus =
       statusFilter === "All" || order.status === statusFilter;
 
-const now = new Date();
+    const now = new Date();
 
-let matchesDate = true;
+    let matchesDate = true;
 
-if (dateFilter === "week") {
-  const lastWeek = new Date();
-  lastWeek.setDate(now.getDate() - 7);
-  matchesDate = new Date(order.createdAt) >= lastWeek;
-}
+    if (dateFilter === "week") {
+      const lastWeek = new Date();
+      lastWeek.setDate(now.getDate() - 7);
+      matchesDate = new Date(order.createdAt) >= lastWeek;
+    }
 
-if (dateFilter === "month") {
-  const lastMonth = new Date();
-  lastMonth.setDate(now.getDate() - 30);
-  matchesDate = new Date(order.createdAt) >= lastMonth;
-}
+    if (dateFilter === "month") {
+      const lastMonth = new Date();
+      lastMonth.setDate(now.getDate() - 30);
+      matchesDate = new Date(order.createdAt) >= lastMonth;
+    }
 
-if (dateFilter === "year") {
-  const lastYear = new Date();
-  lastYear.setFullYear(now.getFullYear() - 1);
-  matchesDate = new Date(order.createdAt) >= lastYear;
-}
+    if (dateFilter === "year") {
+      const lastYear = new Date();
+      lastYear.setFullYear(now.getFullYear() - 1);
+      matchesDate = new Date(order.createdAt) >= lastYear;
+    }
 
-if (dateFilter === "custom") {
-  if (customRange.from && customRange.to) {
-    const from = new Date(customRange.from);
-    const to = new Date(customRange.to);
-    matchesDate =
-      new Date(order.createdAt) >= from &&
-      new Date(order.createdAt) <= to;
-  }
-}
+    if (dateFilter === "custom") {
+      if (customRange.from && customRange.to) {
+        const from = new Date(customRange.from);
+        const to = new Date(customRange.to);
+        matchesDate =
+          new Date(order.createdAt) >= from &&
+          new Date(order.createdAt) <= to;
+      }
+    }
 
-return matchesSearch && matchesStatus && matchesDate;  });
+    return matchesSearch && matchesStatus && matchesDate;
+  });
 
   // 📄 PAGINATION
   const start = (page - 1) * ITEMS_PER_PAGE;
@@ -148,65 +149,65 @@ return matchesSearch && matchesStatus && matchesDate;  });
         Orders</h1>
 
       {/* 🔍 SEARCH + FILTER */}
-     <div className="flex gap-4 mb-4 items-center">
+      <div className="flex gap-4 mb-4 items-center">
 
-  {/* 🔍 Search */}
-  <input
-    placeholder="Search by name or order ID..."
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="border px-3 py-2 rounded w-1/3"
-  />
+        {/* 🔍 Search */}
+        <input
+          placeholder="Search by name or order ID..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border px-3 py-2 rounded w-1/3"
+        />
 
-  {/* 📦 Status */}
-  <select
-    value={statusFilter}
-    onChange={(e) => setStatusFilter(e.target.value)}
-    className="border px-3 py-2 rounded"
-  >
-    <option>All</option>
-    <option>Pending</option>
-    <option>Confirmed</option>
-    <option>Shipped</option>
-    <option>Delivered</option>
-    <option>Cancelled</option>
-  </select>
+        {/* 📦 Status */}
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="border px-3 py-2 rounded"
+        >
+          <option>All</option>
+          <option>Pending</option>
+          <option>Confirmed</option>
+          <option>Shipped</option>
+          <option>Delivered</option>
+          <option>Cancelled</option>
+        </select>
 
-  {/* 📅 Date Filter (NEW) */}
-  <select
-    value={dateFilter}
-    onChange={(e) => setDateFilter(e.target.value)}
-    className="border px-3 py-2 rounded"
-  >
-    <option value="all">All Time</option>
-    <option value="week">Last 7 Days</option>
-    <option value="month">Last 30 Days</option>
-    <option value="year">Last Year</option>
-    <option value="custom">Custom Range</option>
-  </select>
+        {/* 📅 Date Filter (NEW) */}
+        <select
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+          className="border px-3 py-2 rounded"
+        >
+          <option value="all">All Time</option>
+          <option value="week">Last 7 Days</option>
+          <option value="month">Last 30 Days</option>
+          <option value="year">Last Year</option>
+          <option value="custom">Custom Range</option>
+        </select>
 
-</div>
+      </div>
 
-{dateFilter === "custom" && (
-  <div className="flex gap-3 mb-4">
-    <input
-      type="date"
-      value={customRange.from}
-      onChange={(e) =>
-        setCustomRange({ ...customRange, from: e.target.value })
-      }
-      className="border px-3 py-2 rounded"
-    />
-    <input
-      type="date"
-      value={customRange.to}
-      onChange={(e) =>
-        setCustomRange({ ...customRange, to: e.target.value })
-      }
-      className="border px-3 py-2 rounded"
-    />
-  </div>
-)}
+      {dateFilter === "custom" && (
+        <div className="flex gap-3 mb-4">
+          <input
+            type="date"
+            value={customRange.from}
+            onChange={(e) =>
+              setCustomRange({ ...customRange, from: e.target.value })
+            }
+            className="border px-3 py-2 rounded"
+          />
+          <input
+            type="date"
+            value={customRange.to}
+            onChange={(e) =>
+              setCustomRange({ ...customRange, to: e.target.value })
+            }
+            className="border px-3 py-2 rounded"
+          />
+        </div>
+      )}
 
       {/* 📦 BULK ACTION */}
       {selected.length > 0 && (
@@ -244,6 +245,10 @@ return matchesSearch && matchesStatus && matchesDate;  });
               <th className="p-4">Customer</th>
               <th className="p-4">Date</th>
               <th className="p-4">Amount</th>
+              {/* ✅ NEW */}
+              <th className="p-4">Payment</th>
+              <th className="p-4">Paid</th>
+
               <th className="p-4">Status</th>
               <th className="p-4">Invoice</th>
               <th className="p-4">Action</th>
@@ -308,7 +313,7 @@ return matchesSearch && matchesStatus && matchesDate;  });
                 </td>
 
                 {/* Status */}
-                <td className="p-4">
+                {/* <td className="p-4">
                   <select
                     disabled={loading}
                     value={order.status}
@@ -331,8 +336,57 @@ return matchesSearch && matchesStatus && matchesDate;  });
                     <option>Delivered</option>
                     <option>Cancelled</option>
                   </select>
+                </td> */}
+                {/* ✅ PAYMENT METHOD */}
+                <td className="p-4">
+                  {order.paymentMethod === "ONLINE" ? (
+                    <span className="text-green-600 font-medium">
+                      Online
+                    </span>
+                  ) : (
+                    <span className="text-orange-500 font-medium">
+                      COD
+                    </span>
+                  )}
                 </td>
 
+                {/* ✅ PAYMENT STATUS */}
+                <td className="p-4">
+                  {order.isPaid ? (
+                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
+                      Paid
+                    </span>
+                  ) : (
+                    <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-medium">
+                      Pending
+                    </span>
+                  )}
+                </td>
+
+                {/* ORDER STATUS */}
+                <td className="p-4">
+                  <select
+                    disabled={loading}
+                    value={order.status}
+                    onChange={(e) =>
+                      updateStatus(order._id, e.target.value)
+                    }
+                    className={`border px-2 py-1 rounded ${order.status === "Pending"
+                        ? "bg-yellow-50"
+                        : order.status === "Shipped"
+                          ? "bg-blue-50"
+                          : order.status === "Delivered"
+                            ? "bg-green-50"
+                            : ""
+                      }`}
+                  >
+                    <option>Pending</option>
+                    <option>Confirmed</option>
+                    <option>Shipped</option>
+                    <option>Delivered</option>
+                    <option>Cancelled</option>
+                  </select>
+                </td>
                 {/* Invoice */}
                 <td className="p-4">
                   <button

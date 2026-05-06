@@ -340,11 +340,11 @@ export default function MobileNav() {
           </Link>
 
           <Link
-            href="/party-ready-collections"
+            href="/contact-us"
             onClick={() => setMobileOpen(false)}
             className="block border-b border-black/20 pb-3"
           >
-            Review
+            contact
           </Link>
 
         </div>

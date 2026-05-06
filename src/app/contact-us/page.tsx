@@ -5,7 +5,7 @@ export default function Contact() {
     <section className=" text-black">
 
       {/* ================= HERO ================= */}
-      <div className="py-20 text-center bg-black border-b border-[#B9AA52]/30">
+      <div className="py-40  text-center bg-black border-b border-[#B9AA52]/30">
         <h1 className="text-4xl md:text-5xl font-bold text-[#B9AA52] mb-4">
           Contact Us
         </h1>
@@ -27,12 +27,12 @@ export default function Contact() {
           <div className="space-y-6 text-gray-700">
             <div>
               <h4 className="font-semibold text-black">📍 Address</h4>
-              <p>xyz street </p>
+              <p>London, UK</p>
             </div>
 
             <div>
               <h4 className="font-semibold text-black">📞 Phone</h4>
-              <p>07405769411</p>
+              <p>+44 7405 76941</p>
             </div>
 
             <div>
@@ -40,10 +40,10 @@ export default function Contact() {
               <p>info@ranijewellers.com</p>
             </div>
 
-            <div>
+            {/* <div>
               <h4 className="font-semibold text-black">🕒 Store Hours</h4>
               <p>Mon – Sun : 10:00 AM – 8:00 PM</p>
-            </div>
+            </div> */}
           </div>
         </div>
 

@@ -30,16 +30,25 @@ export default function Footer() {
           </p>
 
           {/* Social Icons */}
+          {/* Social Icons */}
           <div className="flex gap-4 pt-2">
-            {[FaInstagram, FaFacebookF, FaPinterestP].map((Icon, i) => (
-              <a
-                key={i}
-                href="#"
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-md hover:bg-[#b76e79] hover:scale-110 transition-all duration-300"
-              >
-                <Icon size={14} />
-              </a>
-            ))}
+            <a
+              href="https://www.instagram.com/rani_designer_hut/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-md hover:bg-[#b76e79] hover:scale-110 transition-all duration-300"
+            >
+              <FaInstagram size={14} />
+            </a>
+
+            <a
+              href="https://facebook.com/yourusername"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-md hover:bg-[#b76e79] hover:scale-110 transition-all duration-300"
+            >
+              <FaFacebookF size={14} />
+            </a>
           </div>
         </div>
 

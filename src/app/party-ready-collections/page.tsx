@@ -26,16 +26,16 @@ export default function PartyReadyPage() {
 
       {[
         {
-          title: "Royal Kundan Set",
-          image: "/images/banner-4.jpg",
+          title: "Royal  Set",
+          image: "/images/Heritage Nakshi Gold Beaded Mala Set-1.webp",
         },
         {
-          title: "Emerald Party Necklace",
-          image: "/images/banner-4.jpg",
+          title: "Polki Kundan",
+          image: "/images/polki-kundan-1.jpg",
         },
         {
           title: "Gold Temple Earrings",
-          image: "/images/banner-4.jpg",
+          image: "/images/Lalbaugcha Raja Inspired Pendant-1.webp",
         },
       ].map((item, index) => (
         <div

@@ -259,14 +259,52 @@ export default function Account() {
                                             ))}
 
                                             {/* Bottom */}
-                                            <div className="flex justify-between mt-2">
-                                                <p className="font-semibold">
-                                                    Total: {formatCurrency(order.total)}                        </p>
+                                         {/* Bottom */}
+<div className="flex justify-between items-end mt-3">
 
-                                                <button className="text-sm text-gray-600 hover:text-black">
-                                                    Invoice
-                                                </button>
-                                            </div>
+  <div className="space-y-1">
+
+    <p className="font-semibold">
+      Total: {formatCurrency(order.total)}
+    </p>
+
+    {/* ✅ PAYMENT METHOD */}
+    <p className="text-sm">
+      Payment:
+      <span
+        className={`ml-2 font-medium ${
+          order.paymentMethod === "ONLINE"
+            ? "text-green-600"
+            : "text-orange-500"
+        }`}
+      >
+        {order.paymentMethod === "ONLINE"
+          ? "Online"
+          : "Cash on Delivery"}
+      </span>
+    </p>
+
+    {/* ✅ PAYMENT STATUS */}
+    <p className="text-sm">
+      Status:
+      <span
+        className={`ml-2 font-medium ${
+          order.isPaid
+            ? "text-green-600"
+            : "text-yellow-600"
+        }`}
+      >
+        {order.isPaid ? "Paid" : "Pending"}
+      </span>
+    </p>
+
+  </div>
+
+  <button className="text-sm text-gray-600 hover:text-black">
+    Invoice
+  </button>
+
+</div>
 
                                         </div>
                                     ))}

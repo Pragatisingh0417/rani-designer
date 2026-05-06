@@ -4,7 +4,7 @@
 
 export default function Faq() {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-40 bg-white">
       <div className="max-w-7xl mx-auto px-6">
 
         <h1 className="text-3xl font-semibold text-center mb-12 text-black">
