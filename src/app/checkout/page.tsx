@@ -11,6 +11,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [addresses, setAddresses] = useState<any[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -59,96 +60,103 @@ export default function CheckoutPage() {
   };
 
   const handleSubmit = async (e: any) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!user?._id) return alert("Login first");
-  if (cart.length === 0) return alert("Cart empty");
+    // if (!user?._id) return alert("Login first");
+    if (!user?._id) {
+  setShowLoginPopup(true);
+  return;
+}
+    if (cart.length === 0) return alert("Cart empty");
 
-  setLoading(true);
+    setLoading(true);
 
-  const orderData = {
-    userId: user._id.toString(),
+    const orderData = {
+      userId: user._id.toString(),
 
-    customerName: form.name,
-    customerEmail: form.email,
+      customerName: form.name,
+      customerEmail: form.email,
 
-    items: cart.map((item: any) => ({
-      productId: item._id,
-      name: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      image: item.images?.[0] || "",
-    })),
+      items: cart.map((item: any) => ({
+        productId: item._id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.images?.[0] || "",
+      })),
 
-    total,
+      total,
 
-    paymentMethod: form.paymentMethod,
+      paymentMethod: form.paymentMethod,
 
-    shippingAddress: {
-      fullName: form.name,
-      phone: form.phone,
-      address: form.address,
-      city: form.city,
-      pincode: form.zip,
-    },
+      shippingAddress: {
+        fullName: form.name,
+        phone: form.phone,
+        address: form.address,
+        city: form.city,
+        pincode: form.zip,
+      },
+    };
+
+    try {
+
+      // ✅ CREATE ORDER FIRST
+      const orderRes = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const order = await orderRes.json();
+
+      if (!orderRes.ok) {
+        throw new Error("Order creation failed");
+      }
+
+      // ✅ CASH ON DELIVERY
+      if (form.paymentMethod === "COD") {
+
+        clearCart();
+
+        alert("Order placed successfully 🎉");
+
+        window.location.href = "/";
+
+        return;
+      }
+
+      // ✅ ONLINE PAYMENT (STRIPE)
+      const stripeRes = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          items: cart,
+          orderId: order._id,
+        }),
+      });
+
+      const stripeData = await stripeRes.json();
+
+      // ✅ REDIRECT TO STRIPE
+      if (stripeData.url) {
+        window.location.href = stripeData.url;
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    }
+
+    setLoading(false);
   };
 
-  try {
 
-    // ✅ CREATE ORDER FIRST
-    const orderRes = await fetch("/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(orderData),
-    });
-
-    const order = await orderRes.json();
-
-    if (!orderRes.ok) {
-      throw new Error("Order creation failed");
-    }
-
-    // ✅ CASH ON DELIVERY
-    if (form.paymentMethod === "COD") {
-
-      clearCart();
-
-      alert("Order placed successfully 🎉");
-
-      window.location.href = "/";
-
-      return;
-    }
-
-    // ✅ ONLINE PAYMENT (STRIPE)
-    const stripeRes = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        items: cart,
-        orderId: order._id,
-      }),
-    });
-
-    const stripeData = await stripeRes.json();
-
-    // ✅ REDIRECT TO STRIPE
-    if (stripeData.url) {
-      window.location.href = stripeData.url;
-    }
-
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong");
-  }
-
-  setLoading(false);
-};
+  
   return (
     <div className="max-w-7xl mx-auto px-4 pt-28 pb-16">
 
@@ -177,8 +185,8 @@ export default function CheckoutPage() {
 
                 {addresses.map((addr) => (
                   <option key={addr._id} value={addr._id}>
-  {addr.fullName}, {addr.address}, {addr.city} - {addr.pincode}
-</option>
+                    {addr.fullName}, {addr.address}, {addr.city} - {addr.pincode}
+                  </option>
                 ))}
               </select>
             </div>
@@ -262,7 +270,7 @@ export default function CheckoutPage() {
                 name="zip"
                 value={form.zip}
                 onChange={handleChange}
-                placeholder="ZIP"
+                placeholder="POST CODE"
                 className="border px-4 py-3 rounded-lg"
                 required
               />
@@ -343,6 +351,45 @@ export default function CheckoutPage() {
         </div>
 
       </div>
+    
+    {/* 🔐 LOGIN POPUP */ }
+  {
+    showLoginPopup && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+
+        <div className="bg-white w-full max-w-md rounded-2xl p-8 relative animate-in fade-in zoom-in duration-200">
+
+          {/* Close */}
+          <button
+            onClick={() => setShowLoginPopup(false)}
+            className="absolute top-3 right-4 text-2xl text-gray-500 hover:text-black"
+          >
+            ×
+          </button>
+
+          <h2 className="text-2xl font-semibold text-center mb-3">
+            Login Required
+          </h2>
+
+          <p className="text-gray-500 text-center text-sm">
+            You need to login before placing an order.
+          </p>
+
+          <p className="text-center text-sm mt-6">
+            Please{" "}
+            <a
+              href="/login"
+              className="text-red-600 font-medium underline hover:text-red-700"
+            >
+              Login
+            </a>
+          </p>
+
+        </div>
+      </div>
+    )
+  }
+    
     </div>
   );
 }

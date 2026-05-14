@@ -74,15 +74,22 @@ export default function Sidebar() {
         </nav>
 
         {/* Logout */}
-        <div className="mt-6">
-          <Link
-            href="/logout"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition"
-          >
-            <LogOut size={18} />
-            Logout
-          </Link>
-        </div>
+<div className="mt-6">
+  <button
+    onClick={() => {
+      document.cookie =
+        "admin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+      localStorage.removeItem("admin");
+
+      window.location.href = "/admin-login";
+    }}
+    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition"
+  >
+    <LogOut size={18} /> 
+    Logout
+  </button>
+</div>
 
       </div>
     </aside>

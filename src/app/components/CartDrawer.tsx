@@ -119,12 +119,22 @@ export default function CartDrawer() {
                 <span>£{total}</span>
               </div>
 
-              <Link
-                href="/checkout"
-                className="block text-center bg-black text-white py-3 rounded"
-              >
-                Checkout
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4 w-full">
+  <Link
+    href="/checkout"
+    className="flex-1 text-center bg-black text-white py-5 px-6 rounded-lg hover:bg-gray-800 transition duration-300"
+  >
+    Checkout
+  </Link>
+
+  <Link
+    href="/products"
+    className="flex-1 text-center border border-black text-black py-3 px-6 rounded-lg hover:bg-black hover:text-white transition duration-300"
+  >
+    Continue Shopping
+  </Link>
+</div>
+
 
             </div>
           )}

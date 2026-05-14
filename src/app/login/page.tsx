@@ -96,7 +96,7 @@ export default function LoginPage() {
               className="w-full border p-3 rounded"
             />
 
-          
+
 
             {/* Password */}
             <div className="relative">
@@ -124,7 +124,12 @@ export default function LoginPage() {
             >
               {loading ? "Logging in..." : "Login"}
             </button>
-
+            <p className="text-center text-sm mt-4">
+              Don't have an account?{" "}
+              <a href="/signup" className="text-red-600 font-medium underline">
+                Signup
+              </a>
+            </p>
           </form>
 
           {error && (
