@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import Order from "@/app/models/Order";
+import { sendOrderConfirmation } from "@/app/lib/sendOrderConfirmation";
 
 export async function POST(req: Request) {
   try {
@@ -22,6 +23,11 @@ const order = await Order.create({
   ...body,
   userId: body.userId, // 🔥 MUST EXIST
 });
+
+await sendOrderConfirmation(
+  body.customerEmail,
+  order
+);
 
 console.log("BODY RECEIVED:", body);
 

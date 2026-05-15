@@ -246,10 +246,10 @@ export default function OrdersPage() {
               <th className="p-4">Date</th>
               <th className="p-4">Amount</th>
               {/* ✅ NEW */}
-              <th className="p-4">Payment</th>
-              <th className="p-4">Paid</th>
+              <th className="p-4">Payment Method</th>
+              <th className="p-4">Payment Status</th>
 
-              <th className="p-4">Status</th>
+              <th className="p-4"> Order Status</th>
               <th className="p-4">Invoice</th>
               <th className="p-4">Action</th>
             </tr>
@@ -364,29 +364,25 @@ export default function OrdersPage() {
                 </td>
 
                 {/* ORDER STATUS */}
-                <td className="p-4">
-                  <select
-                    disabled={loading}
-                    value={order.status}
-                    onChange={(e) =>
-                      updateStatus(order._id, e.target.value)
-                    }
-                    className={`border px-2 py-1 rounded ${order.status === "Pending"
-                        ? "bg-yellow-50"
-                        : order.status === "Shipped"
-                          ? "bg-blue-50"
-                          : order.status === "Delivered"
-                            ? "bg-green-50"
-                            : ""
-                      }`}
-                  >
-                    <option>Pending</option>
-                    <option>Confirmed</option>
-                    <option>Shipped</option>
-                    <option>Delivered</option>
-                    <option>Cancelled</option>
-                  </select>
-                </td>
+               <td className="p-4">
+  <span
+    className={`px-3 py-1 rounded-full text-xs font-medium
+      ${
+        order.status === "Pending"
+          ? "bg-yellow-100 text-yellow-700"
+          : order.status === "Confirmed"
+          ? "bg-purple-100 text-purple-700"
+          : order.status === "Shipped"
+          ? "bg-blue-100 text-blue-700"
+          : order.status === "Delivered"
+          ? "bg-green-100 text-green-700"
+          : "bg-red-100 text-red-700"
+      }
+    `}
+  >
+    {order.status}
+  </span>
+</td>
                 {/* Invoice */}
                 <td className="p-4">
                   <button

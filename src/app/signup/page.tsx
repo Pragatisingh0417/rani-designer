@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // ✅ ADD THIS
+import { useRouter } from "next/navigation";
 
 import Image from "next/image";
+import Link from "next/link";
+
 import { Eye, EyeOff } from "lucide-react";
 
 export default function SignupPage() {
-  const router = useRouter(); // ✅ ADD THIS
+
+  const router = useRouter();
 
   const [form, setForm] = useState({
     name: "",
@@ -19,7 +22,9 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e: any) => {
     setForm({
@@ -31,47 +36,74 @@ export default function SignupPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+    setError("");
+    setSuccess("");
+
+    // ✅ Password match check
     if (form.password !== form.confirmPassword) {
-      setMessage("Passwords do not match");
+      setError("Passwords do not match");
       return;
     }
 
-    setLoading(true);
-    setMessage("");
+    try {
 
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: form.name,
-        email: form.email,
-        password: form.password,
-      }),
-    });
+      setLoading(true);
 
-    const data = await res.json();
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-    if (data.error) {
-      setMessage(data.error);
-    } else {
-      setMessage("Account created successfully!");
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        }),
+      });
 
-      // ✅ REDIRECT TO HOME jfno dkf e
-      router.push("/login");
+      const data = await res.json();
 
-      // optional: refresh to update auth UI
-      router.refresh();
+      // ❌ Error
+      if (data.error) {
+        setError(data.error);
+        setLoading(false);
+        return;
+      }
+
+      // ✅ Success
+      setSuccess(
+        "Verification email sent ✨ Please verify your email before login."
+      );
+
+      // ✅ Clear form
+      setForm({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+
+      // ✅ Redirect after 3 sec
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+
+    } catch (err) {
+
+      setError("Something went wrong");
+
+    } finally {
+
+      setLoading(false);
+
     }
-
-    setLoading(false);
   };
 
   return (
     <div className="min-h-screen grid md:grid-cols-2">
 
-      {/* Left Image */}
+      {/* LEFT IMAGE */}
       <div className="relative hidden md:block">
         <Image
           src="/images/j-2.jpg"
@@ -82,97 +114,132 @@ export default function SignupPage() {
         />
       </div>
 
-      {/* Signup Form */}
-      <div className="flex items-center justify-center bg-amber-50">
+      {/* RIGHT */}
+      <div className="flex items-center justify-center bg-amber-50 px-4">
 
-        <div className="w-full max-w-md bg-white p-8 shadow-md rounded">
+        <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-xl">
 
-          <h1 className="text-2xl font-semibold mb-6 text-center">
+          <h1 className="text-3xl font-semibold mb-2 text-center">
             Create Account
           </h1>
 
+          <p className="text-gray-500 text-sm text-center mb-6">
+            Join Rani Designer ✨
+          </p>
+
           <form onSubmit={handleSubmit} className="space-y-4">
 
+            {/* NAME */}
             <input
               type="text"
               name="name"
               placeholder="Full Name"
               required
+              value={form.name}
               onChange={handleChange}
-              className="w-full border p-3 rounded"
+              className="w-full border p-3 rounded-lg focus:outline-none focus:border-black"
             />
 
+            {/* EMAIL */}
             <input
               type="email"
               name="email"
               placeholder="Email Address"
               required
+              value={form.email}
               onChange={handleChange}
-              className="w-full border p-3 rounded"
+              className="w-full border p-3 rounded-lg focus:outline-none focus:border-black"
             />
 
-            {/* Password */}
+            {/* PASSWORD */}
             <div className="relative">
-  <input
-    type={showPassword ? "text" : "password"}
-    name="password"
-    placeholder="Password"
-    required
-    onChange={handleChange}
-    className="w-full border p-3 rounded pr-10"
-  />
 
-  <button
-    type="button"
-    onClick={() => setShowPassword(!showPassword)}
-    className="absolute right-3 top-3 text-gray-500"
-  >
-    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-  </button>
-</div>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                required
+                value={form.password}
+                onChange={handleChange}
+                className="w-full border p-3 rounded-lg pr-10 focus:outline-none focus:border-black"
+              />
 
-            {/* Confirm Password */}
-           <div className="relative">
-  <input
-    type={showPassword ? "text" : "password"}
-    name="confirmPassword"
-    placeholder="Confirm Password"
-    required
-    onChange={handleChange}
-    className="w-full border p-3 rounded pr-10"
-  />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gray-500"
+              >
+                {showPassword ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </button>
 
-  <button
-    type="button"
-    onClick={() => setShowPassword(!showPassword)}
-    className="absolute right-3 top-3 text-gray-500"
-  >
-    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-  </button>
-</div>
+            </div>
 
+            {/* CONFIRM PASSWORD */}
+            <div className="relative">
+
+              <input
+                type={showPassword ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                required
+                value={form.confirmPassword}
+                onChange={handleChange}
+                className="w-full border p-3 rounded-lg pr-10 focus:outline-none focus:border-black"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gray-500"
+              >
+                {showPassword ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </button>
+
+            </div>
+
+            {/* ERROR */}
+            {error && (
+              <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg">
+                {error}
+              </div>
+            )}
+
+            {/* SUCCESS */}
+            {success && (
+              <div className="bg-green-50 text-green-600 text-sm p-3 rounded-lg">
+                {success}
+              </div>
+            )}
+
+            {/* BUTTON */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-black text-white py-3 rounded hover:bg-gray-800"
+              className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
             >
-              {loading ? "Creating..." : "Sign Up"}
+              {loading ? "Creating Account..." : "Sign Up"}
             </button>
 
+            {/* LOGIN */}
             <p className="text-center text-sm mt-4">
               Already have an account?{" "}
-              <a href="/login" className="text-red-600 font-medium underline">
+              <Link
+                href="/login"
+                className="text-red-600 font-medium underline"
+              >
                 Login
-              </a>
+              </Link>
             </p>
 
           </form>
-
-          {message && (
-            <p className="text-center mt-4 text-sm text-red-500">
-              {message}
-            </p>
-          )}
 
         </div>
 

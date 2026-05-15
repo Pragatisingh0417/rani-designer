@@ -31,9 +31,9 @@ export async function POST(req: Request) {
 
       mode: "payment",
 
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&orderId=${orderId}`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&orderId=${orderId}`,
 
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout`,
     });
 
     return NextResponse.json({

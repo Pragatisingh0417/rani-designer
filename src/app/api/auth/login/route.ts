@@ -15,6 +15,11 @@ export async function POST(req: Request) {
   if (!user) {
     return NextResponse.json({ error: "User not found" });
   }
+  if (!user.isVerified) {
+  return NextResponse.json({
+    error: "Please verify your email first",
+  });
+}
 
   const valid = await bcrypt.compare(password, user.password);
 

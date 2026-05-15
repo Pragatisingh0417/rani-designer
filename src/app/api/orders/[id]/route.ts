@@ -1,22 +1,25 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import Order from "@/app/models/Order";
+import { sendStatusMail } from "@/app/lib/sendStatusMail";
 
+// ✅ UPDATE ORDER STATUS
 // ✅ UPDATE ORDER STATUS
 export async function PUT(
   req: Request,
-  { params }: { params: Promise<{ id: string }> } // ✅ change
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const { id } = await params; // ✅ FIX HERE
+    const { id } = await params;
     const { status } = await req.json();
 
+    // ✅ UPDATE ORDER
     const order = await Order.findByIdAndUpdate(
-      id, // ✅ use id instead of params.id
+      id,
       { status },
-      { returnDocument: "after" } // ✅ updated (see below)
+      { new: true }
     );
 
     if (!order) {
@@ -26,10 +29,18 @@ export async function PUT(
       );
     }
 
+    // ✅ SEND STATUS EMAIL
+  await sendStatusMail(
+  order.customerEmail,
+  order.customerName,
+  status,
+  order
+);
     return NextResponse.json(order);
 
   } catch (err) {
     console.error(err);
+
     return NextResponse.json(
       { error: "Update failed" },
       { status: 500 }

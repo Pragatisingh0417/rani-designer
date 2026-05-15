@@ -11,6 +11,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
-}, { timestamps: true });
+  isVerified: {
+  type: Boolean,
+  default: false,
+},
+
+verificationToken: String,
+}, 
+
+
+{ timestamps: true });
 
 export default mongoose.models.User || mongoose.model("User", UserSchema);

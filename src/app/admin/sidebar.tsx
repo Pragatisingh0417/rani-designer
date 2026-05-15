@@ -31,7 +31,7 @@ export default function Sidebar() {
         
         {/* Title */}
         <h2 className="text-xl font-bold mb-8 text-blue-900">
-          Admin Panel
+          Admin Panel 
         </h2>
 
         {/* Navigation */}
