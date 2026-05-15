@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -41,7 +41,6 @@ export default function VerifyEmailPage() {
 
         setSuccess(true);
 
-        // ✅ Redirect to login after 3 sec
         setTimeout(() => {
           router.push("/login");
         }, 3000);
@@ -109,5 +108,13 @@ export default function VerifyEmailPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
