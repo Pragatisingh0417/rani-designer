@@ -61,24 +61,40 @@ export default function DashboardPage() {
       </div>
 
       {/* 🔥 Stats */}
-      <div className="grid md:grid-cols-3 gap-6 mb-6">
-        <StatCard
-          title="Total Revenue"
-          value={formatCurrency(stats?.totalRevenue || 0)}
-          growth={stats?.growth}
-          icon={<Euro  size={18} />}
-        />
-        <StatCard
-          title="Orders"
-          value={stats?.totalOrders || 0}
-          icon={<ShoppingCart size={18} />}
-        />
-        <StatCard
-          title="Visitors"
-          value={stats?.totalVisitors || 0}
-          icon={<Users size={18} />}
-        />
-      </div>
+     <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
+
+  <StatCard
+    title="Total Revenue"
+    value={formatCurrency(stats?.totalRevenue || 0)}
+    growth={stats?.growth}
+    icon={<Euro size={18} />}
+  />
+
+  <StatCard
+    title="Orders"
+    value={stats?.totalOrders || 0}
+    icon={<ShoppingCart size={18} />}
+  />
+
+  <StatCard
+    title="Paid Orders"
+    value={stats?.paidOrders || 0}
+    icon={<Euro size={18} />}
+  />
+
+  <StatCard
+    title="COD Orders"
+    value={stats?.codOrders || 0}
+    icon={<ShoppingCart size={18} />}
+  />
+
+  <StatCard
+    title="Cancelled"
+    value={stats?.cancelledOrders || 0}
+    icon={<Users size={18} />}
+  />
+
+</div>
 
       {/* 📊 Chart */}
       <div className="bg-white rounded-2xl p-6 mb-6 shadow-sm hover:shadow-md transition">

@@ -105,7 +105,7 @@ export default function DesktopNav() {
       className={`hidden md:block py-2 w-full z-50
       ${isHome
           ? "absolute top-0 left-0 text-white bg-transparent"
-          : "relative bg-amber-50 text-black shadow-sm"
+          : "relative bg-black text-white shadow-sm"
         }`}
       style={{ fontFamily: "'Playfair Display', serif" }}
     >
@@ -235,6 +235,12 @@ export default function DesktopNav() {
                   <>
                     <div className="px-4 py-2 border-b">Hi, {user.name}</div>
                     <Link href="/account" className="block px-4 py-2 hover:bg-gray-100">My Account</Link>
+                    <Link
+                      href="/account?tab=orders"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      My Orders
+                    </Link>
                     <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
                   </>
                 )}

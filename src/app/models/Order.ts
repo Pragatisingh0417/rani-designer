@@ -59,9 +59,11 @@ const OrderSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    stripeSessionId: {
-      type: String,
-    },
+     stripeSessionId: {
+  type: String,
+  unique: true,
+  sparse: true,
+},
     stripePaymentIntentId: {
       type: String,
     },
@@ -72,11 +74,12 @@ const OrderSchema = new Schema(
       enum: ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"],
       default: "Pending",
     },
+   
 
     // 📍 Shipping Address
     shippingAddress: AddressSchema,
   },
-  {
+  { 
     timestamps: true,
   }
 );

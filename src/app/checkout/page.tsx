@@ -12,6 +12,8 @@ export default function CheckoutPage() {
   const [addresses, setAddresses] = useState<any[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] =
+    useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -64,9 +66,9 @@ export default function CheckoutPage() {
 
     // if (!user?._id) return alert("Login first");
     if (!user?._id) {
-  setShowLoginPopup(true);
-  return;
-}
+      setShowLoginPopup(true);
+      return;
+    }
     if (cart.length === 0) return alert("Cart empty");
 
     setLoading(true);
@@ -101,31 +103,46 @@ export default function CheckoutPage() {
     try {
 
       // ✅ CREATE ORDER FIRST
-      const orderRes = await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      });
+      // const orderRes = await fetch("/api/orders", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(orderData),
+      // });
 
-      const order = await orderRes.json();
+      // const order = await orderRes.json();
 
-      if (!orderRes.ok) {
-        throw new Error("Order creation failed");
-      }
+      // if (!orderRes.ok) {
+      //   throw new Error("Order creation failed");
+      // }
 
       // ✅ CASH ON DELIVERY
-      if (form.paymentMethod === "COD") {
+    if (form.paymentMethod === "COD") {
 
-        clearCart();
+  // ✅ CREATE COD ORDER
+  const orderRes = await fetch("/api/orders", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(orderData),
+  });
 
-        alert("Order placed successfully 🎉");
+  if (!orderRes.ok) {
+    throw new Error("COD order failed");
+  }
 
-        window.location.href = "/";
+  clearCart();
 
-        return;
-      }
+  setShowSuccessPopup(true);
+
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 2500);
+
+  return;
+}
 
       // ✅ ONLINE PAYMENT (STRIPE)
       const stripeRes = await fetch("/api/create-checkout-session", {
@@ -136,7 +153,7 @@ export default function CheckoutPage() {
 
         body: JSON.stringify({
           items: cart,
-          orderId: order._id,
+          orderData,
         }),
       });
 
@@ -156,7 +173,7 @@ export default function CheckoutPage() {
   };
 
 
-  
+
   return (
     <div className="max-w-7xl mx-auto px-4 pt-28 pb-16">
 
@@ -351,45 +368,70 @@ export default function CheckoutPage() {
         </div>
 
       </div>
-    
-    {/* 🔐 LOGIN POPUP */ }
-  {
-    showLoginPopup && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
 
-        <div className="bg-white w-full max-w-md rounded-2xl p-8 relative animate-in fade-in zoom-in duration-200">
+      {/* 🔐 LOGIN POPUP */}
+      {
+        showLoginPopup && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
 
-          {/* Close */}
-          <button
-            onClick={() => setShowLoginPopup(false)}
-            className="absolute top-3 right-4 text-2xl text-gray-500 hover:text-black"
-          >
-            ×
-          </button>
+            <div className="bg-white w-full max-w-md rounded-2xl p-8 relative animate-in fade-in zoom-in duration-200">
 
-          <h2 className="text-2xl font-semibold text-center mb-3">
-            Login Required
-          </h2>
+              {/* Close */}
+              <button
+                onClick={() => setShowLoginPopup(false)}
+                className="absolute top-3 right-4 text-2xl text-gray-500 hover:text-black"
+              >
+                ×
+              </button>
 
-          <p className="text-gray-500 text-center text-sm">
-            You need to login before placing an order.
-          </p>
+              <h2 className="text-2xl font-semibold text-center mb-3">
+                Login Required
+              </h2>
 
-          <p className="text-center text-sm mt-6">
-            Please{" "}
-            <a
-              href="/login"
-              className="text-red-600 font-medium underline hover:text-red-700"
-            >
-              Login
-            </a>
-          </p>
+              <p className="text-gray-500 text-center text-sm">
+                You need to login before placing an order.
+              </p>
 
+              <p className="text-center text-sm mt-6">
+                Please{" "}
+                <a
+                  href="/login"
+                  className="text-red-600 font-medium underline hover:text-red-700"
+                >
+                  Login
+                </a>
+              </p>
+
+            </div>
+          </div>
+        )
+      }
+
+
+
+      {/* ✅ SUCCESS POPUP */}
+      {showSuccessPopup && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 px-4">
+
+          <div className="bg-white w-full max-w-sm rounded-2xl p-6 text-center animate-in fade-in zoom-in duration-300">
+
+            {/* Success Icon */}
+            <div className="w-16 h-16 mx-auto rounded-full bg-green-100 flex items-center justify-center text-3xl mb-4">
+              ✅
+            </div>
+
+            <h2 className="text-2xl font-semibold mb-2">
+              Order Placed!
+            </h2>
+
+            <p className="text-gray-500 text-sm">
+              Your order has been placed successfully 🎉
+            </p>
+
+          </div>
         </div>
-      </div>
-    )
-  }
-    
+      )}
+
     </div>
   );
 }

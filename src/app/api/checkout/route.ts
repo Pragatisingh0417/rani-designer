@@ -38,7 +38,8 @@ export async function POST(req: Request) {
         },
         quantity: item.quantity,
       })),
-      success_url: `${process.env.NEXT_PUBLIC_URL}/success?orderId=${order._id}&session_id={CHECKOUT_SESSION_ID}`,
+      success_url:
+        `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart`,
     });
 

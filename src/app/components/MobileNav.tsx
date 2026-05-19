@@ -230,6 +230,12 @@ export default function MobileNav() {
                     <Link href="/account" className="block px-4 py-2 text-sm hover:bg-gray-100">
                       My Account
                     </Link>
+                    <Link
+                      href="/account?tab=orders"
+                      className="block px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                      My Orders
+                    </Link>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"

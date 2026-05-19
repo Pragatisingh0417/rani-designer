@@ -7,8 +7,10 @@ export async function POST(req: Request) {
 
   try {
 
-    const { items, orderId } = await req.json();
+    // ✅ GET DATA
+    const { items, orderData } = await req.json();
 
+    // ✅ CREATE STRIPE SESSION
     const session = await stripe.checkout.sessions.create({
 
       payment_method_types: ["card"],
@@ -31,9 +33,34 @@ export async function POST(req: Request) {
 
       mode: "payment",
 
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&orderId=${orderId}`,
+      // ✅ SUCCESS PAGE
+      success_url:
+        `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
 
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout`,
+      // ✅ CANCEL PAGE
+      cancel_url:
+        `${process.env.NEXT_PUBLIC_BASE_URL}/checkout`,
+
+      // ✅ SAVE ORDER DATA TEMPORARILY
+     metadata: {
+
+  userId: orderData.userId,
+
+  customerName: orderData.customerName,
+
+  customerEmail: orderData.customerEmail,
+
+  paymentMethod: orderData.paymentMethod,
+
+  total: String(orderData.total),
+
+  items: JSON.stringify(orderData.items),
+
+  shippingAddress: JSON.stringify(
+    orderData.shippingAddress
+  ),
+},
+
     });
 
     return NextResponse.json({

@@ -21,15 +21,19 @@ const products = [
     link: "/product/necklace-4",
   },
   {
-    image: "/images/bangles.jpg",
+    image: "/images/rings-1.webp",
     link: "/product/necklace-5",
+  },
+  {
+    image: "/images/earrings-2.jpg",
+    link: "/product/necklace-2",
   },
 ];
 
 export default function GroomJewellerySection() {
   return (
     <section className="max-w-8xl mx-auto py-12 px-10 bg-black">
-      <div className="grid md:grid-cols-2 gap-6 mt-20">
+      <div className="grid md:grid-cols-2 gap-6 ">
 
         {/* LEFT IMAGE */}
         <div className="relative h-[600px]">

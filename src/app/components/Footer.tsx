@@ -60,7 +60,7 @@ export default function Footer() {
           <ul className="space-y-3 text-sm text-white/90">
             <li><Link href="/designer-choice/rajwadi-choice">Rajwadi Choice</Link></li>
             <li><Link href="/designer-choice/meenakari-choice">Meenakari Choice</Link></li>
-            <li><Link href="/designer-choice/kangans-choice/diamond">Kangans Choice</Link></li>
+            <li><Link href="/designer-choice/kangans-choice">Kangans Choice</Link></li>
 
             <li><Link href="/designer-choice/punjabi-traditional-choice">Punjabi Traditional Choice</Link></li>
             <li><Link href="/designer-choice/pachi-kundan-choice">Pachi Kundan Choice</Link></li>

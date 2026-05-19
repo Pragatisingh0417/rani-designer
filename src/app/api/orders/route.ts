@@ -20,8 +20,19 @@ export async function POST(req: Request) {
 
     // ✅ CREATE ORDER (you forgot this)
 const order = await Order.create({
+
   ...body,
-  userId: body.userId, // 🔥 MUST EXIST
+
+  userId: body.userId,
+
+  // ✅ COD / ONLINE LOGIC
+  isPaid:
+    body.paymentMethod === "ONLINE",
+
+  status:
+    body.paymentMethod === "COD"
+      ? "Pending"
+      : "Confirmed",
 });
 
 await sendOrderConfirmation(

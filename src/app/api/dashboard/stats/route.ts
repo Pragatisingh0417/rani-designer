@@ -9,17 +9,42 @@ export async function GET() {
     const orders = await Order.find({});
 
     // 💰 Total Revenue
-    const totalRevenue = orders.reduce(
+    const paidOrders = orders.filter(
+      (order) =>
+        order.isPaid &&
+        order.status !== "Cancelled"
+    );
+
+    const totalRevenue = paidOrders.reduce(
       (acc, order) => acc + (order.total || 0),
       0
     );
 
-    const totalOrders = orders.length;
+    const totalOrders = orders.filter(
+      (o) => o.status !== "Cancelled"
+    ).length;
+
+    const paidOrdersCount = orders.filter(
+  (o) =>
+    o.isPaid &&
+    o.status !== "Cancelled"
+).length;
+
+const codOrders = orders.filter(
+  (o) =>
+    o.paymentMethod === "COD" &&
+    o.status !== "Cancelled"
+).length;
+
+const cancelledOrders = orders.filter(
+  (o) => o.status === "Cancelled"
+).length;
+
 
     // 📊 Monthly revenue
     const monthlyMap: any = {};
 
-    orders.forEach((order) => {
+    paidOrders.forEach((order) => {
       const date = new Date(order.createdAt);
       const month = date.toLocaleString("default", { month: "short" });
 
@@ -31,8 +56,8 @@ export async function GET() {
     });
 
     const monthsOrder = [
-      "Jan","Feb","Mar","Apr","May","Jun",
-      "Jul","Aug","Sep","Oct","Nov","Dec"
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
 
     const monthlyRevenue = monthsOrder.map((m) => ({
@@ -53,16 +78,16 @@ export async function GET() {
     // 🛍️ Top Products
     const productMap: any = {};
 
-    orders.forEach((order) => {
+    paidOrders.forEach((order) => {
       order.items?.forEach((item: any) => {
-        if 
-        (!productMap[item.productId]) {
+        if
+          (!productMap[item.productId]) {
           productMap[item.productId] = {
-  productId: item.productId,
-  name: item.name,
-  image: item.image || item.images?.[0] || "", // ✅ FIX
-  sales: 0,
-};
+            productId: item.productId,
+            name: item.name,
+            image: item.image || item.images?.[0] || "", // ✅ FIX
+            sales: 0,
+          };
         }
 
         productMap[item.productId].sales += item.quantity;
@@ -74,13 +99,25 @@ export async function GET() {
       .slice(0, 5);
 
     return NextResponse.json({
-      totalRevenue,
-      totalOrders,
-      totalVisitors: 1200,
-      growth: Math.round(growth),
-      monthlyRevenue, // 🔥 IMPORTANT
-      topProducts,
-    });
+
+  totalRevenue,
+
+  totalOrders,
+
+  paidOrders: paidOrdersCount,
+
+  codOrders,
+
+  cancelledOrders,
+
+  totalVisitors: 1200,
+
+  growth: Math.round(growth),
+
+  monthlyRevenue,
+
+  topProducts,
+});
 
   } catch (err) {
     console.error(err);

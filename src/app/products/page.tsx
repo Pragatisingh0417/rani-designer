@@ -43,8 +43,10 @@ export default function ProductsPage() {
     if (!p || !p.slug) return false;
     if (!p.isActive) return false;
 
-    const finalPrice = p.isOnSale ? p.salePrice : p.price;
-
+    const finalPrice =
+      p.salePrice && p.salePrice > 0
+        ? p.salePrice
+        : p.price;
     if (finalPrice < priceRange[0] || finalPrice > priceRange[1]) {
       return false;
     }
@@ -59,19 +61,37 @@ export default function ProductsPage() {
 
   // ✅ SORTING
   if (sort === "low") {
-    filteredProducts.sort(
-      (a, b) =>
-        (a.isOnSale ? a.salePrice : a.price) -
-        (b.isOnSale ? b.salePrice : b.price)
-    );
+  filteredProducts.sort((a, b) => {
+
+  const priceA =
+    a.salePrice && a.salePrice > 0
+      ? a.salePrice
+      : a.price;
+
+  const priceB =
+    b.salePrice && b.salePrice > 0
+      ? b.salePrice
+      : b.price;
+
+  return priceA - priceB;
+});
   }
 
   if (sort === "high") {
-    filteredProducts.sort(
-      (a, b) =>
-        (b.isOnSale ? b.salePrice : b.price) -
-        (a.isOnSale ? a.salePrice : a.price)
-    );
+   filteredProducts.sort((a, b) => {
+
+  const priceA =
+    a.salePrice && a.salePrice > 0
+      ? a.salePrice
+      : a.price;
+
+  const priceB =
+    b.salePrice && b.salePrice > 0
+      ? b.salePrice
+      : b.price;
+
+  return priceB - priceA;
+});
   }
 
   return (

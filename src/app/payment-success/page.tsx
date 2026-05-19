@@ -7,7 +7,7 @@ import { useCart } from "@/app/context/CartContext";
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const orderId = searchParams.get("orderId");
+  // const orderId = searchParams.get("orderId");
 
   const { clearCart } = useCart();
 
@@ -24,7 +24,7 @@ function PaymentSuccessContent() {
           },
           body: JSON.stringify({
             sessionId,
-            orderId,
+            
           }),
         });
 
@@ -41,12 +41,12 @@ function PaymentSuccessContent() {
       setLoading(false);
     };
 
-    if (sessionId && orderId) {
+    if (sessionId) {
       verifyPayment();
     } else {
       setLoading(false);
     }
-  }, [sessionId, orderId, clearCart]);
+  }, [sessionId, clearCart]);
 
   if (loading) {
     return (

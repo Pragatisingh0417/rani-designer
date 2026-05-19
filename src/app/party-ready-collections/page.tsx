@@ -37,6 +37,7 @@ export default function PartyReadyPage() {
           title: "Gold Temple Earrings",
           image: "/images/Lalbaugcha Raja Inspired Pendant-1.webp",
         },
+        
       ].map((item, index) => (
         <div
           key={index}
